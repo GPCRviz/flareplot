@@ -17,6 +17,26 @@
     <!-- Theme CSS -->
     <link href="css/freelancer.css" rel="stylesheet">
 
+    <style>
+    .fileUpload {
+        position: relative;
+        overflow: hidden;
+        margin: 30px;
+    }
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+    </style>
+
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -78,7 +98,11 @@
 FlarePlots are interactive diagrams for exploring dynamic networks. They can be used to visualize any type of network that changes over time, but many of our examples currently focus on interaction networks from molecular dynamics simulations. Try an example, or go to <a href="generate.html">Generate Input</a> and then upload the resulting JSON file here:
             </p>
             <p>
-<input id="uploader" type="file" style="380;position:relative;left:50%;margin-left:-190px;border:1px dashed gray;padding:15px"></input>
+<!--<input id="uploader" type="file" style="380;position:relative;left:50%;margin-left:-190px;border:1px dashed gray;padding:15px"></input>-->
+<div class="fileUpload btn btn-primary">
+    <span>Upload JSON</span>
+    <input type="file" id="uploader" class="upload" />
+</div>
 <script>
 var chart;
 
