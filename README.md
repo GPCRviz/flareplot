@@ -4,6 +4,7 @@ FlarePlots illustrate contacts between grouped nodes and are useful for explorin
 
 ![FlarePlot example](https://github.com/GPCRviz/FlarePlot/blob/master/docs/img/examples/mor_example.gif)
 
-A FlarePlot takes a JSON file as input (description of the format and scripts for automatically generating them can be found [here](https://github.com/GPCRviz/FlarePlot/tree/master/input)). This file can either be uploaded to our page ([here](https://GPCRviz.github.io/FlarePlot)) or embedded in your own page (directions are found [here](https://github.com/GPCRviz/FlarePlot/tree/master/embedding)).
+* A FlarePlot takes a JSON file as input (description of the format and scripts for automatically generating them can be found in the [input](https://github.com/GPCRviz/FlarePlot/tree/master/input) folder). 
+* This file can either be uploaded and visualized at our page ([GPCRviz.github.io/FlarePlot](https://GPCRviz.github.io/FlarePlot)) or embedded in your own page (directions are found in the [embedding](https://github.com/GPCRviz/FlarePlot/tree/master/embedding) folder).
 
 
