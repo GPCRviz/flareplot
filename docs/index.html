@@ -128,9 +128,15 @@ function handleFile() {
     reader.readAsText(file);
 }
 
-
 var uploader = document.getElementById("uploader");
 uploader.addEventListener("change", handleFile, false);
+
+function loadExample(fileName){
+  d3.text(fileName, function(json_text){
+    fileRead(json_text);
+  });
+}
+
 </script>
             </p>
             </div>
@@ -149,13 +155,18 @@ uploader.addEventListener("change", handleFile, false);
             </div>
             <div class="row">
                 <div class="col-sm-2 example-item">
-                    <a href="#exampleModal1" class="example-link" data-toggle="modal">
+                    <a nohref class="example-link" onclick="javascript:loadExample('resources/mor-active-rep1-wb.json')">
                         <img src="img/examples/mor_example.gif" class="img-responsive" alt="Morphine receptor">
                     </a>
                 </div>
                 <div class="col-sm-2 example-item">
-                    <a href="#exampleModal2" class="example-link" data-toggle="modal">
+                    <a nohref class="example-link" onclick="javascript:loadExample('resources/salt_bridges.json')">
                         <img src="img/examples/salt_example.gif" class="img-responsive" alt="Salt bridges">
+                    </a>
+                </div>
+                <div class="col-sm-2 example-item">
+                    <a nohref class="example-link" onclick="javascript:loadExample('resources/mor_active_bu72.nc.json')">
+                        <img src="img/examples/degree_example.gif" class="img-responsive" alt="Degree centrality">
                     </a>
                 </div>
                 <div class="col-sm-2 example-item">

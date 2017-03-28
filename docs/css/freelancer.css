@@ -172,6 +172,7 @@ section#examples{
 #examples .example-item {
   right: 0;
   margin: 0 0 10px;
+  cursor: pointer;
 }
 #examples .example-item .example-link {
   display: block;
