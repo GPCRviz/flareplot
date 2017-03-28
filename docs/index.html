@@ -28,6 +28,13 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+    <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/rangeslider.js"></script>
+    <script type="text/javascript" src="js/flareplot-parser.js"></script>
+    <script type="text/javascript" src="js/flareplot-main.js"></script>
+    <!-- Visualization CSS -->
+    <link href="css/flare.css" rel="stylesheet">
 
 </head>
 
@@ -52,7 +59,7 @@
                         <a href="#examples">Examples</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#scripts">Generate flareplot</a>
+                        <a href="generate.html">Generate input</a>
                     </li>
                     <li class="page-scroll">
                         <a href="#embed">Embed</a>
@@ -70,11 +77,46 @@
     <!-- Header -->
     <header>
         <div class="container" id="maincontent" tabindex="-1">
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <img class="img-responsive" src="img/flare-faded_smaller.png" alt="">
-                </div>
+            <img src="img/flare-faded_smaller.png" style="position:absolute;left:50%;margin-left:-300px;z-index:-1">
+            <div id="maintext" style="height:600px;text-align:center;vertical-align:middle">
+            <p>
+<br><br><br>
+FlarePlots are interactive diagrams for exploring dynamic networks. They can be used to visualize any type of network that changes over time, but many of our examples currently focus on interaction networks from molecular dynamics simulations. Try an example, or go to <a href="generate.html">Generate Input</a> and then upload the resulting JSON file here:
+            </p>
+            <p>
+<input id="uploader" type="file" style="380;position:relative;left:50%;margin-left:-190px;border:1px dashed gray;padding:15px"></input>
+<script>
+var chart;
+
+function fileRead(contents){
+    document.getElementById("maincontent").innerHTML = "";
+    chart = createFlareplot(700, contents, "maincontent");
+    document.getElementById("maincontent").children[0].style.width="100%";
+    document.getElementById("evocontrols").style.width="800px";
+    document.getElementById("evocontrols").style.left="50%";
+    document.getElementById("evocontrols").style.marginLeft="-400px";
+    document.getElementById("rangeSlider").style.width="500px";
+}
+
+var reader = new FileReader();
+reader.onload = function(e) {
+    var contents = e.target.result;
+    fileRead(contents);
+};
+
+function handleFile() {
+    document.getElementById("maintext").innerHTML = "<p>Loading ...</p>";
+    var file = this.files[0];
+    reader.readAsText(file);
+}
+
+
+var uploader = document.getElementById("uploader");
+uploader.addEventListener("change", handleFile, false);
+</script>
+            </p>
             </div>
+                    <!--<img class="img-responsive" src="img/flare-faded_smaller.png" alt="">-->
         </div>
     </header>
 
@@ -102,47 +144,6 @@
                     <a href="gpcr_demo.html" class="example-link">
                         <img src="img/examples/gpcr_example.gif" class="img-responsive" alt="GPCR demo">
                     </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Generate Section -->
-    <section id="scripts">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Scripts</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="row-lg-12 script-item">
-                    <p>
-                        <a href="https://raw.githubusercontent.com/GPCRviz/FlarePlot/master/scripts/traj2flare.py">traj2flare.py</a> - Takes a molecular dynamics trajectory, topology, and
-                        UNIPROT-id of a GPCR and generates a FlarePlot input-file (JSON).
-                    </p>
-                </div>
-                <div class="row-lg-12 script-item">
-                    <p>
-                        <a href="#">mbox2flare.py</a> - Takes an email (mbox) file and generates a FlarePlot input that
-                        connects all recipients that are addressed in the same email (either in to-field or CC-field).
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Embed Section -->
-    <section id="embed">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Embedding FlarePlot</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="row-lg-12">
-                    <p>...</p>
                 </div>
             </div>
         </div>
@@ -177,7 +178,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        Copyright &copy; FlarePlot 2016
+                        Copyright &copy; Stanford University 2016
                     </div>
                 </div>
             </div>

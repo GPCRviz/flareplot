@@ -39,7 +39,7 @@
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header page-scroll">
-                <a class="navbar-brand" href="#page-top">FlarePlot</a>
+                <a class="navbar-brand" href="index.html#page-top">FlarePlot</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -52,7 +52,7 @@
                         <a href="#examples">Examples</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#scripts">Generate flareplot</a>
+                        <a href="#scripts">Generate input</a>
                     </li>
                     <li class="page-scroll">
                         <a href="#embed">Embed</a>
@@ -73,8 +73,23 @@
     <!-- Examples Grid Section -->
     <section id="generate">
         <div class="container">
+<h2>Scripts for generating input</h2>
+
+<p>
+<a href="https://raw.githubusercontent.com/GPCRviz/FlarePlot/master/scripts/GPCRtraj2flare.zip">GPCRtraj2flare.zip</a> - Takes a molecular dynamics trajectory, topology, and
+UNIPROT-id of a GPCR and generates a FlarePlot input-file (JSON). 
+</p>
+
+<p>
+<a href="https://raw.githubusercontent.com/GPCRviz/FlarePlot/master/scripts/hbonds2flare.py">hbonds2flare.py</a> - Takes a molecular dynamics trajectory and topology of any molecular chain and generates a FlarePlot input-fie<F12>le that shows hydrogen bond interactions. Can be used to filter by type of interactions: backbone-backbone, backbone-side chain, or side chain-side chain.
+</p>
+
+</div>
+</section>
+<section id="generate">
+<div class="container">
 <h2>Input format</h2>
-<p>The input to FlarePlot is a JSON-file that could look like the following:</p>
+<p>The input to FlarePlot is a JSON-file that could looks as follows:</p>
 <div class="highlight highlight-source-json">
 <pre>
 {

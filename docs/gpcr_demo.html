@@ -23,14 +23,14 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- Visualization libraries -->
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
     <script type="text/javascript" src="js/rangeslider.js"></script>
     <script type="text/javascript" src="js/flareplot-parser.js"></script>
     <script type="text/javascript" src="js/flareplot-main.js"></script>
     <script type="text/javascript" src="vendor/pv/pv.min.js"></script>
 
     <!-- Visualization CSS -->
-    <link href="css/gpcr_flare.css" rel="stylesheet">
+    <link href="css/flare.css" rel="stylesheet">
 </head>
 
 <body id="page-top" class="index">
@@ -106,6 +106,7 @@
       viewer.ballsAndSticks('ligands', ligands);
       viewer.fitTo(structure);
       viewer.setRotation([1,0,0,0,0,1,0,-1,0]);
+      viewer.setZoom(90);
 
     });
   }
@@ -395,16 +396,25 @@
     viewer.rm('interactions');
     var cm = viewer.customMesh('interactions');
 
-    links[frame].forEach(function(d){
-      var name1 = d.name1.substring(d.name1.lastIndexOf(".")+1);
-      var name2 = d.name2.substring(d.name2.lastIndexOf(".")+1);
-      if( name1 in toggledNodes || name2 in toggledNodes ){
+    var curStart = plot.rangeSlider.rangeStart;
+    var curEnd   = plot.rangeSlider.rangeEnd;
+    var widthScale = d3.scale.sqrt()
+        .domain([1,Math.max(1,curEnd-curStart)])
+        .range([0.1,0.4]);
+
+    plot.graph.edges.forEach(function(e){
+      var name1 = e.name1;
+      var name2 = e.name2;
+      if( name1 in plot.toggledNodes || name2 in plot.toggledNodes ){
+        var count = e.frames.rangeCount(curStart, curEnd);
+        if(count==0) return;
+        var tubeWidth = widthScale(count);
         var resi1 = nameToResi(name1);
         var resi2 = nameToResi(name2);
         if(resi1!==undefined && resi2!==undefined){
           var atom1 = struc.atom('A.'+resi1+'.CA');
           var atom2 = struc.atom('A.'+resi2+'.CA');
-          cm.addTube(atom1.pos(), atom2.pos(), 0.3, {cap:false, color:'black'});
+          cm.addTube(atom1.pos(), atom2.pos(), tubeWidth, {cap:false, color:'black'});
         }
 
       }
@@ -475,9 +485,6 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
     <!-- Theme JavaScript -->
     <script src="js/freelancer.js"></script>

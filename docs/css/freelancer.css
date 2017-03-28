@@ -74,7 +74,8 @@ header .intro-text .skills {
   }
 }
 .navbar-custom {
-  background: #d7dde4;
+  background: #e8eff5;
+  /*background: #d7dde4;*/
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
@@ -143,11 +144,11 @@ header .intro-text .skills {
 }
 
 section {
-  padding: 0.3em 0;
-    margin-bottom: 3em;
+padding: 0.3em 0;
+         margin-bottom: 3em;
 }
 section h2 {
-  margin: 0.3em;
+  margin: 0.4em 0 0.5em 0;
   font-size: 2em;
 }
 section.success {
@@ -166,7 +167,7 @@ header.img-responsive {
 }
 
 section#examples{
-  background: #f6f6f6;
+  background: #f5f5fa;
 }
 #examples .example-item {
   right: 0;
@@ -278,14 +279,14 @@ footer h3 {
 }
 footer .footer-above {
   padding-top: 50px;
-  background-color: #2C3E50;
+  background-color: #95a5b5;
 }
 footer .footer-col {
   margin-bottom: 50px;
 }
 footer .footer-below {
   padding: 25px 0;
-  background-color: #233140;
+  background-color: #95a5b5;
 }
 .btn-outline {
   color: white;
@@ -495,5 +496,6 @@ fieldset[disabled] .btn-success.active {
 
 div#maincontent {
   outline: none;
+  text-align: center;
 }
 
