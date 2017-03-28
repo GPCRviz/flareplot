@@ -42,11 +42,11 @@ uniprot_id = sys.argv[3]
 out_file   = os.path.basename(trj_file)+".json"
 
 print("Reading GPCRdb naming database ..")
-import gpcrdb_naming
+import GPCRdb_naming
 resi_to_group = {}
 resi_to_name = {}
 found_uniprot_id = False
-for res in gpcrdb_naming.residue_labels:
+for res in GPCRdb_naming.residue_labels:
   if res[0]==uniprot_id:
     found_uniprot_id = True
     cname = res[4]
@@ -68,7 +68,7 @@ print("Analyzing hbond network in %d frames .."%frame_count)
 hbonds_allframes = md.wernet_nilsson(t)
 hbond_frames = defaultdict(set)
 
-for f,frame in enumerate(t[:100]):
+for f,frame in enumerate(t[:]):
   #hbonds = md.baker_hubbard(frame, periodic=True)
   hbonds = hbonds_allframes[f]
   print("Frame %d .. %d hbonds"%(f,hbonds.shape[0]))

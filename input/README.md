@@ -1,4 +1,4 @@
-#Generating input to FlarePlot
+# Generating input to FlarePlot
 
 The input format to FlarePlots is a JSON file with the format described below. We also provide a set of premade scripts that generate such JSON files.
 
@@ -8,7 +8,7 @@ The input format to FlarePlots is a JSON file with the format described below. W
 python3 GPCRtraj2flare.py mor_active_bu72.nc mor_active_bu72.psf OPRM_MOUSE
 ```
 
-[hbonds2flare](https://raw.githubusercontent.com/GPCRviz/FlarePlot/master/scripts/hbonds2flare.py) - Takes a molecular dynamics trajectory and topology of any molecular chain and generates a FlarePlot input-fie<F12>le that shows hydrogen bond interactions. Can be used to filter by type of interactions: backbone-backbone, backbone-side chain, or side chain-side chain. For example:
+[hbonds2flare](https://raw.githubusercontent.com/GPCRviz/FlarePlot/master/scripts/hbonds2flare.py) - Takes a molecular dynamics trajectory and topology of any molecular chain and generates a FlarePlot input-file that shows hydrogen bond interactions. Can be used to filter by type of interactions: backbone-backbone, backbone-side chain, or side chain-side chain. For example:
 ```bash
 python3 hbonds2flare.py mor_active_bu72.nc mor_active_bu72.psf SC-SC
 ```

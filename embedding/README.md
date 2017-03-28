@@ -1,4 +1,6 @@
-#Embedding FlarePlots
+# Embedding FlarePlots
+
+The FlarePlot library is written so it can easily be connected to other dynamic elements on the page. See for example the [GPCR demo](https://gpcrviz.github.io/FlarePlot/gpcr_demo.html). For a minimum working example of an embedded FlarePlot see the `minimum.html` file.
 
 ## Developer API
 
@@ -20,7 +22,7 @@ The following outlines an API for developers wishing to incorporate a flareplot 
 </body>
 </html>
 ```
-Where `plotfile.json` contains a json file with the format specified above.
+Where `plotfile.json` contains a JSON file with the [correct format](https://github.com/GPCRviz/FlarePlot/tree/master/input).
 
 The following functions are available after a dataset has been loaded:
   * `plot.getTrees()` - Returns list of tree-names
@@ -28,7 +30,7 @@ The following functions are available after a dataset has been loaded:
   * `plot.getTracks()` - Returns list of track-names
   * `plot.setTrack(t)` - Updates the node colors/annotation to reflect the track with index `t`
   * `plot.addTickListener(l)` - Add a callback function, `l`, that gets invoked whenever the time-frame changes. This function must take 2 arguments. The first will be the current frame-number, and the second will be a list of tuples indicating 1) name of first and second node, 2) edge color, and 3) edge width.
-  * `plot.addNodeToggleListener(l)` - 
-  * `plot.addNodeHoverListener(l)` - 
-  * `plot.addEdgeToggleListener(l)` - 
-  * `plot.addEdgeHoverListener(l)` - 
+  * `plot.addNodeToggleListener(l)` - *Not yet implemented*
+  * `plot.addNodeHoverListener(l)` - *Not yet implemented*
+  * `plot.addEdgeToggleListener(l)` - *Not yet implemented*
+  * `plot.addEdgeHoverListener(l)` - *Not yet implemented*
