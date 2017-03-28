@@ -1,4 +1,30 @@
 #!/usr/bin/env python
+"""
+Takes an MD-trajectory, a topology file, and a uniprot-ID of a GPCR and generates 
+in input-JSON file for use in FlarePlot (http://GPCRviz.github.io/FlarePlot). Each 
+vertex will be a residue in the structure named using the GPCRdb naming convention
+and each edge  will represent a hydrogen bond between any pair of atoms in the 
+residues detected using the Wernet-Nilsson algorithm [cite].
+
+The trajectory and topology files can be any format readable by the mdtraj library,
+which is also the only dependency (see http://mdtraj.org/latest/installation.html 
+for installation instructions).
+
+
+Copyright 2017 AJ Venkatakrishnan, Rasmus Fonseca, Stanford University
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+"""
 
 import sys
 import os.path
@@ -57,8 +83,6 @@ for f,frame in enumerate(t[:100]):
 print("Analyzing network centrality ..")
 
 #Build networkx graph
-#import networkx as nx
-#nxG = nx.Graph()
 centrality = defaultdict(int)
 for resi1,resi2 in hbond_frames:
   if not resi1 in resi_to_name: continue
@@ -71,10 +95,7 @@ for resi1,resi2 in hbond_frames:
   weight = interaction_count/frame_count
   centrality[resn1] += weight
   centrality[resn2] += weight
-  #dist = 1-(interaction_count/frame_count)
-  #nxG.add_edge( resi1,resi2, distance=dist)
 
-#centrality = nx.eigenvector_centrality_numpy(nxG, weight='distance')
 #Normalize centrality to the range [0:1]
 min_centrality = min([centrality[v] for v in centrality]) 
 max_centrality = max([centrality[v] for v in centrality]) 
@@ -82,8 +103,8 @@ for v in centrality:
   centrality[v] = (centrality[v]-min_centrality)/(max_centrality-min_centrality)
 
 
-
 print("Writing edges to %s .."%out_file)
+
 #Collect entries for edges and trees (grouping of nodes)
 edge_entries = []
 tree_paths   = set()
