@@ -36,52 +36,22 @@
 <body id="page-top" class="index">
 <div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
 
-    <!-- Navigation -->
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <a class="navbar-brand" href="index.html#page-top">FlarePlot</a> GPCR demo
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="page-scroll">
-                        <a href="https://github.com/GPCRviz/FlarePlot/tree/master/input">Generate input</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="https://github.com/GPCRviz/FlarePlot/tree/master/embedding">Embed</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="index.html#footer">About</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
 
     <!-- Header -->
-    <header>
-        <div class="container" id="maincontent" tabindex="-1">
+    <div class="row">
+        <div class="col-xs-6">
+          <div id="flarediv"></div>
         </div>
-    </header>
-            <div class="row">
-                <div class="col-xs-6">
-                  <div id="flarediv"></div>
-                </div>
-                <div class="col-xs-6">
-                  <div id="proteindiv" ></div>
-                </div>
-            </div>
+        <div class="col-xs-6">
+          <div id="proteindiv" ></div>
+        </div>
+    </div>
 
                 <script type='text/javascript'>
   // override the default options with something less restrictive.
   var options = {
-    width: window.innerWidth-window.innerHeight*0.8,
-    height: window.innerHeight*0.8,
+    width: window.innerWidth/2,
+    height: window.innerHeight,
     antialias: true,
     quality : 'medium'
   };
@@ -111,7 +81,7 @@
 
   var plot;
   d3.text("resources/mor-active-rep1-wb.json", function(rawtext){
-    plot = createFlareplot(window.innerHeight*0.8, rawtext, "flarediv");
+    plot = createFlareplot(window.innerWidth*0.5, rawtext, "flarediv");
     plot.tickListeners.push(updateInteractions);
   });
 
@@ -453,35 +423,12 @@
 
 
 
-    <!-- Footer -->
-    <footer class="text-center" id="footer">
-        <div class="footer-below">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        Copyright &copy; FlarePlot 2016
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
-    <div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
-        <a class="btn btn-primary" href="#page-top">
-            <i class="fa fa-chevron-up"></i>
-        </a>
-    </div>
-
-
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- Theme JavaScript -->
-    <script src="js/freelancer.js"></script>
 
 </body>
 
