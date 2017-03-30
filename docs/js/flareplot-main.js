@@ -362,9 +362,6 @@ function createFlareplot(width, json, divId){
             var widthScale = d3.scale.log()
                 .domain([1,Math.max(1,curEnd-curStart)])
                 .range([2,10]);
-            var colorScale = d3.scale.log()
-                .domain([1,Math.max(1,curEnd-curStart)])
-                .range([255,0]);
 
             path.style("stroke-width",
                 function(d,i){

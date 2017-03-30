@@ -86,6 +86,7 @@ function parse(graph){
     graph.trees.forEach(function(t){
         t.frames = [];
         var summaryEdges = {};
+        t.allEdges = [];
         graph.edges.forEach(function(e,i){
             //Set source and target of edge
             var edge = {
@@ -105,6 +106,13 @@ function parse(graph){
                     color: edge.color,
                     width: 1
                 }
+                t.allEdges.push({
+                    source: edge.source,
+                    target: edge.target,
+                    key: edge.key,
+                    color: edge.color,
+                    width: 1
+                });
             } else {
                 summaryEdges[edgeKey].width++;
             }

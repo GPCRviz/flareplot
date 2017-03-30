@@ -13,8 +13,8 @@ function initSlider(divId){
     buttonSz: 7,
     buttonOffset: 4,
 
-    rangeStart: 10,
-    rangeEnd: 30,
+    rangeStart: 0,
+    rangeEnd: 1,
     rangeDomainStart: 0,
     rangeDomainEnd: 100,
 
@@ -41,6 +41,7 @@ function initSlider(divId){
       sl.back.style.height = height+"px";
 
       sl.range.style.position = "absolute";
+      sl.range.style.zIndex = "4";
       sl.range.style.top = "3px";
       sl.range.style.left = rangeStartPos + "px";
       sl.range.style.width = (rangeEndPos-rangeStartPos)+"px";
@@ -57,6 +58,7 @@ function initSlider(divId){
       sl.button1.style.top = ((height-sl.buttonSz)/2)+"px";
       sl.button1.style.left = (rangeStartPos - sl.buttonSz - sl.buttonOffset)+"px";
       sl.button1.style.cursor = "w-resize";
+      sl.button1.style.zIndex = "4";
 
       sl.button2.style.position = "absolute";
       sl.button2.style.width  = sl.buttonSz+"px";
@@ -64,6 +66,7 @@ function initSlider(divId){
       sl.button2.style.top = ((height-sl.buttonSz)/2)+"px";
       sl.button2.style.left = (rangeEndPos+sl.buttonOffset)+"px";
       sl.button2.style.cursor = "e-resize";
+      sl.button2.style.zIndex = "4";
 
       if( isFunction(sl.onchange) ){
         sl.onchange();
@@ -146,7 +149,6 @@ function initSlider(divId){
     }
   }
   sl.topDiv.appendChild(sl.button2);
-
 
   sl.update();
 

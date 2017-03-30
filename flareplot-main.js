@@ -31,9 +31,11 @@ function createFlareplot(width, json, divId){
             return d3.ascending(aRes, bRes);
         });
 
+    var rangeSlider;
     var stdEdgeColor = "rgba(0,0,0,200)";
     var stdEdgeWidth = 2;
     var svg, div, bundle, line, nodes, splines, links, graph;
+    var alllinks, allsplines;
     var summaryMode = false;
 
     var selectedTree = 0;
@@ -55,8 +57,9 @@ function createFlareplot(width, json, divId){
 
             d3.select(divId).style("position","relative");
 
+                //.style("width", w + "px")
             div = d3.select(divId).insert("div")
-                .style("width", w + "px")
+                .style("width", "100%")
                 .style("height", w + "px")
                 .style("-webkit-backface-visibility", "hidden");
 
@@ -86,8 +89,11 @@ function createFlareplot(width, json, divId){
             splines = bundle(links[0]);
             splineDico = buildSplineIndex(splines);
 
+            alllinks = graph.trees[selectedTree].allEdges;
+            allsplines = bundle(alllinks);
+
             var path = svg.selectAll("path.link")
-                .data(links[0], function(d,i){
+                .data(alllinks, function(d,i){
                     var key = "source-" + d.source.key + "target-" + d.target.key;
                     return key;
                 })
@@ -98,9 +104,11 @@ function createFlareplot(width, json, divId){
                         ret+=" toggled";
                     return ret;
                 })
-                .style("stroke-width",function(d){ return d.width?d.width:stdEdgeWidth; })
+                .style("stroke-width",function(d){
+                    return 0;
+                })
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
-                .attr("d", function(d, i) { return line(splines[i]); });
+                .attr("d", function(d, i) { return line(allsplines[i]); });
 
             svg.selectAll("g.node")
                 .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key})
@@ -181,8 +189,9 @@ function createFlareplot(width, json, divId){
                 .style("font-size","18px");
 
             var controls = controlDiv
-                .append("span")
+                .append("div")
                 .attr("id","controls")
+                .style("float","left")
                 .style("width",cw)
                 .style("height",ch)
                 .append("svg:svg")
@@ -225,44 +234,69 @@ function createFlareplot(width, json, divId){
                 .attr('pointer-events', 'none')
                 .html(function(d){ return d.symbol; });
 
-        //    <input id="timeRange" type="range" min="0" max="1000" value="0" />
-            //d3.select("div#evocontrols #timeRange")
+            //controlDiv
+            //    .append("div")
+            //    .attr("id","rangeSlider")
+            //    .style("float","left")
+            //    .style("height",ch+"px")
+            //    .style("width",(w-2*cw-20)+"px");
             controlDiv
-                .append("input")
-                .attr("id","timeRange")
-                .attr("type","range")
-                .attr("min","0")
-                .attr("max","1000")
-                .attr("value","0")
-                .style("width",(w-2*cw-20)+"px")
-                .style("height", ch+"px")
-                .attr("max", links.length-1)
-                .on("input", function(){fireTickListeners(this.value);} );
+                .append("div")
+                .attr("id","rangeSlider")
+                .style("float","left")
+                .style("height",ch+"px")
+                .style("width",(w-2*cw-20)+"px");
+            rangeSlider = initSlider("rangeSlider");
+            rangeSlider.height = ch+"px";
+            rangeSlider.rangeDomainStart = 0;
+            rangeSlider.rangeDomainEnd = links.length;
+            rangeSlider.backStyle = "border:1px solid #808080";
+            rangeSlider.update();
+            rangeSlider.onchange = function(){fireTickListeners(Math.floor(rangeSlider.rangeStart));};
+
+            // //    <input id="timeRange" type="range" min="0" max="1000" value="0" />
+            // //d3.select("div#evocontrols #timeRange")
+            // rangeSlider = controlDiv
+            //     .append("input")
+            //     .attr("id","timeRange")
+            //     .attr("type","range")
+            //     .attr("min","0")
+            //     .attr("max","1000")
+            //     .attr("value","0")
+            //     .style("width",(w-2*cw-20)+"px")
+            //     .style("height", ch+"px")
+            //     .attr("max", links.length-1)
+            //     .on("input", function(){fireTickListeners(this.value);} );
+            //
+            // rangeSlider = rangeSlider;
+
 
         //    <span id="timeLabel">0</span>
             //d3.select("div#evocontrols #timeLabel")
             controlDiv
-                .append("span")
+                .append("div")
                 .attr("id","timeLabel")
                 .text("0")
-                .style("position","relative")
-                .style("left", "20px")
+                //.style("position","relative")
+                .style("float","left")
                 .style("alignment-baseline","middle")
-                .style("width",cw+"px")
+                //.style("width",cw+"px")
                 .style("line-height", ch+"px")
                 .style("height", ch+"px")
                 .style("bottom", "13px");
 
 
             // we need to that here as we
-            d3.select("input#timeRange")
-                .attr("max", links.length-1)
-                .on("input.tick", function(){
-                    fireTickListeners(this.value);
-                });
+            //     //d3.select("input#timeRange")
+            //     rangeSlider
+            //         .attr("max", links.length - 1)
+            //         .on("input.tick", function () {
+            //             fireTickListeners(this.value);
+            //         });
 
 
 
+            updateFrame();
         }
 
         /**
@@ -312,27 +346,28 @@ function createFlareplot(width, json, divId){
         var frameskip = 1;
         var curFrame = 0;
 
-        function setFrame(frame){
-            if (summaryMode) {
-                return // make no sense to setFrame in summary mode
-            }
-            curFrame = frame;
-            d3.select(divId + " span[id=timeLabel]")
-                .text(""+frame);
+        function updateFrame(){
 
-            splines = bundle(links[frame]);
-            path = svg.selectAll("path.link")
-                .data(links[frame], function(d,i){ return "source-" + d.source.key + "target-" + d.target.key;});//, function(d){ return {source:d.source, target:d.target}; });
+            var curStart = Math.floor(rangeSlider.rangeStart);
+            var curEnd   = Math.ceil(rangeSlider.rangeEnd);
+            curFrame = Math.floor(rangeSlider.rangeStart);
+            d3.select(divId + " div[id=timeLabel]")
+                .text(curStart+(curEnd-curStart<=1?"":" - "+curEnd));
 
-            path.enter().append("path")
-                .attr("class", function(d) {
-                    var ret = "link source-" + d.source.key + " target-" + d.target.key;
-                    if( d.source.key in toggledNodes || d.target.key in toggledNodes)
-                        ret+=" toggled";
-                    return ret;
-                });
-            //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; });
-            path.style("stroke-width",function(d){ return d.width?d.width:stdEdgeWidth; })
+            splines = bundle(alllinks);
+            var path = svg.selectAll("path.link");
+
+            var rangeStart = rangeSlider.rangeStart;
+            var rangeEnd   = rangeSlider.rangeEnd;
+            var widthScale = d3.scale.log()
+                .domain([1,Math.max(1,curEnd-curStart)])
+                .range([2,10]);
+
+            path.style("stroke-width",
+                function(d,i){
+                    var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd);
+                    return count==0?count:widthScale(count);
+                })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
                     if( d.source.key in toggledNodes || d.target.key in toggledNodes)
@@ -343,13 +378,10 @@ function createFlareplot(width, json, divId){
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
                 .attr("d", function(d, i) { return line(splines[i]); });
 
-            path.exit().remove();
-
-            curFrame = frame;
         }
 
         var tickListeners = [];
-        tickListeners[0] = setFrame;
+        tickListeners[0] = updateFrame;
 
         function fireTickListeners(frame){
             for(var i=0;i<tickListeners.length;i++){
@@ -358,13 +390,16 @@ function createFlareplot(width, json, divId){
         }
 
         function playTick(){
-            var timeRange = d3.select(divId + " input[id=timeRange]");
-            var curValue = parseInt(timeRange[0][0].value);
-            if(playing && curValue+frameskip<links.length-1) {
-                var skip = Math.min(frameskip, links.length-1-frameskip);
-                timeRange[0][0].value = curValue+skip;
-                fireTickListeners(curValue+skip);
-                //setFrame(curValue+skip);
+            var curStart = Math.floor(rangeSlider.rangeStart);
+            var curEnd   = Math.ceil(rangeSlider.rangeEnd);
+            if( curEnd==links.length) playing = false;
+            var skip = Math.min(frameskip, links.length-curEnd);
+
+            if(playing && curEnd+skip<=links.length) {
+                rangeSlider.rangeStart = curStart + skip;
+                rangeSlider.rangeEnd = curEnd+skip;
+                rangeSlider.update();
+                fireTickListeners(curStart+skip);
 
                 setTimeout(playTick, 50);
             }else{
@@ -491,11 +526,7 @@ function createFlareplot(width, json, divId){
         function getTreeNames(){
             var ret = [];
             for ( t in graph.trees ){
-                if (!graph.trees[t].treeLabel) {
-                    ret.push("Non-named tree");
-                } else {
-                    ret.push(graph.trees[t].treeLabel);
-                }
+                ret.push(graph.trees[t].treeLabel);
             }
             return ret;
         }
@@ -656,11 +687,7 @@ function createFlareplot(width, json, divId){
         function getTrackNames(){
             var ret = [];
             for ( t in graph.tracks ){
-                if (!graph.tracks[t].trackLabel) {
-                    ret.push('Non named track');
-                } else {
-                    ret.push(graph.tracks[t].trackLabel);
-                }
+                ret.push(graph.tracks[t].trackLabel);
             }
             return ret;
         }
@@ -725,6 +752,7 @@ console.log(sz);
             // for whatever reasons, i have 2 MORE nodes here !!
             return clusterDefinition;
         }
+
         // For all splines in the array, create an index that match the key of
         // the link and the index in the spline array
         function buildSplineIndex(splines) {
@@ -805,62 +833,6 @@ console.log(sz);
             path.exit().remove();
         }
 
-        function download() {
-
-
-                // grab SVG
-                var html = d3.select("svg")
-                    .attr("version", 1.1)
-                    .attr("xmlns", "http://www.w3.org/2000/svg")
-                    .node().parentNode.innerHTML;
-                //d3.select("#svgdataurl").html(img);
-                var DOMURL = self.URL || self.webkitURL || self;
-                var svg = new Blob([html], {type: 'image/svg+xml'});
-                var url = DOMURL.createObjectURL(svg);
-                // rasterize
-                var canvas = document.querySelector("canvas"),
-                    context = canvas.getContext("2d");
-                var image = new Image;
-                image.src = url;
-                image.onload = function() {
-                    context.drawImage(image, 0, 0);
-                    DOMURL.revokeObjectURL(url);
-                    //save and serve it as an actual filename
-                    binaryblob();
-                    //create a link that will force the user to download
-                    var a = document.createElement("a");
-                    a.download = "sample.png";
-                    a.href = canvas.toDataURL("image/png");
-                    var pngimg = '<img src="'+a.href+'">';
-                    d3.select("#pngdataurl").html(pngimg);
-                    a.click();
-                    a.remove();
-                    context.clearRect(0, 0, 1000, 1000);
-                    d3.select("#pngdataurl").html('');
-                    d3.select("#img").html('');
-                    //remove the link and the fake canvas
-
-            };
-
-            function binaryblob(){
-                var byteString = atob(document.querySelector("canvas").toDataURL().replace(/^data:image\/(png|jpg);base64,/, "")); //wtf is atob?? https://developer.mozilla.org/en-US/docs/Web/API/Window.atob
-                var ab = new ArrayBuffer(byteString.length);
-                var ia = new Uint8Array(ab);
-                for (var i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i);
-                }
-                var dataView = new DataView(ab);
-                var blob = new Blob([dataView], {type: "image/png"});
-                var DOMURL = self.URL || self.webkitURL || self;
-                var newurl = DOMURL.createObjectURL(blob);
-
-                var img = '<img src="'+newurl+'">';
-                d3.select("#img").html(img);
-            }
-        }
-
-
-
         create_bundle(json);
 
         return {
@@ -869,8 +841,10 @@ console.log(sz);
             getTreeNames: getTreeNames,
             getTrackNames: getTrackNames,
             toggleSummary: transitionToSummary,
-            download: download,
-            graph: graph// for debugging purposes
+            graph: graph, // for debugging purposes
+            tickListeners: tickListeners,
+            toggledNodes: toggledNodes,
+            rangeSlider: rangeSlider
         }
     }) ();
 }
@@ -893,3 +867,60 @@ function upload_button(el, callback) {
     }
 }
 
+/** Assuming the list is sorted, count the number of elements greater than or 
+equal to `start` and less than or equal to `end`.  */
+function countRange(list, start, end){
+  var i = list.length / 2;
+  var delta = list.length/2;
+  while(delta>=1){
+
+  }
+
+}
+
+
+function indexUpDown(key) {
+  'use strict';
+
+  var minIdx = 0;
+  var maxIdx = this.length - 1;
+  var curIdx, curElm, resIdx;
+
+  while (minIdx <= maxIdx) {
+    resIdx = curIdx = (minIdx + maxIdx) / 2 | 0;
+    curElm = this[curIdx];
+
+    if (curElm < key)      minIdx = curIdx + 1;
+    else if (curElm > key) maxIdx = curIdx - 1;
+    else return [curIdx,curIdx];
+  }
+
+  return [minIdx,maxIdx];
+}
+
+function rangeCount(start, end){
+  var startIdx = this.indexUpDown(start)[0];
+  var endIdx   = this.indexUpDown(end)[1];
+  return endIdx-startIdx+1;
+}
+
+Array.prototype.indexUpDown = indexUpDown;
+Array.prototype.rangeCount = rangeCount;
+
+// var list = [1,2,5,10,15,16];
+// function testRange(l,s,e, expected){
+//   var res = l.rangeCount(s,e);
+//     console.log("["+l+"].count("+s+","+e+") -> "+res+" expects "+expected+(res==expected?" PASS":" FAILED"));
+// }
+//
+// testRange(list,   0,  0, 0);
+// testRange(list,   0,  1, 1);
+// testRange(list, -10, -1, 0);
+// testRange(list,   1,  1, 1);
+// testRange(list,   1,  2, 2);
+// testRange(list,   2,  2, 1);
+// testRange(list,   2,  4, 1);
+// testRange(list,   2,  5, 2);
+// testRange(list,  16, 16, 1);
+// testRange(list,  16, 20, 1);
+// testRange(list,  17, 17, 0);
