@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Minimal example page</title>
+
+  <!--<link rel="stylesheet" id="themeCSS" href="../css/classic.css"> -->
+
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+
+  <!--<script src="../rangeslider.js"></script>-->
+  <script src="jqslider.js"></script>
+
+  <style>
+    #slider{
+      border: 1px dashed #AAA;
+      position:relative;
+    }
+    .jqslider-range {
+      background-color: red;
+    }
+    .jqslider-handle {
+      position:absolute;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+      margin: 0px 2px 0px 2px;
+
+      background-color: blue;
+      width: 5px;
+      height: 100%;
+    }
+
+
+  </style>
+
+
+</head>
+<body>
+<h1>Minimal example</h1>
+<div id="slider"></div>
+
+<script>
+    initSlider("#slider", "10px");
+</script>
+<!--<div class="row">
+  <div class="col col-end"></div>
+  <div class="col"></div>
+  <div class="col col-end"></div>
+</div>
+-->
+</body>
+</html>  
+
