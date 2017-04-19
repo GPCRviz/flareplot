@@ -104,14 +104,13 @@ FlarePlots are interactive diagrams for exploring dynamic networks. They can be 
     <input type="file" id="uploader" class="upload" />
 </div>
 <script>
-var chart;
-
-/******/
+var flareplot;
 
 function fileRead(contents){
     document.getElementById("maincontent").innerHTML = "";
-    chart = createFlareplot(600, contents, "maincontent");
-    document.getElementById("maincontent").children[0].style.width="100%";
+    flareplot = createFlareplot(600, contents, "maincontent");
+
+    //document.getElementById("maincontent").children[0].style.width="100%";
     //document.getElementById("rangeSlider").style.width="500px";
 }
 

@@ -8,9 +8,6 @@ function createFlareplot(width, json, divId){
         rotate = 0,
         discRad = 55;
 
-    var summaryTransitionTime = 400;
-    var summaryRange = [4, 10];
-
     if (!divId) {
         divId = '#evobundlediv';
     } else {
@@ -18,12 +15,8 @@ function createFlareplot(width, json, divId){
     }
 
 
-    var rangeSlider;
     var stdEdgeColor = "rgba(0,0,0,200)";
-    var stdEdgeWidth = 2;
     var svg, div, bundle, line, nodes, splines, links, graph;
-    var alllinks, allsplines;
-    var summaryMode = false;
 
     var selectedTree = 0;
     var selectedTrack = 0;
@@ -31,11 +24,6 @@ function createFlareplot(width, json, divId){
     var splineDico;
 
     return (function() {
-
-        var playing = false;
-        var frameskip = 1;
-        var curFrame = 0;
-
 
         function create_bundle(json_text) {
             cluster = d3.layout.cluster()
@@ -61,8 +49,8 @@ function createFlareplot(width, json, divId){
             splines = bundle(links[0]);
             splineDico = buildSplineIndex(splines);
 
-            alllinks = graph.trees[selectedTree].allEdges;
-            allsplines = bundle(alllinks);
+            links = graph.trees[selectedTree].allEdges;
+            splines = bundle(links);
 
             line = d3.svg.line.radial()
                 .interpolate("bundle")
@@ -96,7 +84,7 @@ function createFlareplot(width, json, divId){
 
 
             var path = svg.selectAll("path.link")
-                .data(alllinks, function(d,i){
+                .data(links, function(d,i){
                     var key = "source-" + d.source.key + "target-" + d.target.key;
                     return key;
                 })
@@ -111,8 +99,11 @@ function createFlareplot(width, json, divId){
                     return 0;
                 })
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
-                .attr("d", function(d, i) { return line(allsplines[i]); })
-                .on("mouseenter", function(d,i){ console.log(this); });
+                .attr("d", function(d, i) { return line(splines[i]); })
+                .on("mouseenter", function(d,i){ /*console.log(this);*/ });
+
+
+
 
             svg.selectAll("g.node")
                 .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key})
@@ -156,88 +147,7 @@ function createFlareplot(width, json, divId){
                 .style("fill", function(d){ return d.color; })
                 .attr("d", arc);
 
-            //d3.select(divId + " input[type=range]")
-            //    .on("input", function() {
-            //        line.tension(this.value / 100);
-            //        var path = svg.selectAll("path.link"); // you need to reselect cause the data can have changed
-            //        path.attr("d", function(d, i) { return line(splines[i]); });
-            //    });
-
-
-
-            //Set up controls
-            var ch = 35,
-                cp = 2,
-                cw = 3*ch+2*cp;
-
-
-            //var controlDiv = d3.select(divId)
-            var controlDiv = div
-                .append("div")
-                .attr("id","evocontrols")
-                .style("width",w+"px")
-                .style("height",ch+"px")
-                .style("font-size","18px");
-
-            var controls = controlDiv
-                .append("div")
-                .attr("id","controls")
-                .style("float","left")
-                .style("width",cw)
-                .style("height",ch)
-                .append("svg:svg")
-                .attr("width", cw)
-                .attr("height", ch);
-
-            var controlData = [
-                {xoffset:0, id:"reverse",   symbol:"<<", callback:reverse},
-                {xoffset:1, id:"playpause", symbol:">", callback:playpause},
-                {xoffset:2, id:"forward",   symbol:">>", callback:forward}
-            ];
-
-            var buttons = controls.selectAll("g")
-                .data(controlData)
-                .enter().append("g");
-
-            buttons
-                .append("circle")
-                .style("fill",  "white")
-                .style("stroke","gray")
-                .style("stroke-width","1")
-                .attr("r",  ch/2-cp)
-                .attr("cx", function(d){ return d.xoffset*(ch+cp)+ch/2; })
-                .attr("cy", function(d){ return ch/2; })
-                .style("cursor", "pointer")
-                .on("click", function(d){ d.callback(); });
-
-            buttons
-                .append("text")
-                .attr("id", function(d){ return d.id; })
-                .attr("x", function(d){ return d.xoffset*(ch+cp)+ch/2; })
-                .attr("y", function(d){ return ch/2; })
-                //.style("dominant-baseline","central")
-                .style("alignment-baseline","middle")
-                .style("text-anchor","middle")
-                .style("font-size",ch/3)
-                .attr('pointer-events', 'none')
-                .html(function(d){ return d.symbol; });
-
-            controlDiv
-                .append("div")
-                .attr("id","rangeSlider")
-                .style("float","left")
-                .style("height",ch+"px")
-                .style("width",width-cw+"px");
-            rangeSlider = initSlider("rangeSlider");
-            rangeSlider.height = ch+"px";
-            rangeSlider.rangeDomainStart = 0;
-            rangeSlider.rangeDomainEnd = links.length;
-            rangeSlider.backStyle = "border:1px solid #808080";
-            rangeSlider.update();
-            rangeSlider.onchange = function(){fireTickListeners(Math.floor(rangeSlider.rangeStart));};
-
-
-            updateFrame();
+            setFrame(0);
         }
 
         /**
@@ -282,20 +192,13 @@ function createFlareplot(width, json, divId){
 
 
 
-        function updateFrame(){
-
-            var curStart = Math.floor(rangeSlider.rangeStart);
-            var curEnd   = Math.ceil(rangeSlider.rangeEnd);
-            curFrame = Math.floor(rangeSlider.rangeStart);
-
-            splines = bundle(alllinks);
+        function rangeIntersect(rangeStart, rangeEnd){
+            splines = bundle(links);
             var path = svg.selectAll("path.link");
 
-            var rangeStart = rangeSlider.rangeStart;
-            var rangeEnd   = rangeSlider.rangeEnd;
-            var widthScale = d3.scale.log()
-                .domain([1,Math.max(1,curEnd-curStart)])
-                .range([2,10]);
+            var widthScale = d3.scale.linear()
+                .domain([rangeEnd-rangeStart-1,rangeEnd-rangeStart])
+                .range([0,2]);
 
             path.style("stroke-width",
                 function(d,i){
@@ -314,62 +217,46 @@ function createFlareplot(width, json, divId){
 
         }
 
-        var tickListeners = [];
-        tickListeners[0] = updateFrame;
+        function rangeSum(rangeStart, rangeEnd){
+            console.log("rangeSum("+rangeStart+", "+rangeEnd+")");
+            splines = bundle(links);
+            var path = svg.selectAll("path.link");
 
-        function fireTickListeners(frame){
-            for(var i=0;i<tickListeners.length;i++){
-                tickListeners[i](frame);
-            }
+            var widthScale = d3.scale.linear()
+                .domain([1,Math.max(1,rangeEnd-rangeStart)])
+                .range([2,10]);
+
+            path.style("stroke-width",
+                function(d,i){
+                    var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd);
+                    return count==0?count:widthScale(count);
+                })
+                .attr("class", function(d) {
+                    var ret = "link source-" + d.source.key + " target-" + d.target.key;
+                    if( d.source.key in toggledNodes || d.target.key in toggledNodes)
+                        ret+=" toggled";
+                    return ret;
+                })
+                //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
+                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .attr("d", function(d, i) { return line(splines[i]); });
         }
 
-        function playTick(){
-            var curStart = Math.floor(rangeSlider.rangeStart);
-            var curEnd   = Math.ceil(rangeSlider.rangeEnd);
-            if( curEnd==links.length) playing = false;
-            var skip = Math.min(frameskip, links.length-curEnd);
+        function setFrame(frameNum){
+            rangeSum(frameNum,frameNum+1);
+        }
+            
 
-            if(playing && curEnd+skip<=links.length) {
-                rangeSlider.rangeStart = curStart + skip;
-                rangeSlider.rangeEnd = curEnd+skip;
-                rangeSlider.update();
-                fireTickListeners(curStart+skip);
+        function subsetIntersect(subset){
 
-                setTimeout(playTick, 50);
-            }else{
-                playing=false;
-            }
-
-            //Update play/pause symbol
-            var sym = playing?"#":">";
-            d3.select(divId + " #playpause")
-                .html(sym);
         }
 
-        function playpause(){
-            playing = !playing;
-            if(playing) {
-                playTick();
-            }
+        function subsetSum(subset){
+
         }
 
-        function reverse(){
-            var timeRange = d3.select(divId + " input[id=timeRange]");
-            var minVal = timeRange.attr("min");
-            timeRange[0][0].value = minVal;
-            fireTickListeners(minVal);
-            //setFrame(minVal);
-        }
 
-        function forward(){
-            playing = false;
-            var timeRange = d3.select(divId + " input[id=timeRange]");
-            var maxVal = timeRange.attr("max");
-            timeRange[0][0].value = maxVal;
-            fireTickListeners(maxVal);
-            //setFrame(maxVal);
-        }
-
+        
 
         function toggleNode(d,i){
             var toggled = !d3.select(this.parentNode).classed("toggledNode");
@@ -387,8 +274,6 @@ function createFlareplot(width, json, divId){
                     return ( d.source.key in toggledNodes || d.target.key in toggledNodes)
                 });
 
-            //svg.selectAll("path.link/target-"+d.key);
-            fireTickListeners(curFrame);
         }
 
 
@@ -434,9 +319,7 @@ function createFlareplot(width, json, divId){
             var recomposedSplines = [];
             nodes = cluster.nodes(graph.trees[selectedTree].tree[""]);
 
-            links = summaryMode ?
-                Object.values(graph.trees[selectedTree].summaryEdges) :
-                graph.trees[selectedTree].frames[curFrame];
+            links = Object.values(graph.trees[selectedTree].summaryEdges);
 
             svg.selectAll("g.node")
                 .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key})
@@ -467,9 +350,7 @@ function createFlareplot(width, json, divId){
 
 
             // transition the splines
-            var newSplines =
-                summaryMode ? bundle(Object.values((graph.trees[selectedTree].summaryEdges))) :
-                bundle(graph.trees[selectedTree].frames[curFrame]);
+            var newSplines = bundle(Object.values((graph.trees[selectedTree].summaryEdges)));
             var newSplinesDico = buildSplineIndex(newSplines);
 
 
@@ -563,6 +444,21 @@ function createFlareplot(width, json, divId){
 
         }
 
+        /**
+         * For all splines in the array, create an index that match the key of
+         * the link and the index in the spline array.
+         */
+        function buildSplineIndex(splines) {
+            var linkKeyToSplineIdx = {};
+            splines.forEach(function(spline, idx){
+                var source = spline[0].key;
+                var target = spline[spline.length-1].key;
+                var key = source + '-' + target;
+                linkKeyToSplineIdx[key] = idx;
+            });
+            return linkKeyToSplineIdx;
+        }
+
 
         function getTrackNames(){
             var ret = [];
@@ -599,131 +495,41 @@ function createFlareplot(width, json, divId){
 
         }
 
-        function cross(a, b) {
-            return a[0] * b[1] - a[1] * b[0];
+        function addNodeToggleListener(l){
+
         }
 
-        function dot(a, b) {
-            return a[0] * b[0] + a[1] * b[1];
+        function addNodeHoverListener(l){
+
         }
 
+        function addEdgeToggleListener(l){
 
-        function parseCluster(cluster) {
-            var keyValuesClusterArray = cluster.split('"');
-            var numberOfObjects = Math.floor(keyValuesClusterArray.length / 2);
-            var clusterDefinition = {};
-            for (var i = 0; i < numberOfObjects; i++) {
-                var keys = keyValuesClusterArray[i * 2 + 1].split(' ');
-
-                clusterDefinition[keyValuesClusterArray[i * 2]] = keys;
-                keys.forEach(function(k){
-                    graph.nodeMap[k].present = true;
-                });
-            }
-            var absentCluster = [];
-            graph.nodes.forEach(function(n){
-                if (!n.present) {
-                    absentCluster.push(n.name);
-                }
-            });
-            clusterDefinition['Others'] = absentCluster;
-
-            // for whatever reasons, i have 2 MORE nodes here !!
-            return clusterDefinition;
         }
 
-        // For all splines in the array, create an index that match the key of
-        // the link and the index in the spline array
-        function buildSplineIndex(splines) {
-            var linkKeyToSplineIdx = {};
-            splines.forEach(function(spline, idx){
-                var source = spline[0].key;
-                var target = spline[spline.length-1].key;
-                var key = source + '-' + target;
-                linkKeyToSplineIdx[key] = idx;
-            });
-            return linkKeyToSplineIdx;
+        function addEdgeHoverListener(l){
+
         }
 
-        function transitionToSummary(){
-            //links contains all the frames
-            if (summaryMode) {
-                // take from setFrame, but with transition
-                links = graph.trees[selectedTree].frames
-                splines = bundle(links[curFrame]);
-                splineDico = buildSplineIndex(splines);
-                path = svg.selectAll("path.link")
-                    .data(links[curFrame], function(d){ return d.key});
-
-                path.attr("class", function(d) {
-                    var ret = "link source-" + d.source.key + " target-" + d.target.key;
-                    if( d.source.key in toggledNodes || d.target.key in toggledNodes)
-                        ret+=" toggled";
-                    return ret;
-                });
-
-                path.transition()
-                    .duration(summaryTransitionTime)
-                    .style("stroke-width",function(d){ return d.width? d .width : stdEdgeWidth; });
-
-                path.exit()
-                    .transition()
-                    .duration(summaryTransitionTime)
-                    .style("stroke-width", 0)
-                    .remove();
-                summaryMode = !summaryMode;
-                return;
-            }
-
-            if(playing) { playpause(); }
-            summaryMode = !summaryMode;
-            summaryLinks = Object.values(graph.trees[selectedTree].summaryEdges);
-
-            //TODO(chab) decide how we set the extent for the width of the links
-            var summaryLinksExtent = d3.extent(summaryLinks, function(d) {
-                return d.width;
-            });
-
-            var linkWidthScale = d3.scale.linear()
-                .domain(summaryLinksExtent)
-                .range(summaryRange);
-
-            splines = bundle(summaryLinks);
-            splineDico = buildSplineIndex(splines);
-
-            var path = svg.selectAll("path.link")
-                .data(summaryLinks, function(d,i){
-                    return d.key;
-                });
-
-            path.enter().insert("svg:path")
-                .style("stroke-width",function(d){ return 0; });
-            path.attr("class", function(d) {
-                var ret = "link source-" + d.source.key + " target-" + d.target.key;
-                if( d.source.key in toggledNodes || d.target.key in toggledNodes)
-                    ret+=" toggled";
-                return ret;
-            }).attr("d", function(d, i) { return line(splines[i]); })
-                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
-                .transition().duration(summaryTransitionTime)
-                .style("stroke-width",function(d){
-                    return linkWidthScale(d.width)
-                });
-            path.exit().remove();
-        }
 
         create_bundle(json);
 
         return {
+            setFrame: setFrame,
+            setRangeSum: rangeSum,
+            setRangeIntersect: rangeIntersect,
+            setSubsetSum: subsetSum,
+            setSubsetIntersect: subsetIntersect,
             setTrack: setTrack,
             setTree: setTree,
             getTreeNames: getTreeNames,
             getTrackNames: getTrackNames,
-            toggleSummary: transitionToSummary,
-            graph: graph, // for debugging purposes
-            tickListeners: tickListeners,
-            toggledNodes: toggledNodes,
-            rangeSlider: rangeSlider
+            addNodeToggleListener: addNodeToggleListener,
+            addNodeHoverListener: addNodeHoverListener,
+            addEdgeToggleListener: addEdgeToggleListener,
+            addEdgeHoverListener: addEdgeHoverListener,
+            graph: graph//, for debugging purposes
+            //toggledNodes: toggledNodes
         }
     }) ();
 }
@@ -758,6 +564,7 @@ function countRange(list, start, end){
 }
 
 
+/** Gets the index of the value just above and just below `key` in a sorted array */
 function indexUpDown(key) {
   'use strict';
 
@@ -777,6 +584,8 @@ function indexUpDown(key) {
   return [minIdx,maxIdx];
 }
 
+/** Get the number of entries whose value are greater than or equal to `start`
+ * and lower than `end` in a sorted array*/
 function rangeCount(start, end){
   var startIdx = this.indexUpDown(start)[0];
   var endIdx   = this.indexUpDown(end)[1];
