@@ -3,9 +3,10 @@
 function createFlareplot(width, json, divId){
     var w = width,
         h   = w,
-        rx  = w / 2,
-        ry  = w / 2,
-        rotate = 0;
+        rx  = w * 0.5,
+        ry  = w * 0.5,
+        rotate = 0,
+        discRad = 55;
 
     var summaryTransitionTime = 400;
     var summaryRange = [4, 10];
@@ -16,20 +17,6 @@ function createFlareplot(width, json, divId){
         divId = '#' + divId;
     }
 
-    var cluster = d3.layout.cluster()
-        .size([360, ry - 120])
-        .sort(function(a, b) {
-            var aRes = a.key.match(/[0-9]*$/);
-            var bRes = b.key.match(/[0-9]*$/);
-            if(aRes.length==0 || bRes.length==0){
-                aRes = a.key;
-                bRes = b.key;
-            }else{
-                aRes = parseInt(aRes[0]);
-                bRes = parseInt(bRes[0]);
-            }
-            return d3.ascending(aRes, bRes);
-        });
 
     var rangeSlider;
     var stdEdgeColor = "rgba(0,0,0,200)";
@@ -45,9 +32,37 @@ function createFlareplot(width, json, divId){
 
     return (function() {
 
-        function create_bundle(json_text) {
+        var playing = false;
+        var frameskip = 1;
+        var curFrame = 0;
 
+
+        function create_bundle(json_text) {
+            cluster = d3.layout.cluster()
+                .size([360, ry - discRad])
+                .sort(function(a, b) {
+                    var aRes = a.key.match(/[0-9]*$/);
+                    var bRes = b.key.match(/[0-9]*$/);
+                    if(aRes.length==0 || bRes.length==0){
+                        aRes = a.key;
+                        bRes = b.key;
+                    }else{
+                        aRes = parseInt(aRes[0]);
+                        bRes = parseInt(bRes[0]);
+                    }
+                    return d3.ascending(aRes, bRes);
+                });
+
+            json  = JSON.parse(json_text)
+            graph = parse(json);
+            nodes = cluster.nodes(graph.trees[selectedTree].tree[""]);
+            links = graph.trees[selectedTree].frames;
             bundle = d3.layout.bundle();
+            splines = bundle(links[0]);
+            splineDico = buildSplineIndex(splines);
+
+            alllinks = graph.trees[selectedTree].allEdges;
+            allsplines = bundle(alllinks);
 
             line = d3.svg.line.radial()
                 .interpolate("bundle")
@@ -57,10 +72,9 @@ function createFlareplot(width, json, divId){
 
             d3.select(divId).style("position","relative");
 
-                //.style("width", w + "px")
             div = d3.select(divId).insert("div")
-                .style("width", "100%")
-                .style("height", w + "px")
+                .style("width", w + "px")
+                .style("height", h + "px")
                 .style("-webkit-backface-visibility", "hidden");
 
             svg = div.append("svg:svg")
@@ -69,28 +83,17 @@ function createFlareplot(width, json, divId){
                 .append("svg:g")
                 .attr("transform", "translate(" + rx + "," + ry + ")");
 
-            svg.append("svg:path")
-                .attr("class", "arc")
-                .attr("d", d3.svg.arc().outerRadius(ry - 120).innerRadius(0).startAngle(0).endAngle(2 * Math.PI));
-                //.on("mousedown", mousedown);
+            // Find the width of the node-name track. Temporarily add all text, go through them and get max-width
+            var tmpTexts = svg.selectAll("g.node")
+                .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key})
+                .enter().append("svg:g")
+                .attr("class", "node")
+                .attr("id", function(d) { return "node-" + d.key; })
+                .append("text")
+                .text(function(d) { return d.key; });
+            var maxTextWidth = d3.max(svg.selectAll("text")[0], function(t){ return t.getBBox().width; });
+            svg.selectAll("g.node").remove();
 
-            d3.select(divId + " .switchButton").on("click", function() {
-                transitionToCluster();
-            });
-
-            d3.select(divId + " .summaryButton").on("click", function() {
-                transitionToSummary();
-            });
-
-            json  = JSON.parse(json_text)
-            graph = parse(json);
-            nodes = cluster.nodes(graph.trees[selectedTree].tree[""]);
-            links = graph.trees[selectedTree].frames;
-            splines = bundle(links[0]);
-            splineDico = buildSplineIndex(splines);
-
-            alllinks = graph.trees[selectedTree].allEdges;
-            allsplines = bundle(alllinks);
 
             var path = svg.selectAll("path.link")
                 .data(alllinks, function(d,i){
@@ -108,7 +111,8 @@ function createFlareplot(width, json, divId){
                     return 0;
                 })
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
-                .attr("d", function(d, i) { return line(allsplines[i]); });
+                .attr("d", function(d, i) { return line(allsplines[i]); })
+                .on("mouseenter", function(d,i){ console.log(this); });
 
             svg.selectAll("g.node")
                 .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key})
@@ -126,15 +130,14 @@ function createFlareplot(width, json, divId){
                 .on("mouseout", mouseoutNode)
                 .on("click", toggleNode);
 
-            var maxWidth = d3.max(svg.selectAll("text")[0], function(t){ return t.getBBox().width; });
 
             var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
             var arc = d3.svg.arc()
-                .innerRadius(ry-80)
+                .innerRadius(ry-15)
                 .outerRadius(function(d,i){ 
                   var sz = d.size;
                   if(!sz) sz = 0.0;
-                  var or = ry-80+sz*15; 
+                  var or = ry-15+sz*15; 
                   return or; 
                 })
                 .startAngle(-arcW)
@@ -153,18 +156,13 @@ function createFlareplot(width, json, divId){
                 .style("fill", function(d){ return d.color; })
                 .attr("d", arc);
 
-            d3.select(divId + " input[type=range]")
-                .on("input", function() {
-                    line.tension(this.value / 100);
-                    var path = svg.selectAll("path.link"); // you need to reselect cause the data can have changed
-                    path.attr("d", function(d, i) { return line(splines[i]); });
-                });
+            //d3.select(divId + " input[type=range]")
+            //    .on("input", function() {
+            //        line.tension(this.value / 100);
+            //        var path = svg.selectAll("path.link"); // you need to reselect cause the data can have changed
+            //        path.attr("d", function(d, i) { return line(splines[i]); });
+            //    });
 
-
-
-            //d3.select(window)
-            //    .on("mousemove", mousemove)
-            //    .on("mouseup", mouseup);
 
 
             //Set up controls
@@ -173,19 +171,12 @@ function createFlareplot(width, json, divId){
                 cw = 3*ch+2*cp;
 
 
-        //<div id="evocontrols" style="position:absolute;top:780px;left:0px;width:100%;font-size:18px;">
-        //    <span  id="controls"></span>
-        //    <input id="timeRange" type="range" min="0" max="1000" value="0" />
-        //    <span id="timeLabel">0</span>
-        //</div>
-            var controlDiv = d3.select(divId)
+            //var controlDiv = d3.select(divId)
+            var controlDiv = div
                 .append("div")
                 .attr("id","evocontrols")
-                .style("position","absolute")
-                .style("bottom","3px")
-                .style("left","0px")
-                .style("width","100%")
-                //.style("height","20px")
+                .style("width",w+"px")
+                .style("height",ch+"px")
                 .style("font-size","18px");
 
             var controls = controlDiv
@@ -204,9 +195,6 @@ function createFlareplot(width, json, divId){
                 {xoffset:2, id:"forward",   symbol:">>", callback:forward}
             ];
 
-            //buttons = controls.selectAll("g")
-            //    .data(controlData)
-            //  .enter().append("g").append("circle")
             var buttons = controls.selectAll("g")
                 .data(controlData)
                 .enter().append("g");
@@ -234,18 +222,12 @@ function createFlareplot(width, json, divId){
                 .attr('pointer-events', 'none')
                 .html(function(d){ return d.symbol; });
 
-            //controlDiv
-            //    .append("div")
-            //    .attr("id","rangeSlider")
-            //    .style("float","left")
-            //    .style("height",ch+"px")
-            //    .style("width",(w-2*cw-20)+"px");
             controlDiv
                 .append("div")
                 .attr("id","rangeSlider")
                 .style("float","left")
                 .style("height",ch+"px")
-                .style("width",(w-2*cw-20)+"px");
+                .style("width",width-cw+"px");
             rangeSlider = initSlider("rangeSlider");
             rangeSlider.height = ch+"px";
             rangeSlider.rangeDomainStart = 0;
@@ -253,47 +235,6 @@ function createFlareplot(width, json, divId){
             rangeSlider.backStyle = "border:1px solid #808080";
             rangeSlider.update();
             rangeSlider.onchange = function(){fireTickListeners(Math.floor(rangeSlider.rangeStart));};
-
-            // //    <input id="timeRange" type="range" min="0" max="1000" value="0" />
-            // //d3.select("div#evocontrols #timeRange")
-            // rangeSlider = controlDiv
-            //     .append("input")
-            //     .attr("id","timeRange")
-            //     .attr("type","range")
-            //     .attr("min","0")
-            //     .attr("max","1000")
-            //     .attr("value","0")
-            //     .style("width",(w-2*cw-20)+"px")
-            //     .style("height", ch+"px")
-            //     .attr("max", links.length-1)
-            //     .on("input", function(){fireTickListeners(this.value);} );
-            //
-            // rangeSlider = rangeSlider;
-
-
-        //    <span id="timeLabel">0</span>
-            //d3.select("div#evocontrols #timeLabel")
-            controlDiv
-                .append("div")
-                .attr("id","timeLabel")
-                .text("0")
-                //.style("position","relative")
-                .style("float","left")
-                .style("alignment-baseline","middle")
-                //.style("width",cw+"px")
-                .style("line-height", ch+"px")
-                .style("height", ch+"px")
-                .style("bottom", "13px");
-
-
-            // we need to that here as we
-            //     //d3.select("input#timeRange")
-            //     rangeSlider
-            //         .attr("max", links.length - 1)
-            //         .on("input.tick", function () {
-            //             fireTickListeners(this.value);
-            //         });
-
 
 
             updateFrame();
@@ -341,18 +282,11 @@ function createFlareplot(width, json, divId){
 
 
 
-
-        var playing = false;
-        var frameskip = 1;
-        var curFrame = 0;
-
         function updateFrame(){
 
             var curStart = Math.floor(rangeSlider.rangeStart);
             var curEnd   = Math.ceil(rangeSlider.rangeEnd);
             curFrame = Math.floor(rangeSlider.rangeStart);
-            d3.select(divId + " div[id=timeLabel]")
-                .text(curStart+(curEnd-curStart<=1?"":" - "+curEnd));
 
             splines = bundle(alllinks);
             var path = svg.selectAll("path.link");
@@ -457,44 +391,6 @@ function createFlareplot(width, json, divId){
             fireTickListeners(curFrame);
         }
 
-        //function mouse(e) {
-        //    return [e.pageX - rx, e.pageY - ry];
-        //}
-
-        //function mousedown() {
-        //    m0 = mouse(d3.event);
-        //    d3.event.preventDefault();
-        //}
-
-        //function mousemove() {
-        //    if (m0) {
-        //        var m1 = mouse(d3.event),
-        //            dm = Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI;
-        //        div.style("-webkit-transform", "translateY(" + (ry - rx) + "px)rotateZ(" + dm + "deg)translateY(" + (rx - ry) + "px)");
-        //    }
-        //}
-
-        //function mouseup() {
-        //    if (m0) {
-        //        var m1 = mouse(d3.event),
-        //            dm = Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI;
-
-        //        rotate += dm;
-        //        if (rotate > 360) rotate -= 360;
-        //        else if (rotate < 0) rotate += 360;
-        //        m0 = null;
-
-        //        div.style("-webkit-transform", null);
-
-        //        svg
-        //            .attr("transform", "translate(" + rx + "," + ry + ")rotate(" + rotate + ")")
-        //            .selectAll("g.node text")
-        //            .attr("dx", function(d) { return (d.x + rotate) % 360 < 180 ? 8 : -8; })
-        //            .attr("text-anchor", function(d) { return (d.x + rotate) % 360 < 180 ? "start" : "end"; })
-        //            .attr("transform", function(d) { return (d.x + rotate) % 360 < 180 ? null : "rotate(180)"; });
-        //    }
-        //}
-
 
         function mouseoverNode(d) {
             svg.selectAll("path.link.target-" + d.key)
@@ -525,7 +421,7 @@ function createFlareplot(width, json, divId){
 
         function getTreeNames(){
             var ret = [];
-            for ( t in graph.trees ){
+            for (var t=0; t<graph.trees.length; t++ ){
                 ret.push(graph.trees[t].treeLabel);
             }
             return ret;
@@ -556,22 +452,6 @@ function createFlareplot(width, json, divId){
                 .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
                 .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
 
-            var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
-            var arc = d3.svg.arc()
-                .innerRadius(ry-80)
-                .outerRadius(function(d,i){ 
-                  var sz = d.size;
-                  if(!sz) sz = 0.0;
-                  var or = ry-80+sz*15; 
-                  return or; 
-                })
-                .startAngle(-arcW)
-                .endAngle(arcW);
-            //var arc = d3.svg.arc()
-            //    .innerRadius(ry-80)
-            //    .outerRadius(ry-70)
-            //    .startAngle(-arcW)
-            //    .endAngle(arcW);
 
             svg.selectAll("g.trackElement")
                 .select("path")
@@ -686,7 +566,7 @@ function createFlareplot(width, json, divId){
 
         function getTrackNames(){
             var ret = [];
-            for ( t in graph.tracks ){
+            for(var t=0;t<graph.tracks.length;t++){
                 ret.push(graph.tracks[t].trackLabel);
             }
             return ret;
@@ -696,12 +576,11 @@ function createFlareplot(width, json, divId){
             selectedTrack = trackIdx;
             var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
             var arc = d3.svg.arc()
-                .innerRadius(ry-80)
+                .innerRadius(ry-15)
                 .outerRadius(function(d,i){ 
                   var sz = d.size;
                   if(!sz) sz = 0.0;
-console.log(sz);
-                  var or = ry-80+sz*15; 
+                  var or = ry-15+sz*15; 
                   return or; 
                 })
                 .startAngle(-arcW)

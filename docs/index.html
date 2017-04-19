@@ -62,7 +62,7 @@
 <div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
 
     <!-- Navigation -->
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <nav id="mainNav" class="navbar navbar-default navbar-custom">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header page-scroll">
@@ -106,14 +106,13 @@ FlarePlots are interactive diagrams for exploring dynamic networks. They can be 
 <script>
 var chart;
 
+/******/
+
 function fileRead(contents){
     document.getElementById("maincontent").innerHTML = "";
-    chart = createFlareplot(700, contents, "maincontent");
+    chart = createFlareplot(600, contents, "maincontent");
     document.getElementById("maincontent").children[0].style.width="100%";
-    document.getElementById("evocontrols").style.width="800px";
-    document.getElementById("evocontrols").style.left="50%";
-    document.getElementById("evocontrols").style.marginLeft="-400px";
-    document.getElementById("rangeSlider").style.width="500px";
+    //document.getElementById("rangeSlider").style.width="500px";
 }
 
 var reader = new FileReader();
@@ -237,7 +236,7 @@ function loadExample(fileName){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
     <!-- Theme JavaScript -->
-    <script src="js/freelancer.js"></script>
+    <!--<script src="js/freelancer.js"></script>-->
 
     <!-- Google analytics -->
     <script>
