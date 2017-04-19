@@ -81,6 +81,7 @@ function initSlider(divId){
   sl.back = document.createElement("div");
   sl.topDiv.appendChild(sl.back);
   sl.back.onclick = function(e){
+    console.log("onclick");
     var backRatio = e.offsetX / sl.back.offsetWidth;
     var rangeWidth = sl.rangeEnd - sl.rangeStart;
     sl.rangeStart = backRatio*(sl.rangeDomainEnd-sl.rangeDomainStart);
@@ -88,15 +89,19 @@ function initSlider(divId){
     sl.update();
   }
 
+  // Range
   sl.range = document.createElement("div");
   sl.topDiv.appendChild(sl.range);
   sl.range.onmousedown = function(e){
+    console.log("onmousedown");
     lastEvent = e;
     window.onmouseup = function(){
+      console.log("onmouseup");
       window.onmouseup = undefined;
       window.onmousemove = undefined;
     }
     window.onmousemove = function(e){
+      console.log("onmousemove");
       var deltaX = e.screenX - lastEvent.screenX;
       lastEvent = e;
 
@@ -110,6 +115,7 @@ function initSlider(divId){
     }
   }
 
+  // Left button
   sl.button1 = document.createElement("div");
   sl.topDiv.appendChild(sl.button1);
   sl.button1.onmousedown = function(e){
@@ -117,8 +123,10 @@ function initSlider(divId){
     window.onmouseup = function(){
       window.onmouseup = undefined;
       window.onmousemove = undefined;
+      console.log("onmouseup");
     }
     window.onmousemove = function(e){
+      console.log("onmousemove");
       var deltaX = e.screenX - lastEvent.screenX;
       lastEvent = e;
 
@@ -130,6 +138,7 @@ function initSlider(divId){
     }
   }
 
+  // Right button
   sl.button2 = document.createElement("div");
   sl.button2.onmousedown = function(e){
     lastEvent = e;

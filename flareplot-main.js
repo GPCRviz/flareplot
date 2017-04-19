@@ -700,7 +700,6 @@ function createFlareplot(width, json, divId){
                 .outerRadius(function(d,i){ 
                   var sz = d.size;
                   if(!sz) sz = 0.0;
-console.log(sz);
                   var or = ry-80+sz*15; 
                   return or; 
                 })
