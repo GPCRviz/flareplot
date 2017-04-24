@@ -206,7 +206,6 @@ function createFlareplot(width, json, divId){
             path.style("stroke-width",
                 function(d,i){
                     var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd-1);
-                    console.log("rangeCount("+rangeStart+","+(rangeEnd-1)+"): "+count);
                     return count==rangeEnd-rangeStart?2:0;
                 })
                 .attr("class", function(d) {
