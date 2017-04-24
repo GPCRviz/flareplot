@@ -1,36 +1,155 @@
 # Embedding FlarePlots
 
-The FlarePlot library is written so it can easily be connected to other dynamic elements on the page. See for example the [GPCR demo](https://gpcrviz.github.io/FlarePlot/gpcr_demo.html). For a minimum working example of an embedded FlarePlot see the `minimum.html` file.
+To embed a FlarePlot on a homepage you'll need to:
 
-## Developer API
+ * Include js and css dependencies in the header
+ * Place a container div
+ * Construct a json that satisfies the [FlarePlot input format](https://github.com/GPCRviz/FlarePlot/tree/master/input)
+ * Call `createFlareplot` with the width of your plot, a container selector, and the json object
 
-The following outlines an API for developers wishing to incorporate a flareplot on a homepage. The general template should be 
+A minimal working template looks as follow
+
 ```html
 <html>
 <head>
-<script src="d3.js" />
-<script src="flareplot-main.js" />
-<script src="flareplot-parser.js" />
+    <!-- FlarePlot dependencies -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+    <!-- FlarePlot javascript files -->
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
 </head>
 <body>
     <div id="flare-container"></div>
-    <script> 
-      d3.text("plotfile.json", function(data) {
-        var plot = createFlareplot("flare-container", data);
-      });
+    <script>
+        var jsonData = {
+            edges: [
+                { name1: "A", name2: "B", frames: [0,1,2] },
+                { name1: "A", name2: "C", frames: [1] },
+                { name1: "B", name2: "C", frames: [0,2] }
+            ]
+        };
+        var plot = createFlareplot(500, jsonData, "#flare-container");
     </script>
 </body>
 </html>
 ```
-Where `plotfile.json` contains a JSON file with the [correct format](https://github.com/GPCRviz/FlarePlot/tree/master/input).
+This will create a 500-by-500 pixel circular plot with three nodes (A, B, and C) of which only A-B and B-C are
+connected (corresponding to frame 0). The FlarePlot library is written so it can easily be restyled or connected to
+other dynamic elements on the page. The
+following sections outline how to add different controls and the [Developer API](#Developer-API) shows all available
+functions.
 
-The following functions are available after a dataset has been loaded:
-  * `plot.getTrees()` - Returns list of tree-names
-  * `plot.setTree(t)` - Updates the ordering of nodes to reflect the tree with index `t`
-  * `plot.getTracks()` - Returns list of track-names
-  * `plot.setTrack(t)` - Updates the node colors/annotation to reflect the track with index `t`
-  * `plot.addTickListener(l)` - Add a callback function, `l`, that gets invoked whenever the time-frame changes. This function must take 2 arguments. The first will be the current frame-number, and the second will be a list of tuples indicating 1) name of first and second node, 2) edge color, and 3) edge width.
-  * `plot.addNodeToggleListener(l)` - *Not yet implemented*
-  * `plot.addNodeHoverListener(l)` - *Not yet implemented*
-  * `plot.addEdgeToggleListener(l)` - *Not yet implemented*
-  * `plot.addEdgeHoverListener(l)` - *Not yet implemented*
+## Reading json from a local file
+
+The d3-library has a convenient mechanism for reading json files:
+```html
+<html>
+<head>
+    <!-- FlarePlot dependencies -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+    <!-- FlarePlot javascript files -->
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
+</head>
+<body>
+    <div id="flare-container"></div>
+    <script>
+        d3.json("abc.json", function(jsonData){
+            var plot = createFlareplot(500, jsonData, "#flare-container");
+        }
+    </script>
+</body>
+</html>
+```
+
+## Styling the plot
+
+The style of the plot can be modified through css. Most importantly, the edges and nodes will be decorated with `
+.link` and `.node` classes. A template css files that looks sensible when the number of nodes is high can be included
+```html
+<html>
+<head>
+    <!-- FlarePlot dependencies -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+    <!-- FlarePlot javascript files -->
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-rangeslider.js"></script>
+
+    <!-- FlarePlot styling -->
+    <link href="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.css" rel="stylesheet"></link>
+</head>
+<body>
+    <div id="flare-container"></div>
+    <script>
+        d3.json("abc.json", function(jsonData){
+            var plot = createFlareplot(500, jsonData, "#flare-container");
+        }
+    </script>
+</body>
+</html>
+```
+This will make edges transparent and node fonts much smaller and responsive to mouse hovering.
+
+
+## Navigating time-varying data
+
+FlarePlot includes a range-slider extension that allows to change the currently selected time-point and inspect
+averages over intervals of frames. To use it
+ * Include the required js and css file
+ * Place a container div
+ * Call `createRangeSlider` with the container selector, and the `plot` object
+
+```html
+<html>
+<head>
+    <!-- FlarePlot dependencies -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+    <!-- FlarePlot javascript files -->
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-rangeslider.js"></script>
+
+    <!-- FlarePlot styling -->
+    <link href="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.css" rel="stylesheet"></link>
+    <link href="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-rangeslider.css" rel="stylesheet"></link>
+</head>
+<body>
+    <div id="flare-container"></div>
+    <div id="slider-container" style="width:500px"></div>
+    <script>
+        d3.json("abc.json", function(jsonData){
+            var plot = createFlareplot(500, jsonData, "#flare-container");
+            createRangeSlider("#slider-container", plot);
+        }
+    </script>
+</body>
+</html>
+```
+This will place a range-slider below the plot. The appearance can be changed by modifying the corresponding css.
+
+## Switching between trees and tracks
+
+TODO
+
+# Developer API
+
+The following functions are available after a `plot` object has been created:
+  * `plot.getNumFrames()` - Returns the number of frames
+  * `plot.setFrame(frameNum)` - Updates the flareplot to reflect the indicated frame
+  * `plot.framesIntersect(subset)` - Updates the flareplot to reflect the intersection of interactions over all frames in the `subset` array.
+  * `plot.framesIntersect(start, end)` - Updates the flareplot to reflect the intersection of interactions over all frames between `start` (inclusive), and `end` (not inclusive).
+  * `plot.framesSum(subset)` - Updates the flareplot to reflect the sum of interactions over all frames in the `subset` array.
+  * `plot.framesSum(start, end)` - Updates the flareplot to reflect the sum of interactions over all frames between `start` (inclusive), and `end` (not inclusive).
+  * `plot.getTrackNames()` - Return an array with names of all tracks in the json.
+  * `plot.setTrack(trackNum)` - Updates the node colors/annotation to reflect the indicated track index.
+  * `plot.getTreeNames()` - Return an array with names of all trees in the json.
+  * `plot.setTree(treeNum)` - Updates the node order to reflect the indicated tree index.
+  * `plot.addNodeToggleListener(l)` - Listen for node toggle events. `l` is assumed to be a callback function that takes a node as argument.
+  * `plot.addNodeHoverListener(l)` - Listen for node toggle events. `l` is assumed to be a callback function that takes a node as argument.
+  * `plot.addEdgeToggleListener(l)` - Listen for node toggle events. `l` is assumed to be a callback function that takes an edge as argument.
+  * `plot.addEdgeHoverListener(l)` - Listen for node toggle events. `l` is assumed to be a callback function that takes an edge as argument.
