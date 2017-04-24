@@ -8,12 +8,9 @@ function createFlareplot(width, json, divId){
     var rotate = 0;
     var discRad = 55;
 
-    if (!divId) {
-        divId = "#evobundlediv";
-    } else {
-        divId = "#" + divId;
+    if( typeof json == "string" ){
+        json = JSON.parse(json);
     }
-
 
     var stdEdgeColor = "rgba(0,0,0,200)";
     var svg;
@@ -32,7 +29,7 @@ function createFlareplot(width, json, divId){
 
     return (function() {
 
-        function create_bundle(json_text) {
+        function create_bundle() {
             cluster = d3.layout.cluster()
                 .size([360, ry - discRad])
                 .sort(function(a, b) {
@@ -48,7 +45,7 @@ function createFlareplot(width, json, divId){
                     return d3.ascending(aRes, bRes);
                 });
 
-            json  = JSON.parse(json_text);
+            //json  = JSON.parse(json_text);
             graph = parse(json);
             nodes = cluster.nodes(graph.trees[selectedTree].tree[""]);
             links = graph.trees[selectedTree].frames;
@@ -78,16 +75,16 @@ function createFlareplot(width, json, divId){
                 .append("svg:g")
                 .attr("transform", "translate(" + rx + "," + ry + ")");
 
-            // Find the width of the node-name track. Temporarily add all text, go through them and get max-width
-            var tmpTexts = svg.selectAll("g.node")
-                .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key; })
-                .enter().append("svg:g")
-                .attr("class", "node")
-                .attr("id", function(d) { return "node-" + d.key; })
-                .append("text")
-                .text(function(d) { return d.key; });
-            var maxTextWidth = d3.max(svg.selectAll("text")[0], function(t){ return t.getBBox().width; });
-            svg.selectAll("g.node").remove();
+            //// Find the width of the node-name track. Temporarily add all text, go through them and get max-width
+            //var tmpTexts = svg.selectAll("g.node")
+            //    .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key; })
+            //    .enter().append("svg:g")
+            //    .attr("class", "node")
+            //    .attr("id", function(d) { return "node-" + d.key; })
+            //    .append("text")
+            //    .text(function(d) { return d.key; });
+            //var maxTextWidth = d3.max(svg.selectAll("text")[0], function(t){ return t.getBBox().width; });
+            //svg.selectAll("g.node").remove();
 
 
             var path = svg.selectAll("path.link")
@@ -107,6 +104,7 @@ function createFlareplot(width, json, divId){
                     return 0;
                 })
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .style("fill","none")
                 .attr("d", function(d, i) { return line(splines[i]); })
                 .on("mouseenter", function(d,i){ return; /*console.log(this);*/ });
 
@@ -622,24 +620,17 @@ function createFlareplot(width, json, divId){
 
         }
 
-        function addNodeToggleListener(l){
+        var nodeToggleListeners = [];
+        var nodeHoverListeners  = [];
+        var edgeToggleListeners = [];
+        var edgeHoverListeners  = [];
 
-        }
+        function addNodeToggleListener(l){ nodeToggleListeners.push(l); }
+        function addNodeHoverListener(l){  nodeHoverListeners.push(l);  }
+        function addEdgeToggleListener(l){ edgeToggleListeners.push(l); }
+        function addEdgeHoverListener(l){  edgeHoverListeners.push(l);  }
 
-        function addNodeHoverListener(l){
-
-        }
-
-        function addEdgeToggleListener(l){
-
-        }
-
-        function addEdgeHoverListener(l){
-
-        }
-
-
-        create_bundle(json);
+        create_bundle();
 
         return {
             getNumFrames: getNumFrames,

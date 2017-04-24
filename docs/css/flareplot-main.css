@@ -26,9 +26,8 @@ path.arc {
 }
 
 .link {
-    fill: none;
     stroke: #000;
-    stroke-opacity: .1;
+    stroke-opacity: .15;
     /*pointer-events: none;*/
 }
 
@@ -64,10 +63,5 @@ svg text {
 }
 svg text::selection {
     background: none;
-}
-
-.tensionControl {
-    left:0px;
-    font-size:18px;
 }
 

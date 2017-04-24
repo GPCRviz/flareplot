@@ -111,7 +111,7 @@ var flareplot;
 
 function fileRead(contents){
     document.getElementById("maincontent").innerHTML = "";
-    flareplot = createFlareplot(600, contents, "maincontent");
+    flareplot = createFlareplot(600, contents, "#maincontent");
 
     d3.select("#maincontent div")
         .style("position","relative")
