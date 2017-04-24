@@ -14,7 +14,10 @@ function parse(graph){
         graph.defaults={};
 
     if(!graph.trees)
-        graph.trees=[{"treeName":"default", "treePaths":[]}];
+        graph.trees=[{"treeLabel":"default", "treePaths":[]}];
+
+    if(!graph.tracks)
+        graph.tracks=[{"trackLabel":"default", "trackProperties":[]}];
 
     // =========== Construct `nodeNames` list =========== \\
     graph.nodeNames = [];

@@ -61,7 +61,10 @@ function createSelectors(flareplot, container){
                     label.append("input")
                         .attr("type","radio")
                         .attr("name","tree-radios")
-                        .attr("id","tree-radio-"+i);
+                        .attr("id","tree-radio-"+i)
+                        .on("click",function(d,i){
+                            flareplot.setTree(i);
+                        });
 
                     label.append("span")
                         .text(treeNames[i]);
@@ -84,7 +87,10 @@ function createSelectors(flareplot, container){
                     label.append("input")
                         .attr("type","radio")
                         .attr("name","track-radios")
-                        .attr("id","track-radio-"+i);
+                        .attr("id","track-radio-"+i)
+                        .on("click",function(d,i){
+                            flareplot.setTrack(i);
+                        });
 
                     label.append("span")
                         .text(trackNames[i]);
@@ -96,6 +102,6 @@ function createSelectors(flareplot, container){
 
         initialize();
 
-        return {};
+        return flareplot.getTrackNames().length > 1 || flareplot.getTreeNames().length > 1;
     }) ();
 }

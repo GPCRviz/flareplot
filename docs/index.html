@@ -120,7 +120,10 @@ function fileRead(contents){
 
 
     var selectorContainer = d3.select("#maincontent").append("div");
-    createSelectors(flareplot, selectorContainer.node());
+    var selectorAdded = createSelectors(flareplot, selectorContainer.node());
+    if( !selectorAdded ){
+        selectorContainer.remove();
+    }
 
     //document.getElementById("maincontent").children[0].style.width="100%";
     //document.getElementById("rangeSlider").style.width="500px";

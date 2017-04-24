@@ -1,22 +1,29 @@
 
 
 function createFlareplot(width, json, divId){
-    var w = width,
-        h   = w,
-        rx  = w * 0.5,
-        ry  = w * 0.5,
-        rotate = 0,
-        discRad = 55;
+    var w = width;
+    var h   = w;
+    var rx  = w * 0.5;
+    var ry  = w * 0.5;
+    var rotate = 0;
+    var discRad = 55;
 
     if (!divId) {
-        divId = '#evobundlediv';
+        divId = "#evobundlediv";
     } else {
-        divId = '#' + divId;
+        divId = "#" + divId;
     }
 
 
     var stdEdgeColor = "rgba(0,0,0,200)";
-    var svg, div, bundle, line, nodes, splines, links, graph;
+    var svg;
+    var div;
+    var bundle;
+    var line;
+    var nodes;
+    var splines;
+    var links;
+    var graph;
 
     var selectedTree = 0;
     var selectedTrack = 0;
@@ -41,7 +48,7 @@ function createFlareplot(width, json, divId){
                     return d3.ascending(aRes, bRes);
                 });
 
-            json  = JSON.parse(json_text)
+            json  = JSON.parse(json_text);
             graph = parse(json);
             nodes = cluster.nodes(graph.trees[selectedTree].tree[""]);
             links = graph.trees[selectedTree].frames;
@@ -54,7 +61,7 @@ function createFlareplot(width, json, divId){
 
             line = d3.svg.line.radial()
                 .interpolate("bundle")
-                .tension(.85)
+                .tension(0.85)
                 .radius(function(d) { return d.y; })
                 .angle(function(d) { return d.x / 180 * Math.PI; });
 
@@ -196,14 +203,11 @@ function createFlareplot(width, json, divId){
             splines = bundle(links);
             var path = svg.selectAll("path.link");
 
-            var widthScale = d3.scale.linear()
-                .domain([rangeEnd-rangeStart-1,rangeEnd-rangeStart])
-                .range([0,2]);
-
             path.style("stroke-width",
                 function(d,i){
-                    var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd);
-                    return count==0?count:widthScale(count);
+                    var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd-1);
+                    console.log("rangeCount("+rangeStart+","+(rangeEnd-1)+"): "+count);
+                    return count==rangeEnd-rangeStart?2:0;
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
@@ -218,7 +222,6 @@ function createFlareplot(width, json, divId){
         }
 
         function rangeSum(rangeStart, rangeEnd){
-            console.log("rangeSum("+rangeStart+", "+rangeEnd+")");
             splines = bundle(links);
             var path = svg.selectAll("path.link");
 
@@ -228,7 +231,7 @@ function createFlareplot(width, json, divId){
 
             path.style("stroke-width",
                 function(d,i){
-                    var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd);
+                    var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd-1);
                     return count==0?count:widthScale(count);
                 })
                 .attr("class", function(d) {
@@ -245,9 +248,28 @@ function createFlareplot(width, json, divId){
         function setFrame(frameNum){
             rangeSum(frameNum,frameNum+1);
         }
-            
 
         function subsetIntersect(subset){
+            splines = bundle(links);
+            var path = svg.selectAll("path.link");
+
+            path.style("stroke-width",
+                function(d,i){
+                    for( var c=0; c<subset.length; c++){
+                        var frame = subset[c];
+                        var iud = graph.edges[i].frames.indexUpDown(frame);
+                        if(iud[0] != iud[1]) return 0;
+                    }
+                    return 2;
+                })
+                .attr("class", function(d) {
+                    var ret = "link source-" + d.source.key + " target-" + d.target.key;
+                    if( d.source.key in toggledNodes || d.target.key in toggledNodes)
+                        ret+=" toggled";
+                    return ret;
+                })
+                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .attr("d", function(d, i) { return line(splines[i]); });
 
         }
 
@@ -335,6 +357,17 @@ function createFlareplot(width, json, divId){
                 .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
                 .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
 
+            var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
+            var arc = d3.svg.arc()
+                .innerRadius(ry-15)
+                .outerRadius(function(d,i){
+                    var sz = d.size;
+                    if(!sz) sz = 0.0;
+                    var or = ry-15+sz*15;
+                    return or;
+                })
+                .startAngle(-arcW)
+                .endAngle(arcW);
 
             svg.selectAll("g.trackElement")
                 .select("path")
@@ -359,7 +392,6 @@ function createFlareplot(width, json, divId){
                 return  d.key;
             });
 
-
             // i dont understand how d3 orders the spline array, so we need
             path.transition().attrTween("d",
                 function(d, i, a) {
@@ -372,7 +404,7 @@ function createFlareplot(width, json, divId){
                     var oldSplineIdx =  splineDico[key];
                     var newSplineIdx = newSplinesDico[key];
                     if (oldSplineIdx === void 0 || newSplineIdx === void 0) {
-                        console.log('Not found Spline with key', key);
+                        console.log("Not found Spline with key", key);
                         return;
                     }
 
@@ -453,7 +485,7 @@ function createFlareplot(width, json, divId){
             splines.forEach(function(spline, idx){
                 var source = spline[0].key;
                 var target = spline[spline.length-1].key;
-                var key = source + '-' + target;
+                var key = source + "-" + target;
                 linkKeyToSplineIdx[key] = idx;
             });
             return linkKeyToSplineIdx;
@@ -470,17 +502,18 @@ function createFlareplot(width, json, divId){
 
         function setTrack(trackIdx){
             selectedTrack = trackIdx;
-            var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
-            var arc = d3.svg.arc()
-                .innerRadius(ry-15)
-                .outerRadius(function(d,i){ 
-                  var sz = d.size;
-                  if(!sz) sz = 0.0;
-                  var or = ry-15+sz*15; 
-                  return or; 
-                })
-                .startAngle(-arcW)
-                .endAngle(arcW);
+            //var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
+            //d3.svg.arc()
+            //    .innerRadius(ry-15)
+            //    .outerRadius(function(d){
+            //      var sz = d.size;
+            //      if(!sz) sz = 0.0;
+            //      var or = ry-15+sz*15;
+            //      return or;
+            //    })
+            //    .startAngle(-arcW)
+            //    .endAngle(arcW);
+
             //var arc = d3.svg.arc()
             //    .innerRadius(ry-80)
             //    .outerRadius(ry-70)
@@ -529,7 +562,6 @@ function createFlareplot(width, json, divId){
             addEdgeToggleListener: addEdgeToggleListener,
             addEdgeHoverListener: addEdgeHoverListener,
             graph: graph//, for debugging purposes
-            //toggledNodes: toggledNodes
         }
     }) ();
 }
@@ -552,19 +584,12 @@ function upload_button(el, callback) {
     }
 }
 
-/** Assuming the list is sorted, count the number of elements greater than or 
-equal to `start` and less than or equal to `end`.  */
-function countRange(list, start, end){
-  var i = list.length / 2;
-  var delta = list.length/2;
-  while(delta>=1){
-
-  }
-
-}
 
 
-/** Gets the index of the value just above and just below `key` in a sorted array */
+/**
+ * Gets the index of the value just above and just below `key` in a sorted array.
+ * If the exact element was found, the two indices are identical.
+ */
 function indexUpDown(key) {
   'use strict';
 
@@ -585,7 +610,7 @@ function indexUpDown(key) {
 }
 
 /** Get the number of entries whose value are greater than or equal to `start`
- * and lower than `end` in a sorted array*/
+ * and lower than or equal to `end` in a sorted array*/
 function rangeCount(start, end){
   var startIdx = this.indexUpDown(start)[0];
   var endIdx   = this.indexUpDown(end)[1];
