@@ -80,7 +80,7 @@ function createFlareplot(width, json, divId){
 
             // Find the width of the node-name track. Temporarily add all text, go through them and get max-width
             var tmpTexts = svg.selectAll("g.node")
-                .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key})
+                .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key; })
                 .enter().append("svg:g")
                 .attr("class", "node")
                 .attr("id", function(d) { return "node-" + d.key; })
@@ -98,8 +98,9 @@ function createFlareplot(width, json, divId){
                 .enter().append("svg:path")
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
-                    if( d.source.key in toggledNodes || d.target.key in toggledNodes)
-                        ret+=" toggled";
+                    if( d.source.key in toggledNodes || d.target.key in toggledNodes) {
+                        ret += " toggled";
+                    }
                     return ret;
                 })
                 .style("stroke-width",function(d){
@@ -107,13 +108,13 @@ function createFlareplot(width, json, divId){
                 })
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
                 .attr("d", function(d, i) { return line(splines[i]); })
-                .on("mouseenter", function(d,i){ /*console.log(this);*/ });
+                .on("mouseenter", function(d,i){ return; /*console.log(this);*/ });
 
 
 
 
             svg.selectAll("g.node")
-                .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key})
+                .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key; })
                 .enter().append("svg:g")
                 .attr("class", "node")
                 .attr("id", function(d) { return "node-" + d.key; })
@@ -132,11 +133,11 @@ function createFlareplot(width, json, divId){
             var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
             var arc = d3.svg.arc()
                 .innerRadius(ry-15)
-                .outerRadius(function(d,i){ 
+                .outerRadius(function(d,i){
                   var sz = d.size;
-                  if(!sz) sz = 0.0;
-                  var or = ry-15+sz*15; 
-                  return or; 
+                  if(!sz) { sz = 0.0; }
+                  var or = ry-15+sz*15;
+                  return or;
                 })
                 .startAngle(-arcW)
                 .endAngle(arcW);
@@ -198,7 +199,31 @@ function createFlareplot(width, json, divId){
         }
 
 
+        /**
+         * Find the total number of frames in the graph.
+         * @returns {number}
+         */
+        function getNumFrames(){
+            var maxFrame = -1;
+            graph.edges.forEach(function(e){
+                maxFrame = Math.max(maxFrame,  Math.max.apply(Math, e.frames));
+            });
+            return maxFrame+1;
+        }
 
+        /**
+         * Change the state of the flareplot so it reflects the interactions in the indicated frame.
+         * @param frameNum a number indicating the frame to set.
+         */
+        function setFrame(frameNum){
+            rangeSum(frameNum,frameNum+1);
+        }
+
+        /**
+         * Update the state of the flareplot so it reflects the intersection over a range.
+         * @param rangeStart first frame to include (must be less than `rangeEnd`)
+         * @param rangeEnd first frame after `rangeStart` that should not be included
+         */
         function rangeIntersect(rangeStart, rangeEnd){
             splines = bundle(links);
             var path = svg.selectAll("path.link");
@@ -210,8 +235,9 @@ function createFlareplot(width, json, divId){
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
-                    if( d.source.key in toggledNodes || d.target.key in toggledNodes)
-                        ret+=" toggled";
+                    if( d.source.key in toggledNodes || d.target.key in toggledNodes) {
+                        ret += " toggled";
+                    }
                     return ret;
                 })
                 //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
@@ -220,6 +246,11 @@ function createFlareplot(width, json, divId){
 
         }
 
+        /**
+         * Update the state of the flareplot so it reflects the sum over a range.
+         * @param rangeStart first frame to include (must be less than `rangeEnd`)
+         * @param rangeEnd first frame after `rangeStart` that should not be included
+         */
         function rangeSum(rangeStart, rangeEnd){
             splines = bundle(links);
             var path = svg.selectAll("path.link");
@@ -235,8 +266,9 @@ function createFlareplot(width, json, divId){
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
-                    if( d.source.key in toggledNodes || d.target.key in toggledNodes)
-                        ret+=" toggled";
+                    if( d.source.key in toggledNodes || d.target.key in toggledNodes) {
+                        ret += " toggled";
+                    }
                     return ret;
                 })
                 //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
@@ -244,20 +276,20 @@ function createFlareplot(width, json, divId){
                 .attr("d", function(d, i) { return line(splines[i]); });
         }
 
-        function setFrame(frameNum){
-            rangeSum(frameNum,frameNum+1);
-        }
-
+        /**
+         * Update the state of the flareplot so it reflects the intersection over a subset.
+         * @param subset a list of numbers indicating which frames to include
+         */
         function subsetIntersect(subset){
             splines = bundle(links);
             var path = svg.selectAll("path.link");
 
             path.style("stroke-width",
-                function(d,i){
-                    for( var c=0; c<subset.length; c++){
+                function(d,i) {
+                    for (var c = 0; c < subset.length; c++) {
                         var frame = subset[c];
                         var iud = graph.edges[i].frames.indexUpDown(frame);
-                        if(iud[0] != iud[1]) return 0;
+                        if (iud[0] != iud[1]) return 0;
                     }
                     return 2;
                 })
@@ -272,17 +304,81 @@ function createFlareplot(width, json, divId){
 
         }
 
+        /**
+         * Update the state of the flareplot so it reflects the sum over a subset.
+         * @param subset a list of numbers indicating which frames to include
+         */
         function subsetSum(subset){
+            splines = bundle(links);
+            var path = svg.selectAll("path.link");
 
+            var widthScale = d3.scale.linear()
+                .domain([1,subset.length])
+                .range([2,10]);
+
+            path.style("stroke-width",
+                function(d,i){
+                    var count = 0;
+                    subset.forEach(function(f){
+                        var iud = graph.edges[i].frames.indexUpDown(f);
+                        if( iud[0] == iud[1] ){ count++; }
+                    });
+                    return count==0?0:widthScale(count);
+                })
+                .attr("class", function(d) {
+                    var ret = "link source-" + d.source.key + " target-" + d.target.key;
+                    if( d.source.key in toggledNodes || d.target.key in toggledNodes) {
+                        ret += " toggled";
+                    }
+                    return ret;
+                })
+                //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
+                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .attr("d", function(d, i) { return line(splines[i]); });
         }
 
+        /**
+         * Update the state of the flareplot so it reflects the intersection over the specified selection. If
+         * `selection` and `optionalSelection` are both numbers then the intersection will be taken over the range of
+         * frames spanned by the two. If `selection` is an array of numbers the intersection will be taken over the
+         * frames in the array. If the arguments don't satisfy these requirements an error is thrown.
+         * @param selection
+         * @param optionalSelection
+         * @returns {*}
+         */
+        function framesIntersect(selection, optionalSelection) {
+            if (typeof selection === "number" && typeof optionalSelection === "number") {
+                return rangeIntersect(selection, optionalSelection);
+            }
+            if (Object.prototype.toString.call(selection) === "[object Array]" && optionalSelection === undefined) {
+                return subsetIntersect(selection);
+            }
+            throw "framesIntersect must take either two integers (range), or an array (subset) as argument";
+        }
 
-        
+        /**
+         * Update the state of the flareplot so it reflects the sum over the specified selection. If `selection` and
+         * `optionalSelection` are both numbers then the intersection will be taken over the range of frames spanned by
+         * the two. If `selection` is an array of numbers the intersection will be taken over the frames in the array.
+         * If the arguments don't satisfy these requirements an error is thrown.
+         * @param selection
+         * @param optionalSelection
+         * @returns {*}
+         */
+        function framesSum(selection, optionalSelection) {
+            if (typeof selection === "number" && typeof optionalSelection === "number") {
+                return rangeSum(selection, optionalSelection);
+            }
+            if (Object.prototype.toString.call(selection) === "[object Array]" && optionalSelection === undefined) {
+                return subsetSum(selection);
+            }
+            throw "framesSum must take either two integers (range), or an array (subset) as argument";
+        }
 
-        function toggleNode(d,i){
+        function toggleNode(d){
             var toggled = !d3.select(this.parentNode).classed("toggledNode");
             d3.select(this.parentNode)
-                .classed("toggledNode", function(d){return toggled; });
+                .classed("toggledNode", function(){return toggled; });
 
             var name = d.name.substring(d.name.lastIndexOf(".")+1);
             if(!toggled)
@@ -354,16 +450,15 @@ function createFlareplot(width, json, divId){
                 .select("text")
                 .attr("dx", function(d) { return d.x < 180 ? 8 : -8; })
                 .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-                .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
+                .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; });
 
             var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
             var arc = d3.svg.arc()
                 .innerRadius(ry-15)
-                .outerRadius(function(d,i){
+                .outerRadius(function(d){
                     var sz = d.size;
                     if(!sz) sz = 0.0;
-                    var or = ry-15+sz*15;
-                    return or;
+                    return ry-15+sz*15;
                 })
                 .startAngle(-arcW)
                 .endAngle(arcW);
@@ -387,7 +482,7 @@ function createFlareplot(width, json, divId){
 
 
             var done = false;
-            var path = svg.selectAll("path.link").data(links, function(d,i){
+            var path = svg.selectAll("path.link").data(links, function(d){
                 return  d.key;
             });
 
@@ -547,11 +642,10 @@ function createFlareplot(width, json, divId){
         create_bundle(json);
 
         return {
+            getNumFrames: getNumFrames,
             setFrame: setFrame,
-            setRangeSum: rangeSum,
-            setRangeIntersect: rangeIntersect,
-            setSubsetSum: subsetSum,
-            setSubsetIntersect: subsetIntersect,
+            framesIntersect: framesIntersect,
+            framesSum: framesSum,
             setTrack: setTrack,
             setTree: setTree,
             getTreeNames: getTreeNames,
@@ -590,7 +684,7 @@ function upload_button(el, callback) {
  * If the exact element was found, the two indices are identical.
  */
 function indexUpDown(key) {
-  'use strict';
+  "use strict";
 
   var minIdx = 0;
   var maxIdx = this.length - 1;
