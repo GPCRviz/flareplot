@@ -87,7 +87,7 @@ The style of the plot can be modified through css. Most importantly, the edges a
     <script>
         d3.json("abc.json", function(jsonData){
             var plot = createFlareplot(500, jsonData, "#flare-container");
-        }
+        });
     </script>
 </body>
 </html>
@@ -125,7 +125,7 @@ averages over intervals of frames. To use it
         d3.json("abc.json", function(jsonData){
             var plot = createFlareplot(500, jsonData, "#flare-container");
             createRangeSlider("#slider-container", plot);
-        }
+        });
     </script>
 </body>
 </html>
