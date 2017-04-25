@@ -58,7 +58,7 @@ The d3-library has a convenient mechanism for reading json files:
     <script>
         d3.json("abc.json", function(jsonData){
             var plot = createFlareplot(500, jsonData, "#flare-container");
-        }
+        });
     </script>
 </body>
 </html>
