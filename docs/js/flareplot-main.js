@@ -106,7 +106,8 @@ function createFlareplot(width, json, divId){
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
                 .style("fill","none")
                 .attr("d", function(d, i) { return line(splines[i]); })
-                .on("mouseenter", function(d,i){ return; /*console.log(this);*/ });
+                .on("mouseover", function(d){ fireEdgeHoverListeners(d); })
+                .on("click", function(d){ fireEdgeToggleListeners(d); });
 
 
 
@@ -594,29 +595,24 @@ function createFlareplot(width, json, divId){
 
         function setTrack(trackIdx){
             selectedTrack = trackIdx;
-            //var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
-            //d3.svg.arc()
-            //    .innerRadius(ry-15)
-            //    .outerRadius(function(d){
-            //      var sz = d.size;
-            //      if(!sz) sz = 0.0;
-            //      var or = ry-15+sz*15;
-            //      return or;
-            //    })
-            //    .startAngle(-arcW)
-            //    .endAngle(arcW);
 
-            //var arc = d3.svg.arc()
-            //    .innerRadius(ry-80)
-            //    .outerRadius(ry-70)
-            //    .startAngle(-arcW)
-            //    .endAngle(arcW);
+            var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
+            var arc = d3.svg.arc()
+                .innerRadius(ry-15)
+                .outerRadius(function(d){
+                    var sz = d.size;
+                    if(!sz) sz = 0.0;
+                    return ry-15+sz*15;
+                })
+                .startAngle(-arcW)
+                .endAngle(arcW);
 
             svg.selectAll("g.trackElement")
                 .data(graph.tracks[selectedTrack].trackProperties, function(d){ return d.nodeName; })
                 .select("path")
                 .transition()
-                .style("fill", function(d){ return d.color; });
+                .style("fill", function(d){ return d.color; })
+                .attr("d", arc);
 
         }
 
@@ -629,6 +625,11 @@ function createFlareplot(width, json, divId){
         function addNodeHoverListener(l){  nodeHoverListeners.push(l);  }
         function addEdgeToggleListener(l){ edgeToggleListeners.push(l); }
         function addEdgeHoverListener(l){  edgeHoverListeners.push(l);  }
+
+        function fireNodeToggleListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
+        function fireNodeHoverListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
+        function fireEdgeToggleListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
+        function fireEdgeHoverListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
 
         create_bundle();
 
