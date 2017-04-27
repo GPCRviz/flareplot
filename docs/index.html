@@ -37,6 +37,7 @@
 
     </style>
 
+
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -54,10 +55,12 @@
     <script type="text/javascript" src="js/flareplot-parser.js"></script>
     <script type="text/javascript" src="js/flareplot-main.js"></script>
     <script type="text/javascript" src="js/flareplot-selectors.js"></script>
+    <script type="text/javascript" src="js/fingerprintpanel.js"></script>
 
     <!-- Visualization CSS -->
     <link href="css/flareplot-main.css" rel="stylesheet">
     <link href="css/flareplot-selectors.css" rel="stylesheet">
+    <link href="css/fingerprintpanel.css" rel="stylesheet">
 
 </head>
 
@@ -108,6 +111,7 @@
             </div>
 <script>
 var flareplot;
+var panel;
 
 function fileRead(contents){
     document.getElementById("maincontent").innerHTML = "";
@@ -125,6 +129,17 @@ function fileRead(contents){
         selectorContainer.remove();
     }
 
+    // Create fingerprint panel if frameDict is included in contents
+    frameDict = getFrameDict(contents)
+    if(frameDict){
+        flareplot.framesIntersect([]) //show all interactions to begin with
+        var gpcrs = getFingerprintColumns(contents);
+        var numRows = 1;
+        panel = initFingerprintPanel("#maincontent", gpcrs, numRows, twoStateSelection);
+        panel.on("click", updateIntersectFrames)
+    }
+
+    
     //document.getElementById("maincontent").children[0].style.width="100%";
     //document.getElementById("rangeSlider").style.width="500px";
 }
