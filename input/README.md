@@ -53,14 +53,14 @@ The edge-width is measured in pixels.
 This section has the format
 ```json
   "trees":[
-    { "treeName":<string>, "treePaths":<string-list> },
+    { "treeLabel":<string>, "treePaths":<string-list> },
      ...
   ]
 ```
 Each tree has a name and a set of paths. Each "path" is a dot-separated list of branches in the path from the node to the root in a tree. This tree is used to order and group nodes. In the following example, `Asn1` and `Pro2` will be placed in the same group because theyre both children of `helix1` while `His3` will be placed in a separate group. 
 ```json
   "trees":[
-    { "treeName":"Group-order",
+    { "treeLabel":"Group-order",
       "treePaths": [
         "Root.helix1.Asn1",
         "Root.helix1.Pro2",
@@ -74,9 +74,9 @@ Each tree has a name and a set of paths. Each "path" is a dot-separated list of 
 This section has the format
 ```json
   "tracks":[
-    { "trackName":<string>, 
-      "nodeProperties": [
-        {"nodeName":<string>, "color":<string>, "size":<float>, "label":<string>},
+    { "trackLabel":<string>, 
+      "trackProperties": [
+        {"nodeName":<string>, "color":<string>, "size":<float>},
         ...
       ]
     }
@@ -85,37 +85,15 @@ This section has the format
 ```
 
 Each track specifies visual cues for each of the nodes. If `color` is specified and `size` is non-zero a box will appear next to the node-label with the indicated color. The width of the box depends on the number of nodes around the flare-plot and the height of the box by the `size` parameter which should be a number between 0 and 1. 
-
-If `color` is not specified but `label` is, the track will contain a text-label. The node-labels are considered a special track which by default is enabled and placed closest to the center. This default can be overwritten by adding a special track named "nodelabels". In the following example, same-sized boxes will appear as the inner track and node-labels appear as the outer track
 ```json
   "tracks":[
-    { "trackName":"Boxes",
-      "nodeProperties":[
+    { "trackLabel":"Boxes",
+      "trackProperties":[
         {"nodeName":"Asn1", "color":"blue", "size":1.0},
         {"nodeName":"Pro2", "color":"blue", "size":1.0},
         {"nodeName":"His3", "color":"red",  "size":1.0}
-      ]
-    },
-    { "trackName":"nodelabels", 
-      "nodeProperties":[
-        {"nodeName":"Asn1", "label":"Asn1"},
-        {"nodeName":"Pro2", "label":"Pro2"},
-        {"nodeName":"His3", "label":"His3"},
       ]
     }
-  ]
-```
-The `nodeProperties` entry is not required, so the above example could equivalently be written
-```json
-  "tracks":[
-    { "trackName":"Boxes",
-      "nodeProperties":[
-        {"nodeName":"Asn1", "color":"blue", "size":1.0},
-        {"nodeName":"Pro2", "color":"blue", "size":1.0},
-        {"nodeName":"His3", "color":"red",  "size":1.0}
-      ]
-    },
-    { "trackName":"nodelabels" }
   ]
 ```
 
