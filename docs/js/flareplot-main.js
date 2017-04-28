@@ -9,9 +9,9 @@
  */
 function createFlareplot(width, inputGraph, containerSelector){
     var w = width;
-    var h   = w;
-    var rx  = w * 0.5;
-    var ry  = w * 0.5;
+    var h = w;
+    var rx = w * 0.5;
+    var ry = w * 0.5;
     var rotate = 0;
     var discRad = 55;
 
@@ -227,7 +227,8 @@ function createFlareplot(width, inputGraph, containerSelector){
                 var name = fullName.substring(i + 1);
                 var node = nodeMap[name];
                 if (!node) {
-                    node = nodeMap[name] = {name: name, children: []};
+                    node = {name: name, children: []};
+                    nodeMap[name] = node;
                     if (name.length) {
                         node.parent = addToMap(nodeMap, fullName.substring(0, i));
                         node.parent.children.push(node);
