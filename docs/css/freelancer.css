@@ -63,7 +63,6 @@ header .intro-text .skills {
     padding-bottom: 10px;
   }
   header {
-    margin-top: 100px;
     padding-top: 0px;
   }
   header .intro-text .name {
@@ -124,7 +123,7 @@ header .intro-text .skills {
 }
 @media (min-width: 768px) {
   .navbar-custom {
-    padding: 25px 0;
+    padding: 14px 0;
     -webkit-transition: padding 0.3s;
     -moz-transition: padding 0.3s;
     transition: padding 0.3s;

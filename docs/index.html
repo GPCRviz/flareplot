@@ -37,6 +37,7 @@
 
     </style>
 
+
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -51,10 +52,14 @@
     
     <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
     <script type="text/javascript" src="js/rangeslider.js"></script>
-    <script type="text/javascript" src="js/flareplot-parser.js"></script>
     <script type="text/javascript" src="js/flareplot-main.js"></script>
+    <script type="text/javascript" src="js/flareplot-selectors.js"></script>
+    <script type="text/javascript" src="js/fingerprintpanel.js"></script>
+
     <!-- Visualization CSS -->
-    <link href="css/flare.css" rel="stylesheet">
+    <link href="css/flareplot-main.css" rel="stylesheet">
+    <link href="css/flareplot-selectors.css" rel="stylesheet">
+    <link href="css/fingerprintpanel.css" rel="stylesheet">
 
 </head>
 
@@ -62,7 +67,7 @@
 <div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
 
     <!-- Navigation -->
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <nav id="mainNav" class="navbar navbar-default navbar-custom">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header page-scroll">
@@ -89,31 +94,53 @@
     </nav>
 
     <!-- Header -->
-    <header>
-        <div class="container" id="maincontent" tabindex="-1">
-            <img src="img/flare-faded_smaller.png" style="position:absolute;left:50%;margin-left:-300px;z-index:-1">
-            <div id="maintext" style="height:600px;text-align:center;vertical-align:middle">
+<header>
+    <div class="container" id="maincontent" tabindex="-1">
+        <img src="img/flare-faded_smaller.png" style="position:absolute;left:50%;margin-left:-300px;z-index:-1">
+        <div id="maintext" style="height:600px;text-align:center;vertical-align:middle">
             <p>
-<br><br><br>
-FlarePlots are interactive diagrams for exploring dynamic networks. They can be used to visualize any type of network that changes over time, but many of our examples currently focus on interaction networks from molecular dynamics simulations. Try an example, or go to <a href="generate.html">Generate Input</a> and then upload the resulting JSON file here:
+                <br><br><br>
+                FlarePlots are interactive diagrams for exploring dynamic networks. They can be used to visualize any type of network that changes over time, but many of our examples currently focus on interaction networks from molecular dynamics simulations. Try an example, or go to <a href="generate.html">Generate Input</a> and then upload the resulting JSON file here:
             </p>
             <p>
-<!--<input id="uploader" type="file" style="380;position:relative;left:50%;margin-left:-190px;border:1px dashed gray;padding:15px"></input>-->
-<div class="fileUpload btn btn-primary">
-    <span>Upload JSON</span>
-    <input type="file" id="uploader" class="upload" />
-</div>
+                <!--<input id="uploader" type="file" style="380;position:relative;left:50%;margin-left:-190px;border:1px dashed gray;padding:15px"></input>-->
+            <div class="fileUpload btn btn-primary">
+                <span>Upload JSON</span>
+                <input type="file" id="uploader" class="upload" />
+            </div>
 <script>
-var chart;
+var flareplot;
+var panel;
 
 function fileRead(contents){
     document.getElementById("maincontent").innerHTML = "";
-    chart = createFlareplot(700, contents, "maincontent");
-    document.getElementById("maincontent").children[0].style.width="100%";
-    document.getElementById("evocontrols").style.width="800px";
-    document.getElementById("evocontrols").style.left="50%";
-    document.getElementById("evocontrols").style.marginLeft="-400px";
-    document.getElementById("rangeSlider").style.width="500px";
+    flareplot = createFlareplot(600, contents, "#maincontent");
+
+    d3.select("#maincontent div")
+        .style("position","relative")
+        .style("left","50%")
+        .style("margin-left","-300px");
+
+
+    var selectorContainer = d3.select("#maincontent").append("div");
+    var selectorAdded = createSelectors(flareplot, selectorContainer.node());
+    if( !selectorAdded ){
+        selectorContainer.remove();
+    }
+
+    // Create fingerprint panel if frameDict is included in contents
+    frameDict = getFrameDict(contents)
+    if(frameDict){
+        flareplot.framesIntersect([]) //show all interactions to begin with
+        var gpcrs = getFingerprintColumns(contents);
+        var numRows = 1;
+        panel = initFingerprintPanel("#maincontent", gpcrs, numRows, twoStateSelection);
+        panel.on("click", updateIntersectFrames)
+    }
+
+    
+    //document.getElementById("maincontent").children[0].style.width="100%";
+    //document.getElementById("rangeSlider").style.width="500px";
 }
 
 var reader = new FileReader();
@@ -237,7 +264,7 @@ function loadExample(fileName){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
     <!-- Theme JavaScript -->
-    <script src="js/freelancer.js"></script>
+    <!--<script src="js/freelancer.js"></script>-->
 
     <!-- Google analytics -->
     <script>

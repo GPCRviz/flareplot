@@ -1,0 +1,15 @@
+
+{
+  "edges": [
+    {"name1":"A", "name2":"B", "frames":[2,3]},
+    {"name1":"A", "name2":"C", "frames":[0,1]},
+    {"name1":"A", "name2":"D", "frames":[0,1,2,3]},
+    {"name1":"B", "name2":"D", "frames":[2]}
+  ],
+  "frameDict": {
+    "B2AR":0,
+    "mOR":1,
+    "dOR":2,
+    "A2A":3
+  }
+}

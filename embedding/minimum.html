@@ -1,94 +1,27 @@
 <html>
 <head>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="flareplot-main.js"></script>
-  <script src="flareplot-parser.js"></script>
-    <style type="text/css">
+  <!-- FlarePlot dependencies -->
+  <script src="https://d3js.org/d3.v3.min.js"></script>
 
-        path.arc {
-            fill: #fff;
-        }
+  <!-- FlarePlot javascript files -->
+  <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
 
-        .node {
-            font-size: 10px;
-            fill:#888;
-            cursor: pointer;
-        }
-
-        .node:hover {
-            fill: #1f77b4;
-        }
-
-        .toggledNode{
-            font-size: 10px;
-            fill: "black";
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .link {
-            fill: none;
-            stroke: #000;
-            stroke-opacity: .1;
-            stroke-width: 2.0;
-            pointer-events: none;
-        }
-
-        .link.source, .link.target {
-            stroke-opacity: 1;
-        }
-
-        .node.target {
-            font-weight: bold;
-        }
-
-        .link.source {
-            stroke: #2ca02c;
-        }
-
-        .link.target {
-            stroke: #2ca02c;
-        }
-
-        .link.toggled{
-            stroke-opacity: 1;
-        }
-
-        .node.source {
-            font-weight: bold;
-        }
-
-
-        svg text {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        svg text::selection {
-            background: none;
-        }
-
-        body{
-            margin:20px;
-        }
-
-        section{
-            width:900px;
-        }
-
-    </style>
+  <!-- FlarePlot css files -->
+  <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.css"></script>
 </head>
 <body>
-  <div id="flare-container"></div>
-  <div id="flare-container2"></div>
-  <script> 
-    d3.json("real_example-salt_bridges.json", function(data) {
-      var plot = createFlareplot(600, data, "flare-container");
-    });
-    d3.json("real_example-salt_bridges.json", function(data) {
-      var plot2 = createFlareplot(800, data, "flare-container2");
-    });
-  </script>
+
+<div id="flare-container"></div>
+
+<script>
+    var jsonData = {
+        edges: [
+            { name1: "A", name2: "B", frames: [0,1,2] },
+            { name1: "A", name2: "C", frames: [1] },
+            { name1: "B", name2: "C", frames: [0,2] }
+        ]
+    };
+    var plot = createFlareplot(500, jsonData, "#flare-container");
+</script>
 </body>
 </html>
