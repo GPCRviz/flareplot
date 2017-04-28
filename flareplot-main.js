@@ -48,13 +48,15 @@ function createFlareplot(width, json, divId){
             //json  = JSON.parse(json_text);
             graph = parse(json);
             nodes = cluster.nodes(graph.trees[selectedTree].tree[""]);
-            links = graph.trees[selectedTree].frames;
             bundle = d3.layout.bundle();
-            splines = bundle(links[0]);
-            splineDico = buildSplineIndex(splines);
+
+            //links = graph.trees[selectedTree].frames;
+            //splines = bundle(links[0]);
+            //splineDico = buildSplineIndex(splines);
 
             links = graph.trees[selectedTree].allEdges;
             splines = bundle(links);
+            splineDico = buildSplineIndex(splines);
 
             line = d3.svg.line.radial()
                 .interpolate("bundle")
@@ -224,7 +226,8 @@ function createFlareplot(width, json, divId){
          * @param rangeEnd first frame after `rangeStart` that should not be included
          */
         function rangeIntersect(rangeStart, rangeEnd){
-            splines = bundle(links);
+            //splines = bundle(links);
+            //splineDico = buildSplineIndex(splines);
             var path = svg.selectAll("path.link");
 
             path.style("stroke-width",
@@ -251,7 +254,8 @@ function createFlareplot(width, json, divId){
          * @param rangeEnd first frame after `rangeStart` that should not be included
          */
         function rangeSum(rangeStart, rangeEnd){
-            splines = bundle(links);
+            //splines = bundle(links);
+            //splineDico = buildSplineIndex(splines);
             var path = svg.selectAll("path.link");
 
             var widthScale = d3.scale.linear()
@@ -280,7 +284,8 @@ function createFlareplot(width, json, divId){
          * @param subset a list of numbers indicating which frames to include
          */
         function subsetIntersect(subset){
-            splines = bundle(links);
+            //splines = bundle(links);
+            //splineDico = buildSplineIndex(splines);
             var path = svg.selectAll("path.link");
 
             path.style("stroke-width",
@@ -308,7 +313,8 @@ function createFlareplot(width, json, divId){
          * @param subset a list of numbers indicating which frames to include
          */
         function subsetSum(subset){
-            splines = bundle(links);
+            //splines = bundle(links);
+            //splineDico = buildSplineIndex(splines);
             var path = svg.selectAll("path.link");
 
             var widthScale = d3.scale.linear()
