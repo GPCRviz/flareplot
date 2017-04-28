@@ -7,119 +7,29 @@
     <script src="jquery-1.7.2.js"></script>
     <script src="jquery.event.drag-2.2.js"></script>
     <script src="jquery.event.drag.live-2.2.js"></script>
+
+    <script src="jqdRangeslider.js"></script>
+    <link href="jqdRangeslider.css" rel="stylesheet">
+
     <title>jqd-slider</title>
 
     <style type="text/css">
-        #container{
+        #slider-container{
             position: relative;
             border: 0px dashed gray;
             height:20px;
             background-color: #eeeef5;
         }
-        .drag {
-            position: absolute;
-            border: 1px solid #AAB;
-            background: #BCE;
-            height: 100%;
-            width: 58px;
-            top: 0px;
-            cursor: move;
-            margin:-0.5px;
-        }
-        .handle {
-            position: absolute;
-            height: 6px;
-            width: 6px;
-            border: 1px solid #AAB;
-            background: #9AC;
-        }
-        .EE {
-            right: -4px;
-            cursor: e-resize;
-        }
-        .WW {
-            cursor: w-resize;
-            left: -4px;
-        }
-        .EE, .WW {
-            top: 50%;
-            margin-top: -4px;
-        }
     </style>
 </head>
 <body>
-<script type="text/javascript">
-    jQuery(function($){
-        var $con = $('#container');
-        var con_width = parseFloat($con.css("width"));
-
-        $('.drag')
-            .drag("init",function(){
-            })
-            .drag("start",function( ev, dd ){
-                dd.attr = $( ev.target ).prop("className");
-                dd.width = $( this ).width();
-                dd.height = $( this ).height();
-
-                dd.limit = $con.offset();
-                dd.limit.right = $con.outerWidth() - $( this ).outerWidth();
-
-            })
-            .drag(function( ev, dd ){
-
-                var props = {};
-                if ( dd.attr.indexOf("EE") > -1 ){
-                    props.width = Math.min( Math.max( 10, dd.width + dd.deltaX ), $con.innerWidth() - dd.originalX + $con.offset().left);
-                }
-                if ( dd.attr.indexOf("WW") > -1 ){
-                    props.width = Math.max(10, dd.width - dd.deltaX);
-                    props.left = dd.originalX + dd.width - props.width - $con.offset().left;
-                    if(props.left<0){
-                        props.width += props.left;
-                        props.left = 0;
-                    }
-                }
-                if ( dd.attr.indexOf("drag") > -1 ){
-                    props.left = Math.min( dd.limit.right, Math.max( dd.offsetX - $con.offset().left, 0));
-                }
-                $( this ).css( props );
-            });
-
-        //Reposition slider on window resize
-        $(window).resize(function(ev){
-            var new_width = parseFloat($con.css("width"));
-            var ratio = new_width/con_width;
-            con_width = new_width;
-
-            var props = {};
-            props.left = parseFloat($(".drag").css("left")) * ratio;
-
-            var dragWidth = parseFloat($(".drag").css("width"));
-            if(dragWidth>10.5)
-                props.width = Math.max( dragWidth * ratio, 10);
-
-            $(".drag").css(props);
-        });
-
-        //Click on bar
-        $con.mousedown(function(ev){
-            var x = ev.offsetX;
-            var props = {};
-            var dragWidth = parseFloat($(".drag").css("width"));
-            var conWidth = parseFloat($con.css("width"));
-            props.left = Math.min( conWidth-dragWidth, Math.max(x - dragWidth/2, 0));
-            $(".drag").css(props);
-        });
-
-    });
-</script>
 
 <h1>Range slider demo based on jquery drag</h1>
-<div id="container">
-    <div class="drag" style="left:20px;">
-        <div class="handle WW"></div>
-        <div class="handle EE"></div>
-    </div>
-</div>
+
+<div id="slider-container"></div>
+
+<script type="text/javascript">
+    createJQDRangeslider(0, 100, "#slider-container")
+</script>
 </body>
 </html>
