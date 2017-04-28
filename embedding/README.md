@@ -16,7 +16,6 @@ A minimal working template looks as follow
     <script src="https://d3js.org/d3.v3.min.js"></script>
 
     <!-- FlarePlot javascript files -->
-    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
     <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
 </head>
 <body>
@@ -50,7 +49,6 @@ The d3-library has a convenient mechanism for reading json files:
     <script src="https://d3js.org/d3.v3.min.js"></script>
 
     <!-- FlarePlot javascript files -->
-    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
     <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
 </head>
 <body>
@@ -75,7 +73,6 @@ The style of the plot can be modified through css. Most importantly, the edges a
     <script src="https://d3js.org/d3.v3.min.js"></script>
 
     <!-- FlarePlot javascript files -->
-    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
     <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
     <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-rangeslider.js"></script>
 
@@ -110,7 +107,6 @@ averages over intervals of frames. To use it
     <script src="https://d3js.org/d3.v3.min.js"></script>
 
     <!-- FlarePlot javascript files -->
-    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-parser.js"></script>
     <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
     <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-rangeslider.js"></script>
 
