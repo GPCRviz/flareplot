@@ -30,6 +30,9 @@
 
 <script type="text/javascript">
     var slider = createJQDRangeslider(0, 100, "#slider-container")
+    slider.onChange(function(newRange){
+        //console.log(newRange);
+    })
 </script>
 </body>
 </html>

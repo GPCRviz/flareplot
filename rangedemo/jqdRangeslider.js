@@ -1,104 +1,46 @@
-/**
- * Created by rfonseca on 4/27/17.
- */
-
 /*jslint browser:true */
 /*jslint this */
 
 
 /**
+ * Create a jquery-drag range slider that selects ranges between `rangeMin` and `rangeMax`, and add it to the
+ * `containerSelector`. The contents of the container is laid out as follows
+ * <code>
+ * <div class="drag">
+ *     <div class="handle WW"></div>
+ *     <div class="handle EE"></div>
+ * </div>
+ * </code>
+ * The appearance can be changed with CSS, but the `position` must be `relative`, and the width of `.drag` should be
+ * left unaltered.
  *
- * @param rangeMin
- * @param rangeMax
- * @param containerSelector
- * @returns {{range: range, onChange: onChange}}
+ * @param rangeMin Minimum value of the range
+ * @param rangeMax Maximum value of the range
+ * @param containerSelector A CSS selection indicating exactly one element in the document
+ * @returns {{range: function(number, number), onChange: function(function)}}
  */
 function createJQDRangeslider (rangeMin, rangeMax, containerSelector) {
     "use strict";
 
-    var sliderRange = {begin: rangeMin, end: rangeMin};
-    var $container;
-    var $drag;
     var minWidth = 10;
 
-    $(function () {
-
-        var $drg = $(document.createElement("div"));
-        $drg.attr("class", "drag");
-        $drg.append( $(document.createElement("div")).attr("class", "handle WW") );
-        $drg.append( $(document.createElement("div")).attr("class", "handle EE") );
-
-        var $con = $(containerSelector);
-        $container = $con;
-        $con.append($drg);
-
-        var con_width = parseFloat($con.css("width"));
-
-        $drag = $(".drag")
-            .drag("start", function (ev, dd) {
-                dd.attr = $(ev.target).prop("className");
-                dd.width = $(this).width();
-                dd.height = $(this).height();
-
-                dd.limit = $con.offset();
-                dd.limit.right = $con.outerWidth() - $(this).outerWidth();
-
-            })
-            .drag(function (ev, dd) {
-
-                var props = {};
-                if (dd.attr.indexOf("EE") > -1) {
-                    props.width = Math.min(Math.max(minWidth, dd.width + dd.deltaX), $con.innerWidth() - dd.originalX + $con.offset().left);
-                }
-                if (dd.attr.indexOf("WW") > -1) {
-                    props.width = Math.max(minWidth, dd.width - dd.deltaX);
-                    props.left = dd.originalX + dd.width - props.width - $con.offset().left;
-                    if (props.left < 0) {
-                        props.width += props.left;
-                        props.left = 0;
-                    }
-                }
-                if (dd.attr.indexOf("drag") > -1) {
-                    props.left = Math.min(dd.limit.right, Math.max(dd.offsetX - $con.offset().left, 0));
-                }
-                $(this).css(props);
-            });
-
-        //Reposition slider on window resize
-        $(window).resize(function (ev) {
-            var new_width = parseFloat($con.css("width"));
-            var ratio = new_width / con_width;
-            con_width = new_width;
-
-            var props = {};
-            props.left = parseFloat($(".drag").css("left")) * ratio;
-
-            var dragWidth = parseFloat($(".drag").css("width"));
-            if (dragWidth > 10.5) {
-                props.width = Math.max(dragWidth * ratio, 10);
-            }
-
-            $(".drag").css(props);
-        });
-
-        //Click on bar
-        $con.mousedown(function (ev) {
-            var x = ev.offsetX;
-            var props = {};
-            var dragWidth = parseFloat($(".drag").css("width"));
-            var conWidth = parseFloat($con.css("width"));
-            props.left = Math.min(conWidth - dragWidth, Math.max(x - dragWidth / 2, 0));
-            $(".drag").css(props);
-        });
-
-    });
-
+    var sliderRange = {begin: rangeMin, end: rangeMin};
     var changeListeners = [];
+    var $container;
+    var $drag;
+    var dragging = false; //Used to avoid rounding errors when recomputing sliderRange from UI
 
-    function onChange(callback){
-        changeListeners.push(callback);
-        return this;
-    }
+
+    //Create elements in container
+    var $drg = $(document.createElement("div"));
+    $drg.attr("class", "drag");
+    $drg.append( $(document.createElement("div")).attr("class", "handle WW") );
+    $drg.append( $(document.createElement("div")).attr("class", "handle EE") );
+    var $con = $(containerSelector);
+    $container = $con;
+    $con.append($drg);
+    var con_width = parseFloat($con.css("width"));
+
 
     function updateUIFromRange () {
         var conW = parseFloat($container.css("width"));
@@ -109,13 +51,110 @@ function createJQDRangeslider (rangeMin, rangeMax, containerSelector) {
         if (isNaN(ratio)) {
             ratio = 0;
         }
-        $drag.css("left", (ratio * (conW - uirangeW)) + "px");
-        $drag.css("width", uirangeW + "px");
+        var uirangeL = ratio * (conW - uirangeW);
 
+        $drag.css("left", uirangeL + "px");
+        $drag.css("width", uirangeW + "px");
     }
 
     function updateRangeFromUI () {
+        var uirangeL = parseFloat($drag.css("left"));
+        var uirangeW = parseFloat($drag.css("width"));
+        var conW = parseFloat($container.css("width"));
+        var slope = (conW - minWidth) / (rangeMax - rangeMin);
+        var rangeW = (uirangeW - minWidth) / slope;
+        var uislope = (rangeMax - rangeMin - rangeW) / (conW - uirangeW);
+        var rangeL = rangeMin + uislope * uirangeL;
+        var oldRangeW = sliderRange.end - sliderRange.begin;
+        sliderRange.begin = Math.round(rangeL);
+        if (dragging) {
+            sliderRange.end = sliderRange.begin + oldRangeW;
+        } else {
+            sliderRange.end = Math.round(rangeL + rangeW);
+        }
 
+        //Fire change listeners
+        changeListeners.forEach(function (callback) {
+            callback({begin: sliderRange.begin, end: sliderRange.end});
+        });
+    }
+
+
+    $drag = $(".drag")
+        .drag("start", function (ev, dd) {
+            dd.attr = $(ev.target).prop("className");
+            dd.width = $(this).width();
+            dd.height = $(this).height();
+
+            dd.limit = $con.offset();
+            dd.limit.right = $con.outerWidth() - $(this).outerWidth();
+
+            dragging = (dd.attr.indexOf("drag") > -1);
+
+        })
+        .drag("end", function (ev, dd) {
+            dragging = false;
+        })
+        .drag(function (ev, dd) {
+
+            var props = {};
+            if (dd.attr.indexOf("EE") > -1) {
+                props.width = Math.min(Math.max(minWidth, dd.width + dd.deltaX), $con.innerWidth() - dd.originalX + $con.offset().left);
+            }
+            if (dd.attr.indexOf("WW") > -1) {
+                props.width = Math.max(minWidth, dd.width - dd.deltaX);
+                props.left = dd.originalX + dd.width - props.width - $con.offset().left;
+                if (props.left < 0) {
+                    props.width += props.left;
+                    props.left = 0;
+                }
+            }
+            if (dd.attr.indexOf("drag") > -1) {
+                props.left = Math.min(dd.limit.right, Math.max(dd.offsetX - $con.offset().left, 0));
+            }
+            props.left = Math.round(props.left);
+            props.width = Math.round(props.width);
+            $(this).css(props);
+            updateRangeFromUI();
+        });
+
+    //Reposition slider on window resize
+    $(window).resize(function (ev) {
+        var new_width = parseFloat($con.css("width"));
+        var ratio = new_width / con_width;
+        con_width = new_width;
+
+        var props = {};
+        props.left = parseFloat($(".drag").css("left")) * ratio;
+
+        var dragWidth = parseFloat($(".drag").css("width"));
+        if (dragWidth > 10.5) {
+            props.width = Math.max(dragWidth * ratio, 10);
+        }
+
+        props.left = Math.round(props.left);
+        props.width = Math.round(props.width);
+        $(".drag").css(props);
+        updateRangeFromUI();
+    });
+
+    //Click on bar
+    $con.mousedown(function (ev) {
+        var x = ev.offsetX;
+        var props = {};
+        var dragWidth = parseFloat($(".drag").css("width"));
+        var conWidth = parseFloat($con.css("width"));
+        props.left = Math.min(conWidth - dragWidth, Math.max(x - dragWidth / 2, 0));
+        props.left = Math.round(props.left);
+        props.width = Math.round(props.width);
+        $(".drag").css(props);
+        updateRangeFromUI();
+    });
+
+
+    function onChange(callback){
+        changeListeners.push(callback);
+        return this;
     }
 
     function setRange (b, e) {
@@ -123,6 +162,11 @@ function createJQDRangeslider (rangeMin, rangeMax, containerSelector) {
         sliderRange.end = e;
 
         updateUIFromRange();
+
+        //Fire change listeners
+        changeListeners.forEach(function (callback) {
+            callback({begin: sliderRange.begin, end: sliderRange.end});
+        });
     }
 
 
@@ -149,8 +193,7 @@ function createJQDRangeslider (rangeMin, rangeMax, containerSelector) {
 
             //Check that lower and upper range are within their bounds
             if (rLower < rangeMin || rUpper > rangeMax) {
-                console.log("Warning: trying to set range (" + rLower + "," + rUpper + ") which is outside of bounds" +
-                    " (" + rangeMin + "," + rangeMax + "). ");
+                console.log("Warning: trying to set range (" + rLower + "," + rUpper + ") which is outside of bounds (" + rangeMin + "," + rangeMax + "). ");
                 rLower = Math.max(rLower, rangeMin);
                 rUpper = Math.min(rUpper, rangeMax);
             }
@@ -164,13 +207,11 @@ function createJQDRangeslider (rangeMin, rangeMax, containerSelector) {
             rUpper = rLower + dif;
 
             if (rLower < rangeMin) {
-                console.log("Warning: trying to set range (" + rLower + "," + rUpper + ") which is outside of bounds" +
-                    " (" + rangeMin + "," + rangeMax + "). ");
+                console.log("Warning: trying to set range (" + rLower + "," + rUpper + ") which is outside of bounds (" + rangeMin + "," + rangeMax + "). ");
                 rLower = rangeMin;
             }
             if(rUpper > rangeMax){
-                console.log("Warning: trying to set range (" + rLower + "," + rUpper + ") which is outside of bounds" +
-                    " (" + rangeMin + "," + rangeMax + "). ");
+                console.log("Warning: trying to set range (" + rLower + "," + rUpper + ") which is outside of bounds (" + rangeMin + "," + rangeMax + "). ");
                 rLower = rangeMax - dif;
                 rUpper = rangeMax;
             }
@@ -180,6 +221,8 @@ function createJQDRangeslider (rangeMin, rangeMax, containerSelector) {
 
         return {begin: sliderRange.begin, end: sliderRange.end};
     }
+
+    setRange(sliderRange.begin, sliderRange.end);
 
     return {
         range: range,
