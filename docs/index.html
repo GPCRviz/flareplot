@@ -132,9 +132,9 @@ function fileRead(contents){
     frameDict = getFrameDict(contents)
     if(frameDict){
         flareplot.framesIntersect([]) //show all interactions to begin with
-        var gpcrs = getFingerprintColumns(contents);
+        var columnNames = getFingerprintColumns(contents);
         var numRows = 1;
-        panel = initFingerprintPanel("#maincontent", gpcrs, numRows, twoStateSelection);
+        panel = initFingerprintPanel("#maincontent", columnNames, numRows, twoStateSelection);
         panel.on("click", updateIntersectFrames)
     }
 

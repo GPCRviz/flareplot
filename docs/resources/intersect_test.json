@@ -7,9 +7,9 @@
     {"name1":"B", "name2":"D", "frames":[2]}
   ],
   "frameDict": {
-    "B2AR":0,
-    "mOR":1,
-    "dOR":2,
-    "A2A":3
+    "0":"B2AR",
+    "1":"mOR",
+    "2":"dOR",
+    "3":"A2A"
   }
 }
