@@ -17,27 +17,6 @@
     <!-- Theme CSS -->
     <link href="css/freelancer.css" rel="stylesheet">
 
-    <style>
-    .fileUpload {
-        position: relative;
-        overflow: hidden;
-        margin: 30px;
-    }
-    .fileUpload input.upload {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin: 0;
-        padding: 0;
-        font-size: 20px;
-        cursor: pointer;
-        opacity: 0;
-        filter: alpha(opacity=0);
-    }
-
-    </style>
-
-
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -51,7 +30,8 @@
     <![endif]-->
     
     <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
-    <script type="text/javascript" src="js/rangeslider.js"></script>
+
+    <script type="text/javascript" src="js/flareplot-rangeslider.js"></script>
     <script type="text/javascript" src="js/flareplot-main.js"></script>
     <script type="text/javascript" src="js/flareplot-selectors.js"></script>
     <script type="text/javascript" src="js/fingerprintpanel.js"></script>
@@ -59,7 +39,29 @@
     <!-- Visualization CSS -->
     <link href="css/flareplot-main.css" rel="stylesheet">
     <link href="css/flareplot-selectors.css" rel="stylesheet">
+    <link href="css/flareplot-rangeslider.css" rel="stylesheet">
     <link href="css/fingerprintpanel.css" rel="stylesheet">
+
+    <style>
+        .fileUpload {
+            position: relative;
+            overflow: hidden;
+            margin: 30px;
+        }
+        .fileUpload input.upload {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+    </style>
+
 
 </head>
 
@@ -127,6 +129,20 @@ function fileRead(contents){
     if( !selectorAdded ){
         selectorContainer.remove();
     }
+
+    d3.select("#maincontent")
+        .append("div")
+        .attr("id", "slider-container")
+        .style("width","600px")
+        .style("height","30px")
+        .style("background-color","#E9E9E9")
+        .style("position","relative")
+        .style("left","50%")
+        .style("margin-left","-300px");
+    var slider = createJQDRangeslider(0,flareplot.getNumFrames(), "#slider-container");
+
+
+
 
     // Create fingerprint panel if frameDict is included in contents
     frameDict = getFrameDict(contents)
