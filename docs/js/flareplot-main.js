@@ -460,7 +460,7 @@ function createFlareplot(width, inputGraph, containerSelector){
          * Update the state of the flareplot so it reflects the intersection over a subset.
          * @param subset a list of numbers indicating which frames to include
          */
-        function subsetIntersect(subset){
+        function subsetIntersect(subset, subtract){
             //splines = bundle(links);
             //splineDico = buildSplineIndex(splines);
             var path = svg.selectAll("path.link");
@@ -472,6 +472,15 @@ function createFlareplot(width, inputGraph, containerSelector){
                         var iud = graph.edges[i].frames.indexUpDown(frame);
                         if (iud[0] != iud[1]) return 0;
                     }
+
+                    if (subtract) {
+                        for (var c = 0; c < subtract.length; c++) {
+                            var frame = subtract[c];
+                            var iud = graph.edges[i].frames.indexUpDown(frame);
+                            if (iud[0] == iud[1]) return 0;
+                        }
+                    }
+
                     return 2;
                 })
                 .attr("class", function(d) {
@@ -536,6 +545,10 @@ function createFlareplot(width, inputGraph, containerSelector){
                 return subsetIntersect(selection);
             }
             throw "framesIntersect must take either two integers (range), or an array (subset) as argument";
+        }
+
+        function framesIntersectSubtract(intersectSelection, subtractSelection) {
+            return subsetIntersect(intersectSelection, subtractSelection);
         }
 
         /**
@@ -821,6 +834,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             setFrame: setFrame,
             framesIntersect: framesIntersect,
             framesSum: framesSum,
+            framesIntersectSubtract: framesIntersectSubtract,
             setTrack: setTrack,
             setTree: setTree,
             getTreeNames: getTreeNames,
