@@ -41,7 +41,7 @@
 
                 function fileRead(contents){
                     document.getElementById("maincontent").innerHTML = "";
-                    flareplot = createFlareplot(600, contents, "#maincontent");
+                    flareplot = createFlareplot(750, contents, "#maincontent");
 
                     d3.select("#maincontent div")
                         .style("position","relative")
@@ -86,7 +86,7 @@
                 }
 
                 function codeAddress() {
-                    loadExample('resources/gpcr_brain_interactome_degree_centrality.json')
+                    loadExample('resources/gpcr_brain_interactome_clustered_degree_centrality_inter.json')
                 }
                 window.onload = codeAddress;
             </script>
