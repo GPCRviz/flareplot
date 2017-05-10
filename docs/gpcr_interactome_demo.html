@@ -41,12 +41,12 @@
 
                 function fileRead(contents){
                     document.getElementById("maincontent").innerHTML = "";
-                    flareplot = createFlareplot(750, contents, "#maincontent");
+                    flareplot = createFlareplot(600, contents, "#maincontent");
 
                     d3.select("#maincontent div")
                         .style("position","relative")
                         .style("left","50%")
-                        .style("margin-left","-350px");
+                        .style("margin-left","-300px");
 
 
                     var selectorContainer = d3.select("#maincontent").append("div");
