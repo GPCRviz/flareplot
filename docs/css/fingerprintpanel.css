@@ -1,3 +1,4 @@
+
 .fpPanelOuter {
     overflow-x:auto;
     width: 100%;
@@ -18,7 +19,7 @@
 .fpPanel th {
   position: relative;
   padding: 10px; 
-  height: 150px;
+  height: 110px;
 }
 
 .fpPanel th span {
@@ -29,6 +30,8 @@
   position: absolute;
   bottom: 0;
   left: 50%;
+  font-weight: normal;
+  font-size:12px;
 }
 
 
