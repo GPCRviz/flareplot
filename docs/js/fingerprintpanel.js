@@ -42,63 +42,6 @@ function threeStateSelection(el, row, col, i){
 }
 
 
-
-// function initFingerprintPanel(containerId, columnNames, numRows, callback){
-//     // Creates the grid and attaches printClick callback to each cell
-//     var numCols = columnNames.length;
-//     var i = 0;
-//     var panel = d3.select(containerId).append('table')
-//         .attr("class", "fpPanel")
-//         .attr("id", "fingerprint")
-
-//     for (var r = 0; r < numRows; ++r){
-//         var tr = panel.append('tr');
-//         for (var c = 0; c < numCols; ++c){
-//             var cell = tr.append('td');
-//             cell.html(columnNames[c]);
-//             cell.on('click', function(el, r, c, i){
-//                 return function(){
-//                     callback(el, r, c, i);
-//                 }
-//             }(cell, r, c, i), false);
-//         }
-//     }
-
-//     return panel
-// }
-
-
-// function initFingerprintPanel(containerId, columnNames, numRows, callback){
-//     // Creates the grid and attaches printClick callback to each cell
-//     var numCols = columnNames.length;
-//     var i = 0;
-
-//     var outerPanel = d3.select(containerId).append('div')
-//         .attr("class", "fpPanelOuter")
-//         .attr("id", "fingerprintOuter")
-
-//     var panel = d3.select("#fingerprintOuter").append('table')
-//         .attr('class', 'fpPanel')
-//         .attr('id', 'fingerprint')
-
-
-//     for (var r = 0; r < numRows; ++r){
-//         var tr = panel.append('tr');
-//         for (var c = 0; c < numCols; ++c){
-//             var cell = tr.append('td');
-//             cell.html(columnNames[c]);
-//             cell.on('click', function(el, r, c, i){
-//                 return function(){
-//                     callback(el, r, c, i);
-//                 }
-//             }(cell, r, c, i), false);
-//         }
-//     }
-
-//     return panel
-// }
-
-
 function initFingerprintPanel(containerId, columnNames, numRows, callback){
     // Creates the grid and attaches printClick callback to each cell
     var numCols = columnNames.length;
@@ -193,9 +136,20 @@ function updateIntersectFrames(){
     }
 
 
-    var selection = [];
+    var include_sel = [];
     for (var i = 0; i < include_nodes.length; i++){
-        selection.push(frameIndex_to_collabel[include_nodes[i]]);
+        include_sel.push(frameIndex_to_collabel[include_nodes[i]]);
     }
-    flareplot.framesIntersect(selection);
+
+    var exclude_sel = [];
+    for (var i = 0; i < exclude_nodes.length; i++){
+        exclude_sel.push(frameIndex_to_collabel[exclude_nodes[i]]);
+    }
+
+    if(exclude_sel.length == 0){
+        flareplot.framesIntersect(include_sel);
+    }else{
+        flareplot.framesIntersectSubtract(include_sel, exclude_sel)
+    }
+    
 }

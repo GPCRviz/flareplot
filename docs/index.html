@@ -134,7 +134,7 @@ function fileRead(contents){
         flareplot.framesIntersect([]) //show all interactions to begin with
         var columnNames = getFingerprintColumns(contents);
         var numRows = 1;
-        panel = initFingerprintPanel("#maincontent", columnNames, numRows, twoStateSelection);
+        panel = initFingerprintPanel("#maincontent", columnNames, numRows, threeStateSelection);
         panel.on("click", updateIntersectFrames)
     }
 
