@@ -61,10 +61,18 @@
                     frameDict = getFrameDict(contents)
                     if(frameDict){
                         flareplot.framesIntersect([]) //show all interactions to begin with
+
+                        // Interactive Mode
                         var columnNames = getFingerprintColumns(contents);
-                        var numRows = 1;
-                        panel = initFingerprintPanel("#maincontent", columnNames, numRows, threeStateSelection);
-                        panel.on("click", updateIntersectFrames)
+                        panel1 = initFingerprintPanel("#maincontent", columnNames, 1, threeStateSelection);
+
+                        // Precomputed Fingerprints
+                        var fingerprint_list = calcFingerprints(contents); 
+                        var numRows = fingerprint_list.length;
+                        panel2 = initScrollableFingerprintPanel("#maincontent", columnNames, numRows, fingerprint_list, threeStateRowSelection);
+
+                        panel1.on("click", updateIntersectFrames)
+                        panel2.on("click", updateIntersectFrames)
                     }
                 }
 
