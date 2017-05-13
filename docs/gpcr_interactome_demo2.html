@@ -63,7 +63,9 @@
                         flareplot.framesIntersect([]) //show all interactions to begin with
 
                         var columnNames = getFingerprintColumns(contents);
-                        panel = initFingerprintPanel("#maincontent", columnNames, threeStateSelection, true, '110px');
+                        var fingerprint_list = calcFingerprints(contents); 
+                        panel = initScrollableFingerprintPanel("#maincontent", columnNames, fingerprint_list, threeStateRowSelection, true, '110px');
+
                         panel.on("click", updateIntersectFrames)
                     }
                 }

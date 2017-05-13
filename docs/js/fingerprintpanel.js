@@ -111,8 +111,9 @@ function threeStateSelection(el, row, col){
 }
 
 
-function initFingerprintPanel(containerId, columnNames, numRows, callback){
+function initFingerprintPanel(containerId, columnNames, callback, show_header, col_label_height){
     // Creates the grid and attaches printClick callback to each cell
+    var numRows = 1;
     var numCols = columnNames.length;
 
     var outerPanel = d3.select(containerId).append('div')
@@ -128,9 +129,15 @@ function initFingerprintPanel(containerId, columnNames, numRows, callback){
     var column_header_panel = panel.append("thead").append('tr');
     var col_headers = []
     for (var c = 0; c < numCols; ++c){
-        var col_header = column_header_panel.append('th').append("span")
-        col_header.html(columnNames[c]);
-        col_headers.push(col_header)
+        var col_header = column_header_panel.append('th').style('height', col_label_height).append("span");
+        if(show_header){
+            col_header.html(columnNames[c]);
+            col_headers.push(col_header);
+        }else{
+            col_header.html("");
+            col_headers.push(col_header)
+        }
+        
     }
 
 
@@ -206,9 +213,14 @@ function threeStateRowSelection(tr, r, columnNames){
 }
 
 
-function initScrollableFingerprintPanel(containerId, columnNames, numRows, fingerpint_list, callback){
+function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_list, callback, show_header, col_label_height){
     // Creates the grid and attaches printClick callback to each cell
+    var numRows = fingerprint_list.length;
     var numCols = columnNames.length;
+
+    var outerPanel = d3.select(containerId).append('div')
+        .attr("class", "fpPanelOuter")
+        .attr("id", "fingerprintOuter")
 
     var panel = d3.select("#fingerprintOuter").append('table')
         .attr('class', 'fpScrolldown')
@@ -219,9 +231,14 @@ function initScrollableFingerprintPanel(containerId, columnNames, numRows, finge
     var column_header_panel = panel.append("thead").append('tr');
     var col_headers = []
     for (var c = 0; c < numCols; c++){
-        var col_header = column_header_panel.append('th').append("span")
-        col_header.html("");
-        col_headers.push("")
+        var col_header = column_header_panel.append('th').style('height', col_label_height).append("span")
+        if(show_header){
+            col_header.html(columnNames[c]);
+            col_headers.push(col_header)
+        }else{
+            col_header.html("");
+            col_headers.push(col_header)
+        }
     }
 
 
