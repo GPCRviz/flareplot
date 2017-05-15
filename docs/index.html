@@ -139,7 +139,6 @@ function fileRead(contents){
         .style("position","relative")
         .style("left","50%")
         .style("margin-left","-300px");
-    var slider = createJQDRangeslider(0,flareplot.getNumFrames(), "#slider-container");
 
 
 
@@ -152,6 +151,11 @@ function fileRead(contents){
         var numRows = 1;
         panel = initFingerprintPanel("#maincontent", gpcrs, numRows, twoStateSelection);
         panel.on("click", updateIntersectFrames)
+    } else {
+        var slider = createD3RangeSlider(0,flareplot.getNumFrames(), "#slider-container", true);
+        slider.onChange(function(newRange){
+           flareplot.framesSum(newRange.begin, newRange.end+1);
+        });
     }
 
     

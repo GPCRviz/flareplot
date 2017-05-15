@@ -1,3 +1,6 @@
+.slider-container {
+    background-color: #f2f2f9;
+}
 
 .slider {
     position: absolute;
@@ -37,3 +40,17 @@
     top: 50%;
     margin-top: -4px;
 }
+
+.play-container .button{
+    fill-opacity: 0.0;
+    stroke: #AAB;
+    stroke-width: 1.6;
+}
+
+.play-container .play, .play-container .stop {
+    fill: #BCE;
+    stroke: #AAB;
+    stroke-width: 1;
+}
+
+
