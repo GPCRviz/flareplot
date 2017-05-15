@@ -1,0 +1,28 @@
+h1,h2,h3,h4,h5,h6 {
+    text-align: center;
+    font-weight: 100;
+    font-size: 1.3em;
+}
+* {
+    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.container {
+    outline: none;
+}
+
+
+.rightNav, .leftNav{
+    position: fixed;
+    top: 50%;
+    font-size: 50px;
+    margin-top: -25px;
+    color: #efeff6;
+    text-decoration: none;
+}
+
+.leftNav {
+    left: 10px;
+}
+.rightNav {
+    right: 10px;
+}
