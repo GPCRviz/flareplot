@@ -813,6 +813,12 @@ function createFlareplot(width, inputGraph, containerSelector){
 
         }
 
+        function setTension(tension){
+            line.tension(tension);
+            var path = svg.selectAll("path.link")
+                .attr("d", function(d, i) { return line(splines[i]); })
+        }
+
         var nodeToggleListeners = [];
         var nodeHoverListeners  = [];
         var edgeToggleListeners = [];
@@ -840,6 +846,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             setTree: setTree,
             getTreeNames: getTreeNames,
             getTrackNames: getTrackNames,
+            setTension: setTension,
             addNodeToggleListener: addNodeToggleListener,
             addNodeHoverListener: addNodeHoverListener,
             addEdgeToggleListener: addEdgeToggleListener,
