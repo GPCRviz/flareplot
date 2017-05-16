@@ -19,9 +19,44 @@
     <!-- Visualization CSS -->
     <link href="../css/flareplot-main.css" rel="stylesheet">
     <link href="../css/flareplot-selectors.css" rel="stylesheet">
-    <link href="../css/flareplot-fingerprintpanel.css" rel="stylesheet">
+    <link href="../css/flareplot-rangeslider.css" rel="stylesheet">
 
     <link href="demo.css" rel="stylesheet">
+
+    <style>
+        #flareDiv div{
+            position: relative;
+            left: 50%;
+            margin-left: -350px;
+        }
+        #sliderDiv {
+            height: 30px;
+            width: 700px;
+            position: relative;
+            left: 50%;
+            margin-left: -350px;
+            margin-top: 20px;
+        }
+        #regroupDiv {
+            position: relative;
+            left: 50%;
+            margin-left: -50px;
+            margin-top: 20px;
+            width: 100px;
+            height: 40px;
+            background-color: #d7deeb;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 40px;
+            border: 2px solid #8489a3;
+            cursor: pointer;
+        }
+        #regroupDiv:hover {
+            background-color: #a1a5bd;
+        }
+
+
+    </style>
 
 
 </head>
@@ -30,23 +65,25 @@
 <h1>Interactions in MD trajectory of active morphine receptor</h1>
 <div class="container" id="flareDiv"></div>
 <div class="container" id="sliderDiv"></div>
+<div class="button" id="regroupDiv">Regroup</div>
 <script>
     var flareplot;
     var slider;
 
     function fileRead(contents){
-        flareplot = createFlareplot(600, contents, "#flareDiv");
+        flareplot = createFlareplot(700, contents, "#flareDiv");
+        slider = createFlareplotSlider(flareplot, "#sliderDiv");
 
-        d3.select("#flareDiv div")
-            .style("position","relative")
-            .style("left","50%")
-            .style("margin-left","-300px");
-
-        /* slider = createRangeSlider(flareplot, ..)*/
-
+        var curGroup = 0;
+        d3.select("#regroupDiv")
+            .on("click", function(){
+                curGroup = (curGroup+1)%2;
+                flareplot.setTrack(curGroup);
+                flareplot.setTree(curGroup);
+            });
     }
 
-    d3.text("../resources/mor_active_bu72.nc.json", function(json_text){
+    d3.text("../resources/mor-active-rep1-wb.json", function(json_text){
         fileRead(json_text);
     });
 
