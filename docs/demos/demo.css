@@ -16,8 +16,11 @@ h1,h2,h3,h4,h5,h6 {
     top: 50%;
     font-size: 50px;
     margin-top: -25px;
-    color: #efeff6;
+    color: #dedee4;
     text-decoration: none;
+}
+.rightNav:hover, .leftNav:hover {
+    color: #c4c2e4;
 }
 
 .leftNav {
@@ -26,3 +29,5 @@ h1,h2,h3,h4,h5,h6 {
 .rightNav {
     right: 10px;
 }
+
+

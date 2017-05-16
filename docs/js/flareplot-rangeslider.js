@@ -1,6 +1,22 @@
 /*jslint browser: true */
 /*jslint this */
 
+/**
+ * Create a time slider specifically for a flareplot.
+ * Calls the `createD3RangeSlider` and returns the result, but also sets up bindings.
+ * @param flareplot
+ * @param containerSelector
+ * @returns {{range: (function(number, number)), onChange: (function(Function))}}
+ */
+function createFlareplotSlider (flareplot, containerSelector) {
+    var slider = createD3RangeSlider(0, flareplot.getNumFrames()-1, containerSelector, true);
+    slider.onChange(function (newRange) {
+        flareplot.framesSum(newRange.begin, newRange.end+1);
+    });
+
+    return slider;
+}
+
 
 /**
  * Create a d3 range slider that selects ranges between `rangeMin` and `rangeMax`, and add it to the
@@ -346,7 +362,7 @@ function createD3RangeSlider (rangeMin, rangeMax, containerSelector, playButton)
 
         var limitWidth = rangeMax - rangeMin + 1;
         var rangeWidth = sliderRange.end - sliderRange.begin + 1;
-        var delta = Math.min(Math.ceil(rangeWidth / 100), Math.ceil(limitWidth / 1000));
+        var delta = Math.min(Math.ceil(rangeWidth / 10), Math.ceil(limitWidth / 100));
 
         // Check if playback has reached the end
         if (sliderRange.end + delta > rangeMax) {
