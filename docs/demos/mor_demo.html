@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Diversity in the GPCR interactome across human tissues">
+
+    <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Javascript libs -->
+    <script type="text/javascript" src="../vendor/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../js/flareplot-main.js"></script>
+    <script type="text/javascript" src="../js/flareplot-selectors.js"></script>
+    <script type="text/javascript" src="../js/flareplot-rangeslider.js"></script>
+
+    <!-- Visualization CSS -->
+    <link href="../css/flareplot-main.css" rel="stylesheet">
+    <link href="../css/flareplot-selectors.css" rel="stylesheet">
+    <link href="../css/flareplot-fingerprintpanel.css" rel="stylesheet">
+
+    <link href="demo.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+<h1>Interactions in MD trajectory of active morphine receptor</h1>
+<div class="container" id="flareDiv"></div>
+<div class="container" id="sliderDiv"></div>
+<script>
+    var flareplot;
+    var slider;
+
+    function fileRead(contents){
+        flareplot = createFlareplot(600, contents, "#flareDiv");
+
+        d3.select("#flareDiv div")
+            .style("position","relative")
+            .style("left","50%")
+            .style("margin-left","-300px");
+
+        /* slider = createRangeSlider(flareplot, ..)*/
+
+    }
+
+    d3.text("../resources/mor_active_bu72.nc.json", function(json_text){
+        fileRead(json_text);
+    });
+
+
+</script>
+
+<a href="gpcr_interactome_demo.html" class="rightNav">&#9654;</a>
+<a href="gpcr_interactome_demo2.html" class="leftNav">&#9664;</a>
+
+</body>
+</html>

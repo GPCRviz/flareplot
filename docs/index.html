@@ -34,13 +34,13 @@
     <script type="text/javascript" src="js/flareplot-rangeslider.js"></script>
     <script type="text/javascript" src="js/flareplot-main.js"></script>
     <script type="text/javascript" src="js/flareplot-selectors.js"></script>
-    <script type="text/javascript" src="js/fingerprintpanel.js"></script>
+    <script type="text/javascript" src="js/flareplot-fingerprintpanel.js"></script>
 
     <!-- Visualization CSS -->
     <link href="css/flareplot-main.css" rel="stylesheet">
     <link href="css/flareplot-selectors.css" rel="stylesheet">
     <link href="css/flareplot-rangeslider.css" rel="stylesheet">
-    <link href="css/fingerprintpanel.css" rel="stylesheet">
+    <link href="css/flareplot-fingerprintpanel.css" rel="stylesheet">
 
     <style>
         .fileUpload {
@@ -130,16 +130,6 @@ function fileRead(contents){
         selectorContainer.remove();
     }
 
-    d3.select("#maincontent")
-        .append("div")
-        .attr("id", "slider-container")
-        .style("width","600px")
-        .style("height","30px")
-        .style("background-color","#E9E9E9")
-        .style("position","relative")
-        .style("left","50%")
-        .style("margin-left","-300px");
-
 
 
 
@@ -147,11 +137,26 @@ function fileRead(contents){
     frameDict = getFrameDict(contents)
     if(frameDict){
         flareplot.framesIntersect([]) //show all interactions to begin with
-        var gpcrs = getFingerprintColumns(contents);
-        var numRows = 1;
-        panel = initFingerprintPanel("#maincontent", gpcrs, numRows, twoStateSelection);
-        panel.on("click", updateIntersectFrames)
+        // Interactive Mode
+        var columnNames = getFingerprintColumns(contents);
+        panel1 = initFingerprintPanel("#maincontent", columnNames, threeStateSelection, true, '110px');
+
+        // Precomputed Fingerprints
+        var fingerprint_list = calcFingerprints(contents);
+        panel2 = initScrollableFingerprintPanel("#maincontent", columnNames, fingerprint_list, threeStateRowSelection, false, '0px');
+
+        panel1.on("click", updateIntersectFrames)
+        panel2.on("click", updateIntersectFrames)
     } else {
+        d3.select("#maincontent")
+            .append("div")
+            .attr("id", "slider-container")
+            .style("width","600px")
+            .style("height","30px")
+            .style("position","relative")
+            .style("left","50%")
+            .style("margin-left","-300px");
+
         var slider = createD3RangeSlider(0,flareplot.getNumFrames(), "#slider-container", true);
         slider.onChange(function(newRange){
            flareplot.framesSum(newRange.begin, newRange.end+1);
@@ -201,6 +206,7 @@ function loadExample(fileName){
                 </div>
             </div>
             <div class="row">
+                <!--
                 <div class="col-sm-2 example-item">
                     <a nohref class="example-link" onclick="javascript:loadExample('resources/mor-active-rep1-wb.json')">
                         <img src="img/examples/mor_example.gif" class="img-responsive" alt="Morphine receptor">
@@ -224,6 +230,22 @@ function loadExample(fileName){
                 <div class="col-sm-2 example-item">
                     <a href="http://rasmusfonseca.github.io/EvoBundle/gpcr_demo2/" class="example-link">
                         <img src="img/examples/oldgpcr_example.gif" class="img-responsive" alt="GPCR demo">
+                    </a>
+                </div>
+                -->
+                <div class="col-sm-2 example-item">
+                    <a href="demos/mor_demo.html" class="example-link">
+                        <img src="img/examples/mor_example.gif" class="img-responsive" alt="Morphine receptor">
+                    </a>
+                </div>
+                <div class="col-sm-2 example-item">
+                    <a href="demos/gpcr_interactome_demo.html" class="example-link">
+                        <img src="img/examples/interaction_example1.gif" class="img-responsive" alt="Interactome demo">
+                    </a>
+                </div>
+                <div class="col-sm-2 example-item">
+                    <a href="demos/gpcr_interactome_demo2.html" class="example-link">
+                        <img src="img/examples/interaction_example2.gif" class="img-responsive" alt="Interactome demo">
                     </a>
                 </div>
             </div>

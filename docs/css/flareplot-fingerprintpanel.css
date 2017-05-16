@@ -1,0 +1,126 @@
+/*Fingerprint selection query menu*/
+
+.fpPanelOuter {
+    overflow: auto;
+    max-width: 100%;
+    max-height:150px;
+    margin: 0 auto;
+    margin-bottom: 80px;
+}
+
+
+.fpPanel { 
+    border-collapse:collapse;
+    width: 50%;
+    margin: 0 auto;
+}
+
+
+.fpPanel th {
+  position: relative;
+  padding: 10px; 
+  height: 10px;
+}
+
+
+.fpPanel th span {
+  transform-origin: 0 50%;
+  transform: rotate(-45deg); 
+  white-space: nowrap; 
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  font-weight: normal;
+  font-size:12px;
+}
+
+
+.fpPanel td {
+    cursor:pointer;
+    width:20px; 
+    height:20px;
+    border:1px solid #ccc;
+    text-align:center;
+    font-family:sans-serif; 
+    font-size:13px;
+}
+.fpPanel td.include {
+    background-color:#28881e;
+    font-weight:bold; 
+    color:white;
+}
+.fpPanel td.exclude {
+    background-color:#863333;
+    font-weight:bold; 
+    color:#696969;
+}
+.fpPanel td.ignore {
+    background-color: white;
+}
+
+.fpPanel td.hover {
+  background-color:purple;
+}
+
+/* Scrolldown selection menu*/
+
+.fpScrolldown { 
+    border-collapse:collapse;
+    width: 50%;
+    margin: 0 auto;
+}
+.fpScrolldown th {
+  position: relative;
+  padding: 10px; 
+  height: 10px;
+}
+
+.fpScrolldown th span {
+  transform-origin: 0 50%;
+  transform: rotate(-45deg); 
+  white-space: nowrap; 
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  font-weight: normal;
+  font-size:12px;
+}
+
+.fpScrolldown tbody tr:hover {
+  border: 2px solid #441111;
+}
+
+
+.fpScrolldown td {
+    margin:3px;
+    border-radius:15px;
+    cursor:pointer;
+    width:20px; 
+    height:20px;
+    /*border:1px solid #ccc;*/
+    text-align:center;
+    font-family:sans-serif; 
+    font-size:13px;
+}
+.fpScrolldown td.include {
+    /*background-color:#28881e;*/
+    background-color: #acacac;
+    font-weight:bold; 
+    color:white;
+}
+.fpScrolldown td.exclude {
+    /*background-color:#863333;*/
+    background-color: white;
+    font-weight:bold; 
+    color:#696969;
+}
+.fpScrolldown td.ignore {
+    background-color: white;
+}
+
+.fpScrolldown td.hover {
+  background-color:purple;
+}
+
