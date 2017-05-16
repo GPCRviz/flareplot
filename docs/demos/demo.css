@@ -1,10 +1,24 @@
+* {
+    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.logo {
+    font-family: 'Cambay', sans-serif;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: 500;
+    font-style: italic;
+    color: #c3c3c3;
+}
+
 h1,h2,h3,h4,h5,h6 {
     text-align: center;
     font-weight: 100;
     font-size: 1.3em;
-}
-* {
-    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .container {
     outline: none;
