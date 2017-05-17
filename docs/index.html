@@ -139,13 +139,13 @@ function fileRead(contents){
         flareplot.framesIntersect([]) //show all interactions to begin with
         // Interactive Mode
         var columnNames = getFingerprintColumns(contents);
-        panel1 = initFingerprintPanel("#maincontent", columnNames, threeStateSelection, true, '110px');
+        // panel1 = initFingerprintPanel("#maincontent", columnNames, threeStateSelection, true, '110px');
 
         // Precomputed Fingerprints
         var fingerprint_list = calcFingerprints(contents);
-        panel2 = initScrollableFingerprintPanel("#maincontent", columnNames, fingerprint_list, threeStateRowSelection, false, '0px');
+        panel2 = initScrollableFingerprintPanel("#maincontent", columnNames, fingerprint_list, threeStateRowSelection, true, '110px');
 
-        panel1.on("click", updateIntersectFrames)
+        // panel1.on("click", updateIntersectFrames)
         panel2.on("click", updateIntersectFrames)
     } else {
         d3.select("#maincontent")
