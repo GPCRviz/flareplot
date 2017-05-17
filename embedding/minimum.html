@@ -1,0 +1,27 @@
+<html>
+<head>
+  <!-- FlarePlot dependencies -->
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+
+  <!-- FlarePlot javascript files -->
+  <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
+
+  <!-- FlarePlot css files -->
+  <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.css"></script>
+</head>
+<body>
+
+<div id="flare-container"></div>
+
+<script>
+    var jsonData = {
+        edges: [
+            { name1: "A", name2: "B", frames: [0,1,2] },
+            { name1: "A", name2: "C", frames: [1] },
+            { name1: "B", name2: "C", frames: [0,2] }
+        ]
+    };
+    var plot = createFlareplot(500, jsonData, "#flare-container");
+</script>
+</body>
+</html>
