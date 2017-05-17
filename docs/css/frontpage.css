@@ -74,6 +74,7 @@ body {
 }
 
 ul.nav a:hover {
+    /* remove default gray background from */
     background-color: transparent;
 }
 

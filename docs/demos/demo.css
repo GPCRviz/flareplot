@@ -1,24 +1,21 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic');
-@import url('https://fonts.googleapis.com/css?family=Cambay');
-@import url('https://fonts.googleapis.com/css?family=Katibeh:100,400,700,100italic,400italic');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
 
 * {
-    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .logo {
     /*font-family: 'Cambay', sans-serif;*/
-    font-family: 'Katibeh', cursive;
+    font-family: 'Playfair Display', serif;
 
     position: fixed;
     top: 10px;
     left: 10px;
 
     text-decoration: none;
-    font-size: 3em;
-    font-weight: 100;
-    font-style: italic;
-    color: #c3c3c3;
+    font-size: 2.0rem;
+    color: #939393;
 }
 
 h1,h2,h3,h4,h5,h6 {
