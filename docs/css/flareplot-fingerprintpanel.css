@@ -16,7 +16,6 @@
 }
 
 .fpScrolldownContainer {
-    display:inline-block;
     overflow: auto;
     overflow-x: hidden;
     max-height:150px;
@@ -107,7 +106,7 @@
 /* Scrolldown selection menu*/
 
 .fpScrolldown { 
-    /*overflow-x: scroll;*/
+    display:block;
     border-collapse:collapse;
     width: 50%;
     margin: 0 auto;
@@ -115,7 +114,7 @@
 
 
 .fpScrolldown tr:hover {
-  border: 2px solid #441111;
+  border: 1px solid #441111;
 }
 
 
@@ -133,22 +132,13 @@
     font-size:13px;
 }
 .fpScrolldown td.include {
-    /*background-color:#28881e;*/
     background-color: #acacac;
-    font-weight:bold; 
-    color:white;
 }
 .fpScrolldown td.exclude {
-    /*background-color:#863333;*/
     background-color: white;
-    font-weight:bold; 
-    color:#696969;
 }
 .fpScrolldown td.ignore {
     background-color: white;
 }
 
-.fpScrolldown td.hover {
-  background-color:purple;
-}
 
