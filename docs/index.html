@@ -4,31 +4,15 @@
 <head>
 
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Flareplot</title>
+    <meta name="description" content="Interactive visualization of dynamic networks">
+    <meta name="author" content="Rasmus Fonseca & AJ Venkatakrishnan">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>FlarePlot</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
 
-    <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Theme CSS -->
-    <link href="css/freelancer.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
     <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
 
     <script type="text/javascript" src="js/flareplot-rangeslider.js"></script>
@@ -42,283 +26,152 @@
     <link href="css/flareplot-rangeslider.css" rel="stylesheet">
     <link href="css/flareplot-fingerprintpanel.css" rel="stylesheet">
 
-    <style>
-        .fileUpload {
-            position: relative;
-            overflow: hidden;
-            margin: 30px;
-        }
-        .fileUpload input.upload {
-            position: absolute;
-            top: 0;
-            right: 0;
-            margin: 0;
-            padding: 0;
-            font-size: 20px;
-            cursor: pointer;
-            opacity: 0;
-            filter: alpha(opacity=0);
-        }
+    <!-- Page css -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-    </style>
+    <link href="css/frontpage.css" rel="stylesheet">
+
 
 
 </head>
 
-<body id="page-top" class="index">
-<div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
+<body>
 
+<div class="container">
     <!-- Navigation -->
-    <nav id="mainNav" class="navbar navbar-default navbar-custom">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <a class="navbar-brand" href="#page-top">FlarePlot</a>
+    <nav class="navbar navbar-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Flareplot</a>
             </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="page-scroll">
-                        <a href="https://github.com/GPCRviz/FlarePlot/tree/master/input">Generate input</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="https://github.com/GPCRviz/FlarePlot/tree/master/embedding">Embed</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#footer">About</a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="https://github.com/GPCRviz/FlarePlot/tree/master/input">Generate input</a></li>
+                <li><a href="https://github.com/GPCRviz/FlarePlot/tree/master/embedding">Embed</a></li>
+                <li><a href="#footer">About</a></li>
+            </ul>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container-fluid -->
     </nav>
+</div>
 
-    <!-- Header -->
-<header>
-    <div class="container" id="maincontent" tabindex="-1">
-        <img src="img/flare-faded_smaller.png" style="position:absolute;left:50%;margin-left:-300px;z-index:-1">
-        <div id="maintext" style="height:600px;text-align:center;vertical-align:middle">
+<!-- Demo area -->
+<div class="container">
+    <div class="row">
+
+        <!-- Right side bar -->
+        <div class="col-lg-3 text-center side-bar right-bar">
             <p>
-                <br><br><br>
-                FlarePlots are interactive diagrams for exploring dynamic networks. They can be used to visualize any type of network that changes over time, but many of our examples currently focus on interaction networks from molecular dynamics simulations. Try an example, or go to <a href="generate.html">Generate Input</a> and then upload the resulting JSON file here:
+                Flareplots are interactive diagrams for exploring dynamic networks. They can be used to visualize any
+                type of network that changes over time.
             </p>
+        </div>
+
+        <!-- Demo div -->
+        <div class="col-lg-6 text-center" id="maincontent"></div>
+
+        <!-- Left side bar -->
+        <div class="col-lg-3 text-center side-bar left-bar">
             <p>
-                <!--<input id="uploader" type="file" style="380;position:relative;left:50%;margin-left:-190px;border:1px dashed gray;padding:15px"></input>-->
+                Click one of the examples below or go to <a href="https://github.com/GPCRviz/FlarePlot/tree/master/input">Generate Input</a>, run one of the
+                scripts, and then upload the resulting JSON file here:
+            </p>
             <div class="fileUpload btn btn-primary">
                 <span>Upload JSON</span>
                 <input type="file" id="uploader" class="upload" />
             </div>
-<script>
-var flareplot;
-var panel;
-
-function fileRead(contents){
-    document.getElementById("maincontent").innerHTML = "";
-    flareplot = createFlareplot(600, contents, "#maincontent");
-
-    d3.select("#maincontent div")
-        .style("position","relative")
-        .style("left","50%")
-        .style("margin-left","-300px");
-
-
-    var selectorContainer = d3.select("#maincontent").append("div");
-    var selectorAdded = createSelectors(flareplot, selectorContainer.node());
-    if( !selectorAdded ){
-        selectorContainer.remove();
-    }
-
-
-
-
-    // Create fingerprint panel if frameDict is included in contents
-    frameDict = getFrameDict(contents)
-    if(frameDict){
-        flareplot.framesIntersect([]) //show all interactions to begin with
-        // Interactive Mode
-        var columnNames = getFingerprintColumns(contents);
-        // panel1 = initFingerprintPanel("#maincontent", columnNames, threeStateSelection, true, '110px');
-
-        // Precomputed Fingerprints
-        var fingerprint_list = calcFingerprints(contents);
-        panel2 = initScrollableFingerprintPanel("#maincontent", columnNames, fingerprint_list, threeStateRowSelection, true, '110px');
-
-        // panel1.on("click", updateIntersectFrames)
-        panel2.on("click", updateIntersectFrames)
-    } else {
-        d3.select("#maincontent")
-            .append("div")
-            .attr("id", "slider-container")
-            .style("width","600px")
-            .style("height","30px")
-            .style("position","relative")
-            .style("left","50%")
-            .style("margin-left","-300px");
-
-        var slider = createD3RangeSlider(0,flareplot.getNumFrames(), "#slider-container", true);
-        slider.onChange(function(newRange){
-           flareplot.framesSum(newRange.begin, newRange.end+1);
-        });
-    }
-
-    
-    //document.getElementById("maincontent").children[0].style.width="100%";
-    //document.getElementById("rangeSlider").style.width="500px";
-}
-
-var reader = new FileReader();
-reader.onload = function(e) {
-    var contents = e.target.result;
-    fileRead(contents);
-};
-
-function handleFile() {
-    document.getElementById("maintext").innerHTML = "<p>Loading ...</p>";
-    var file = this.files[0];
-    reader.readAsText(file);
-}
-
-var uploader = document.getElementById("uploader");
-uploader.addEventListener("change", handleFile, false);
-
-function loadExample(fileName){
-  d3.text(fileName, function(json_text){
-    fileRead(json_text);
-  });
-}
-
-</script>
-            </p>
-            </div>
-                    <!--<img class="img-responsive" src="img/flare-faded_smaller.png" alt="">-->
         </div>
-    </header>
-
-    <!-- Examples Grid Section -->
-    <section id="examples">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Examples</h2>
-                    <!--<hr class="star-primary">-->
-                </div>
-            </div>
-            <div class="row">
-                <!--
-                <div class="col-sm-2 example-item">
-                    <a nohref class="example-link" onclick="javascript:loadExample('resources/mor-active-rep1-wb.json')">
-                        <img src="img/examples/mor_example.gif" class="img-responsive" alt="Morphine receptor">
-                    </a>
-                </div>
-                <div class="col-sm-2 example-item">
-                    <a nohref class="example-link" onclick="javascript:loadExample('resources/salt_bridges.json')">
-                        <img src="img/examples/salt_example.gif" class="img-responsive" alt="Salt bridges">
-                    </a>
-                </div>
-                <div class="col-sm-2 example-item">
-                    <a nohref class="example-link" onclick="javascript:loadExample('resources/mor_active_bu72.nc.json')">
-                        <img src="img/examples/degree_example.gif" class="img-responsive" alt="Degree centrality">
-                    </a>
-                </div>
-                <div class="col-sm-2 example-item">
-                    <a href="gpcr_demo.html" class="example-link">
-                        <img src="img/examples/gpcr_example.gif" class="img-responsive" alt="GPCR demo">
-                    </a>
-                </div>
-                <div class="col-sm-2 example-item">
-                    <a href="http://rasmusfonseca.github.io/EvoBundle/gpcr_demo2/" class="example-link">
-                        <img src="img/examples/oldgpcr_example.gif" class="img-responsive" alt="GPCR demo">
-                    </a>
-                </div>
-                -->
-                <div class="col-sm-2 example-item">
-                    <a href="demos/mor_demo.html" class="example-link">
-                        <img src="img/examples/mor_example.gif" class="img-responsive" alt="Morphine receptor">
-                    </a>
-                </div>
-                <div class="col-sm-2 example-item">
-                    <a href="demos/gpcr_interactome_demo.html" class="example-link">
-                        <img src="img/examples/interaction_example1.gif" class="img-responsive" alt="Interactome demo">
-                    </a>
-                </div>
-                <div class="col-sm-2 example-item">
-                    <a href="demos/gpcr_interactome_demo2.html" class="example-link">
-                        <img src="img/examples/interaction_example2.gif" class="img-responsive" alt="Interactome demo">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Footer -->
-    <footer class="text-center" id="footer">
-        <div class="footer-above">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>About FlarePlot</h3>
-                        <p>FlarePlot is an open source library for visualizing and interactively exploring dynamically
-                            changing networks.</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Join us online</h3>
-                        <ul class="list-inline">
-                            <li>
-                                <a href="http://sparkle-group.slack.com" class="btn-social btn-outline"><span class="sr-only">Slack</span><i class="fa fa-fw fa-slack"></i></a>
-                            </li>
-                            <li>
-                                <a href="http://github.com/GPCRviz/FlarePlot" class="btn-social btn-outline"><span class="sr-only">Google Plus</span><i class="fa fa-fw fa-github"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-below">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        Copyright &copy; Stanford University 2016
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
-    <div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
-        <a class="btn btn-primary" href="#page-top">
-            <i class="fa fa-chevron-up"></i>
-        </a>
     </div>
 
+</div>
 
-    <!-- jQuery -->
-    <script src="vendor/jquery/jquery.min.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!-- Examples Grid Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h2>Examples</h2>
+        </div>
+    </div>
+    <div class="row row-centered">
+        <div class="col-sm-3 col-md-2 col-centered example-item">
+            <a href="demos/mor_demo.html" class="example-link">
+                <img src="img/examples/mor_example.gif" class="img-thumbnail" alt="Morphine receptor">
+            </a>
+        </div>
+        <div class="col-sm-3 col-md-2 col-centered example-item">
+            <a href="demos/gpcr_interactome_demo.html" class="example-link">
+                <img src="img/examples/interaction_example1.gif" class="img-thumbnail" alt="Interactome demo">
+            </a>
+        </div>
+        <div class="col-sm-3 col-md-2 col-centered example-item">
+            <a href="demos/gpcr_interactome_demo2.html" class="example-link">
+                <img src="img/examples/interaction_example2.gif" class="img-thumbnail" alt="Fingerprint demo">
+            </a>
+        </div>
+    </div>
+</div>
 
-    <!-- Plugin JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
-    <!-- Theme JavaScript -->
-    <!--<script src="js/freelancer.js"></script>-->
+<!-- Footer -->
+<footer class="text-center">
+    <div class="container footer-above">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>About FlarePlot</h3>
+                <p>FlarePlot is an open source library for visualizing and interactively exploring dynamically
+                    changing networks.</p>
+            </div>
 
-    <!-- Google analytics -->
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+            <div class="col-md-6">
+                <h3>Join us online</h3>
+                <ul class="list-inline">
+                    <li>
+                        <a href="http://sparkle-group.slack.com" class="btn-social btn-outline">
+                            <span class="sr-only">Slack</span>
+                            <i class="fa fa-fw fa-slack"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://github.com/GPCRviz/FlarePlot" class="btn-social btn-outline">
+                            <span class="sr-only">Github</span>
+                            <i class="fa fa-fw fa-github"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-      ga('create', 'UA-96399796-1', 'auto');
-      ga('send', 'pageview');
+    <div class="container footer-below">
+        <div class="row">
+            <div class="col-lg-12">
+                Copyright &copy; Stanford University 2016
+            </div>
+        </div>
+    </div>
+</footer>
 
-    </script>
+
+<!-- Google analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-96399796-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+</div>
+
+<script type="text/javascript" src="js/frontpage.js"></script>
 
 </body>
 
