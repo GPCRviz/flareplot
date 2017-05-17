@@ -4,23 +4,19 @@
 <head>
 
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Flareplot</title>
+    <meta name="description" content="Interactive visualization of dynamic networks">
+    <meta name="author" content="Rasmus Fonseca & AJ Venkatakrishnan">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>FlarePlot</title>
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-    <!-- Bootstrap Core CSS -->
+    <link rel="icon" type="image/png" href="img/favicon.png">
+
+
+    <!--&lt;!&ndash; Bootstrap Core CSS &ndash;&gt;-->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Theme CSS -->
-    <link href="css/freelancer.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,7 +24,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
+
     <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
 
     <script type="text/javascript" src="js/flareplot-rangeslider.js"></script>
@@ -42,11 +38,12 @@
     <link href="css/flareplot-rangeslider.css" rel="stylesheet">
     <link href="css/flareplot-fingerprintpanel.css" rel="stylesheet">
 
+
+    <!-- Styling for button -->
     <style>
         .fileUpload {
             position: relative;
             overflow: hidden;
-            margin: 30px;
         }
         .fileUpload input.upload {
             position: absolute;
@@ -62,139 +59,105 @@
 
     </style>
 
+    <!-- Styling for page -->
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+
+        body {
+            font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+            line-height: 1.6;
+            font-weight: 400;
+            font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: #222;
+        }
+
+
+        ul.nav a:hover {
+            background-color: transparent;
+        }
+
+
+        nav a {
+            color: black;
+        }
+        @media (min-width: 768px) {
+            nav a {
+                font-size: 2rem;
+            }
+        }
+
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.2rem;
+        }
+
+        @media (min-width: 1200px) {
+            .side-bar {
+                margin-top: 200px;
+            }
+        }
+        .side-bar {
+            text-align: center;
+        }
+        #maincontent {
+            margin-bottom: 20px;
+        }
+
+    </style>
 
 </head>
 
-<body id="page-top" class="index">
-<div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
+<body>
 
+<div class="container">
     <!-- Navigation -->
-    <nav id="mainNav" class="navbar navbar-default navbar-custom">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <a class="navbar-brand" href="#page-top">FlarePlot</a>
+    <nav class="navbar navbar-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Flareplot</a>
             </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="page-scroll">
-                        <a href="https://github.com/GPCRviz/FlarePlot/tree/master/input">Generate input</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="https://github.com/GPCRviz/FlarePlot/tree/master/embedding">Embed</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#footer">About</a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="https://github.com/GPCRviz/FlarePlot/tree/master/input">Generate input</a></li>
+                <li><a href="https://github.com/GPCRviz/FlarePlot/tree/master/embedding">Embed</a></li>
+                <li><a href="#footer">About</a></li>
+            </ul>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container-fluid -->
     </nav>
+</div>
 
-    <!-- Header -->
-<header>
-    <div class="container" id="maincontent" tabindex="-1">
-        <img src="img/flare-faded_smaller.png" style="position:absolute;left:50%;margin-left:-300px;z-index:-1">
-        <div id="maintext" style="height:600px;text-align:center;vertical-align:middle">
+<!-- Demo area -->
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Right side bar -->
+        <div class="col-lg-3 side-bar right-bar">
             <p>
-                <br><br><br>
-                FlarePlots are interactive diagrams for exploring dynamic networks. They can be used to visualize any type of network that changes over time, but many of our examples currently focus on interaction networks from molecular dynamics simulations. Try an example, or go to <a href="generate.html">Generate Input</a> and then upload the resulting JSON file here:
+                Flareplots are interactive diagrams for exploring dynamic networks. They can be used to visualize any
+                type of network that changes over time.
             </p>
+        </div>
+
+        <!-- Demo div -->
+        <div class="col-lg-6" id="maincontent"></div>
+
+        <!-- Left side bar -->
+        <div class="col-lg-3 side-bar left-bar">
             <p>
-                <!--<input id="uploader" type="file" style="380;position:relative;left:50%;margin-left:-190px;border:1px dashed gray;padding:15px"></input>-->
+                Click one of the examples below or go to <a href="generate.html">Generate Input</a>, run one of the
+                scripts, and then upload the resulting JSON file here:
+            </p>
             <div class="fileUpload btn btn-primary">
                 <span>Upload JSON</span>
                 <input type="file" id="uploader" class="upload" />
             </div>
-<script>
-var flareplot;
-var panel;
-
-function fileRead(contents){
-    document.getElementById("maincontent").innerHTML = "";
-    flareplot = createFlareplot(600, contents, "#maincontent");
-
-    d3.select("#maincontent div")
-        .style("position","relative")
-        .style("left","50%")
-        .style("margin-left","-300px");
-
-
-    var selectorContainer = d3.select("#maincontent").append("div");
-    var selectorAdded = createSelectors(flareplot, selectorContainer.node());
-    if( !selectorAdded ){
-        selectorContainer.remove();
-    }
-
-
-
-
-    // Create fingerprint panel if frameDict is included in contents
-    frameDict = getFrameDict(contents)
-    if(frameDict){
-        flareplot.framesIntersect([]) //show all interactions to begin with
-        // Interactive Mode
-        var columnNames = getFingerprintColumns(contents);
-        panel1 = initFingerprintPanel("#maincontent", columnNames, threeStateSelection, true, '110px');
-
-        // Precomputed Fingerprints
-        var fingerprint_list = calcFingerprints(contents);
-        panel2 = initScrollableFingerprintPanel("#maincontent", columnNames, fingerprint_list, threeStateRowSelection, false, '0px');
-
-        panel1.on("click", updateIntersectFrames)
-        panel2.on("click", updateIntersectFrames)
-    } else {
-        d3.select("#maincontent")
-            .append("div")
-            .attr("id", "slider-container")
-            .style("width","600px")
-            .style("height","30px")
-            .style("position","relative")
-            .style("left","50%")
-            .style("margin-left","-300px");
-
-        var slider = createD3RangeSlider(0,flareplot.getNumFrames(), "#slider-container", true);
-        slider.onChange(function(newRange){
-           flareplot.framesSum(newRange.begin, newRange.end+1);
-        });
-    }
-
-    
-    //document.getElementById("maincontent").children[0].style.width="100%";
-    //document.getElementById("rangeSlider").style.width="500px";
-}
-
-var reader = new FileReader();
-reader.onload = function(e) {
-    var contents = e.target.result;
-    fileRead(contents);
-};
-
-function handleFile() {
-    document.getElementById("maintext").innerHTML = "<p>Loading ...</p>";
-    var file = this.files[0];
-    reader.readAsText(file);
-}
-
-var uploader = document.getElementById("uploader");
-uploader.addEventListener("change", handleFile, false);
-
-function loadExample(fileName){
-  d3.text(fileName, function(json_text){
-    fileRead(json_text);
-  });
-}
-
-</script>
-            </p>
-            </div>
-                    <!--<img class="img-responsive" src="img/flare-faded_smaller.png" alt="">-->
         </div>
-    </header>
+    </div>
+
+</div>
 
     <!-- Examples Grid Section -->
     <section id="examples">
@@ -319,7 +282,8 @@ function loadExample(fileName){
       ga('send', 'pageview');
 
     </script>
-
+</div>
+<script type="text/javascript" src="js/frontpage.js"></script>
 </body>
 
 </html>

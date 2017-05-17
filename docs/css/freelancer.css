@@ -73,6 +73,7 @@ header .intro-text .skills {
     font-size: 1.75em;
   }
 }
+
 .navbar-custom {
   background: #e8eff5;
   /*background: #d7dde4;*/
@@ -82,13 +83,7 @@ header .intro-text .skills {
   border: none;
 }
 .navbar-custom .navbar-brand {
-  color: black;
-}
-.navbar-custom .navbar-brand:hover,
-.navbar-custom .navbar-brand:focus,
-.navbar-custom .navbar-brand:active,
-.navbar-custom .navbar-brand.active {
-  color: #1a242f;
+    font-family: Katibeh, cursive;
 }
 .navbar-custom .navbar-nav {
   letter-spacing: 1px;
