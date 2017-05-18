@@ -91,7 +91,7 @@ function threeStateSelection(el, row, col){
     }
     else if((includeIndex >= 0) && !(excludeIndex >= 0)){
         includeElems.splice(includeIndex, 1);
-        el.html("X")
+        el.html("&#10007")
         excludeElems.push(el);
     }
     else if(excludeIndex >= 0){
@@ -102,7 +102,7 @@ function threeStateSelection(el, row, col){
 
     for (var i = 0; i < includeElems.length; i++){
         includeElems[i][0][0].className = "include";
-        
+
         include_nodes.push(includeElems[i].col_header);
     }
     for (var j = 0; j < excludeElems.length; j++){
