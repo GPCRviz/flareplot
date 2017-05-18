@@ -213,64 +213,6 @@ function threeStateRowSelection(tr, r, columnNames){
 }
 
 
-// function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_list, callback, show_header, col_label_height){
-//     // Creates the grid and attaches printClick callback to each cell
-//     var numRows = fingerprint_list.length;
-//     var numCols = columnNames.length;
-
-//     var outerPanel = d3.select(containerId).append('div')
-//         .attr("class", "fpPanelOuter")
-//         .attr("id", "fingerprintOuter")
-
-//     var panel = d3.select("#fingerprintOuter").append('table')
-//         .attr('class', 'fpScrolldown')
-//         .attr('id', 'scrolldown')
-
-
-//     // Column Headers
-//     var column_header_panel = panel.append("thead").append('tr');
-//     var col_headers = []
-//     for (var c = 0; c < numCols; c++){
-//         var col_header = column_header_panel.append('th').style('height', col_label_height).append("span")
-//         if(show_header){
-//             col_header.html(columnNames[c]);
-//             col_headers.push(col_header)
-//         }else{
-//             col_header.html("");
-//             col_headers.push(col_header)
-//         }
-//     }
-
-
-//     // Fingerprint cells
-//     for (var r = 0; r < numRows; r++){
-//         var fpattern = fingerprint_list[r][0].split(",").map(Number);
-//         var count = fingerprint_list[r][1];
-
-//         var tr = panel.append("tbody").append('tr');
-//         for (var c = 0; c < numCols; c++){
-
-//             var cell = tr.append('td')
-//             cell.col_header = columnNames[c]; // Attribute to keep track of column header
-//             if(fpattern.includes(c)){
-//                 cell[0][0].className = 'include';
-//             }else{
-//                 cell[0][0].className = 'exclude';
-//             }
-//         }
-//         tr.on('click', function(tr, r, columnNames){
-//             return function(){
-//                 callback(tr, r, columnNames);
-//             }
-//         }(tr, r, columnNames), false);
-
-//     }
-
-//     return panel
-// }
-
-
-
 function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_list, callback, show_header, col_label_height){
     // Creates the grid and attaches printClick callback to each cell
     var numRows = fingerprint_list.length;
@@ -280,23 +222,12 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
         .attr("class", "fpPanelOuter")
         .attr("id", "fingerprintOuter")
 
-    var titlePanel = d3.select("#fingerprintOuter").append('div')
-        .attr("class", "fpTitleContainer")
-        .attr("id", "titleContainer")
-        .append('table')
-        .attr('class', 'fpTitle')
-        .attr('id', 'title')
-
-    var scrollPanel = d3.select("#fingerprintOuter").append('div')
-        .attr("class", "fpScrolldownContainer")
-        .attr("id", "scrolldownContainer")
-        .append('table')
+    var panel = d3.select("#fingerprintOuter").append('table')
         .attr('class', 'fpScrolldown')
         .attr('id', 'scrolldown')
 
-
     // Column Headers
-    var column_header_panel = titlePanel.append("thead").append('tr');
+    var column_header_panel = panel.append("thead").append('tr');
     var col_headers = []
     for (var c = 0; c < numCols; c++){
         var col_header = column_header_panel.append('th').style('height', col_label_height).append("span")
@@ -311,11 +242,12 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
 
 
     // Fingerprint cells
+    var scroll_panel_body = panel.append("tbody")
     for (var r = 0; r < numRows; r++){
         var fpattern = fingerprint_list[r][0].split(",").map(Number);
         var count = fingerprint_list[r][1];
 
-        var tr = scrollPanel.append('tr');
+        var tr = scroll_panel_body.append('tr');
         for (var c = 0; c < numCols; c++){
 
             var cell = tr.append('td')
@@ -334,5 +266,5 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
 
     }
 
-    return scrollPanel
+    return panel
 }
