@@ -47,15 +47,22 @@
         }
 
         // Create fingerprint panel if frameDict is included in contents
-        frameDict = getFrameDict(contents)
+        frameDict = getFrameDict(contents);
         if(frameDict){
-            flareplot.framesIntersect([]) //show all interactions to begin with
+            flareplot.framesIntersect([]); //show all interactions to begin with
 
             var columnNames = getFingerprintColumns(contents);
             var fingerprint_list = calcFingerprints(contents);
-            panel = initScrollableFingerprintPanel("#maincontent", columnNames, fingerprint_list, threeStateRowSelection, true, '110px');
+            panel = initScrollableFingerprintPanel(
+                "#maincontent", // Container selector
+                columnNames,
+                fingerprint_list,
+                threeStateRowSelection,
+                true, // Show header
+                '70px' // Height of column headers
+            );
 
-            panel.on("click", updateIntersectFrames)
+            panel.on("click", updateIntersectFrames);
         }
     }
 

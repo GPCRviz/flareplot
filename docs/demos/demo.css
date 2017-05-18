@@ -7,6 +7,10 @@
     font-family: "Lato";
 }
 
+body {
+    margin: 0px;
+}
+
 .logo {
     /*font-family: 'Cambay', sans-serif;*/
     /*font-family: 'Playfair Display', serif;*/
