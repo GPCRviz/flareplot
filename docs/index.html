@@ -51,7 +51,9 @@
             </div>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="https://github.com/GPCRviz/flareplot/tree/master/input">Generate input</a></li>
+                <li><a href="" target="content-frame">Temporal</a></li>
+                <li><a href="" target="content-frame">Comparative</a></li>
+                <li><a href="" target="content-frame">Upload</a></li>
                 <li><a href="https://github.com/GPCRviz/flareplot/tree/master/embedding">Embed</a></li>
                 <li><a href="#footer">About</a></li>
             </ul>
@@ -63,60 +65,9 @@
 
 <!-- Demo area -->
 <div class="container">
-    <div class="row">
-
-        <!-- Right side bar -->
-        <div class="col-lg-3 text-center side-bar right-bar">
-            <p>
-                Flareplots are interactive diagrams for exploring dynamic networks. They can be used to visualize any
-                type of network that changes over time.
-            </p>
-        </div>
-
-        <!-- Demo div -->
-        <div class="col-lg-6 text-center" id="maincontent"></div>
-
-        <!-- Left side bar -->
-        <div class="col-lg-3 text-center side-bar left-bar">
-            <p>
-                Click one of the examples below or go to <a href="https://github.com/GPCRviz/flareplot/tree/master/input">Generate Input</a>, run one of the
-                scripts, and then upload the resulting JSON file here:
-            </p>
-            <div class="fileUpload btn btn-primary">
-                <span>Upload JSON</span>
-                <input type="file" id="uploader" class="upload" />
-            </div>
-        </div>
-    </div>
-
+    <iframe src="demos/mor_demo.html" width="100%" height="760px" name="content-frame" frameBorder="0"></iframe>
 </div>
 
-
-<!-- Examples Grid Section -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <h2>Examples</h2>
-        </div>
-    </div>
-    <div class="row row-centered">
-        <div class="col-sm-3 col-md-2 col-centered example-item">
-            <a href="demos/mor_demo.html" class="example-link">
-                <img src="img/examples/mor_example.gif" class="img-thumbnail" alt="Morphine receptor">
-            </a>
-        </div>
-        <div class="col-sm-3 col-md-2 col-centered example-item">
-            <a href="demos/gpcr_interactome_demo.html" class="example-link">
-                <img src="img/examples/interaction_example1.gif" class="img-thumbnail" alt="Interactome demo">
-            </a>
-        </div>
-        <div class="col-sm-3 col-md-2 col-centered example-item">
-            <a href="demos/gpcr_interactome_demo2.html" class="example-link">
-                <img src="img/examples/interaction_example2.gif" class="img-thumbnail" alt="Fingerprint demo">
-            </a>
-        </div>
-    </div>
-</div>
 
 
 <!-- Footer -->
@@ -170,8 +121,6 @@
 
 </script>
 </div>
-
-<script type="text/javascript" src="js/frontpage.js"></script>
 
 </body>
 

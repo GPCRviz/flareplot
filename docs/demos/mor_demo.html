@@ -24,14 +24,14 @@
         #flareDiv div{
             position: relative;
             left: 50%;
-            margin-left: -350px;
+            margin-left: -300px;
         }
         #sliderDiv {
             height: 30px;
-            width: 700px;
+            width: 600px;
             position: relative;
             left: 50%;
-            margin-left: -350px;
+            margin-left: -300px;
             margin-top: 20px;
         }
         #regroupDiv {
@@ -40,13 +40,14 @@
             margin-left: -50px;
             margin-top: 20px;
             width: 100px;
-            height: 40px;
+            height: 30px;
             background-color: #d7deeb;
             vertical-align: middle;
             text-align: center;
-            line-height: 40px;
+            line-height: 30px;
             border: 2px solid #8489a3;
             cursor: pointer;
+            border-radius: 5px;
         }
         #regroupDiv:hover {
             background-color: #a1a5bd;
@@ -59,8 +60,8 @@
 </head>
 
 <body>
-<a href="../index.html" class="logo">Flareplot</a>
-<h1>Interactions in MD trajectory of active morphine receptor</h1>
+<!--<a href="../index.html" class="logo">Flareplot</a>-->
+<!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
 <div class="container" id="flareDiv"></div>
 <div class="container" id="sliderDiv"></div>
 <div class="button" id="regroupDiv">Regroup</div>
@@ -69,7 +70,7 @@
     var slider;
 
     function fileRead(contents){
-        flareplot = createFlareplot(700, contents, "#flareDiv");
+        flareplot = createFlareplot(600, contents, "#flareDiv");
         slider = createFlareplotSlider(flareplot, "#sliderDiv");
 
         var curGroup = 0;

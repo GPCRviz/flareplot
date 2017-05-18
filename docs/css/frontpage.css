@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+/*@import url('https://fonts.googleapis.com/css?family=Playfair+Display');*/
 
 /* Styling for button */
  .fileUpload {
@@ -45,8 +45,6 @@
 
 
 /* Styling for page */
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
-
 body {
     font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
     line-height: 1.6;
@@ -79,7 +77,7 @@ ul.nav a:hover {
 }
 
 .navbar {
-    padding: 1rem;
+    padding: 0.2rem;
     border-bottom-color: #b2b2b2;
 
 }
@@ -89,16 +87,16 @@ nav a {
 }
 @media (min-width: 768px) {
     nav a {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 }
 
 nav, h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    /*font-family: 'Playfair Display', serif;*/
 }
 
 .navbar-brand {
-    font-size: 4.2rem;
+    font-size: 3.0rem;
 }
 
 @media (min-width: 1200px) {

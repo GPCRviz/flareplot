@@ -1,13 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
 
 * {
-    font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /*font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+    font-family: "Lato";
 }
 
 .logo {
     /*font-family: 'Cambay', sans-serif;*/
-    font-family: 'Playfair Display', serif;
+    /*font-family: 'Playfair Display', serif;*/
 
     position: fixed;
     top: 10px;
