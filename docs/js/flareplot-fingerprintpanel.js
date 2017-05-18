@@ -78,7 +78,6 @@ function twoStateSelection(el, row, col){
 
 function threeStateSelection(el, row, col){
     // Allows user to toggle between include, exclude, and ignore nodes
-    
     include_nodes = [];
     exclude_nodes = [];
 
@@ -87,19 +86,23 @@ function threeStateSelection(el, row, col){
 
 
     if(!(includeIndex >= 0) && !(excludeIndex >= 0)){
+        el.html("&#10003")
         includeElems.push(el);
     }
     else if((includeIndex >= 0) && !(excludeIndex >= 0)){
         includeElems.splice(includeIndex, 1);
+        el.html("X")
         excludeElems.push(el);
     }
     else if(excludeIndex >= 0){
         excludeElems.splice(excludeIndex, 1);
+        el.html("")
         el[0][0].className = "ignore";
     }
 
     for (var i = 0; i < includeElems.length; i++){
         includeElems[i][0][0].className = "include";
+        
         include_nodes.push(includeElems[i].col_header);
     }
     for (var j = 0; j < excludeElems.length; j++){
@@ -146,6 +149,7 @@ function initFingerprintPanel(containerId, columnNames, callback, show_header, c
         var tr = panel.append("tbody").append('tr');
         for (var c = 0; c < numCols; ++c){
             var cell = tr.append('td');
+            cell.html("")
             cell.col_header = columnNames[c]; // Attribute to keep track of column header
             cell.on('click', function(el, r, c){
                 return function(){
