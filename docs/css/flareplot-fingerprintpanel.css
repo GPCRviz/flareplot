@@ -1,38 +1,24 @@
-/*Fingerprint selection query menu*/
+/* Outer fingerprint panel frame*/
 
 .fpPanelOuter {
-    overflow: auto;
-    overflow-y:hidden;
-    max-width: 100%;
-    max-height:250px;
-    margin: 0 auto;
-    /*margin-bottom: 80px;*/
+  max-width: 50%;
+  max-height:150px;
+  margin: 0 auto;
+  margin-bottom: 80px;
 }
 
-.fpTitleContainer {
-    max-width: 100%;
-    height:auto;
-    margin: 0 auto;
-}
-
-.fpScrolldownContainer {
-    overflow: auto;
-    overflow-x: hidden;
-    max-height:150px;
-}
-
-
+/*Fingerprint selection query menu*/
 .fpPanel { 
-    border-collapse:collapse;
-    width: 50%;
-    margin: 0 auto;
+  border-collapse:collapse;
+  width: 50%;
+  margin: 0 auto;
 }
 
 
 .fpPanel th {
   position: relative;
   padding: 10px; 
-  height: 10px;
+  height: 120px;
 }
 
 
@@ -60,13 +46,9 @@
 }
 .fpPanel td.include {
   background-color:#28881e;
-  font-weight:bold; 
-  color:white;
 }
 .fpPanel td.exclude {
   background-color:#863333;
-  font-weight:bold; 
-  color:#696969;
 }
 .fpPanel td.ignore {
   background-color: white;
@@ -76,26 +58,36 @@
   background-color:purple;
 }
 
-
-/* Title panel */
-
-.fpTitle {
+/* Scrolldown selection menu*/
+.fpScrolldown { 
   border-collapse:collapse;
   width: 50%;
   margin: 0 auto;
 }
 
-.fpTitle th {
+.fpScrolldown tbody, .fpScrolldown thead{
+  display:block;
+}
+
+
+.fpScrolldown tbody{
+  overflow:auto;
+  height:100px;
+}
+
+
+.fpScrolldown th {
   position: relative;
   padding: 10px; 
   height: 10px;
 }
 
-.fpTitle th span {
+
+
+.fpScrolldown th span {
   transform-origin: 0 50%;
   transform: rotate(-45deg); 
   white-space: nowrap; 
-  display: block;
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -103,52 +95,23 @@
   font-size:12px;
 }
 
-/* Scrolldown selection menu*/
-
-.fpScrolldown { 
-    display:block;
-    border-collapse:collapse;
-    width: 50%;
-    margin: 0 auto;
-}
-
-
-.fpScrolldown tr:hover {
-  border: 1px solid #441111;
-}
-
 
 .fpScrolldown td {
-    /*position: relative;
-    padding: 10px;
-    height: 10px;
-    margin:3px;
-    border-radius:15px;
-    cursor:pointer;
-    width:20px; 
-    height:20px;
-    text-align:center;
-    font-family:sans-serif; 
-    font-size:13px;*/
   cursor:pointer;
   width:20px; 
   height:20px;
   border:1px solid #ccc;
-  text-align:center;
-  font-family:sans-serif; 
-  font-size:13px;
 }
-
 
 
 .fpScrolldown td.include {
-    background-color: #acacac;
+  background-color:#acacac;
 }
 .fpScrolldown td.exclude {
-    background-color: white;
+  background-color:white;
 }
 .fpScrolldown td.ignore {
-    background-color: white;
+  background-color: white;
 }
 
 
