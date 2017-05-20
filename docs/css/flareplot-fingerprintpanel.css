@@ -1,14 +1,15 @@
-/* Legend */
+/* Legend Panel */
 
-/*.fpClickLegend td.include, td.exclude{
+.fpSelectLegend td.include, .fpSelectLegend td.exclude{
   background-color:white;
   color:black;
   border:1px;
   border-color:#acacac;
   border-style: solid;
   width:15px;
-  height:15px
-  text-align:center;
+  height:15px;
+  text-align: center;
+  font-size:12px;
 }
 
 .fpScrollLegend td.include{
@@ -25,136 +26,13 @@
   border-style: solid;
   width:13px;
   height:13px
-}*/
-
-
-
-
-/* Scrolldown selection menu*/
-/*.fpScrolldown { 
-  border-collapse:collapse;
-  width: 50%;
-  margin: 0 auto;
 }
-
-.fpScrolldown tbody, .fpScrolldown thead{
-  display:block;
-}
-
-
-.fpScrolldown tbody{
-  overflow:auto;
-  height:69px;
-}
-
-
-.fpScrolldown th {
-  position: relative;
-  padding: 10px; 
-  height: 10px;
-}
-
-
-
-.fpScrolldown th span {
-  transform-origin: 0 50%;
-  transform: rotate(-45deg); 
-  white-space: nowrap; 
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  font-weight: normal;
+.fpScrollLegend td.text {
   font-size:12px;
 }
 
 
-.fpScrolldown td {
-  cursor:pointer;
-  width:20px; 
-  height:20px;
-  border:1px solid #ccc;
-}
-
-
-.fpScrolldown td.include {
-  background-color:#acacac;
-}
-.fpScrolldown td.exclude {
-  background-color:white;
-}
-.fpScrolldown td.ignore {
-  background-color: white;
-}
-*/
-
-
-/* Outer fingerprint panel frame*/
-
-/*.fpPanelOuter {
-  margin: 0 auto;
-}*/
-
-
-/*Fingerprint selection query menu*/
-/*.fpPanel { 
-  border-collapse:collapse;
-  width: 50%;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-
-.fpPanel th {
-  position: relative;
-  padding: 10px; 
-  height: 120px;
-}
-
-
-.fpPanel th span {
-  transform-origin: 0 50%;
-  transform: rotate(-40deg);
-  white-space: nowrap; 
-  display: block;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  font-weight: normal;
-  font-size:12px;
-}
-
-
-.fpPanel td {
-  cursor:pointer;
-  width:20px; 
-  height:20px;
-  border:1px solid #ccc;
-  text-align:center;
-  font-family:sans-serif; 
-  font-size:13px;
-  color:white;
-
-}
-.fpPanel td.include {
-  background-color:white;
-  color:black;
-}
-.fpPanel td.exclude {
-  background-color:white;
-  color:black;
-}
-.fpPanel td.ignore {
-  background-color: white;
-  color:white;
-}
-
-.fpPanel td.hover {
-  background-color:purple;
-}
-*/
-
-
-/*Fingerprint selection query menu*/
+/* Fingerprint selection query menu*/
 .fpSelection * {
     box-sizing: border-box;
 }
@@ -169,15 +47,20 @@
 
 .fpSelection tbody td{
     height:20px;
+    cursor:pointer;
     border:1px solid #acacac;
 }
 .fpSelection tbody td.include{
   background-color:white;
   color:black;
+  text-align: center;
+  font-size:12px;
 }
 .fpSelection tbody td.exclude{
     background-color: white;
     color:black;
+    text-align: center;
+    font-size:12px;
 }
 .fpSelection thead th {
     position: relative;
@@ -200,12 +83,12 @@
     display: block;
 }
 .fpSelection tbody {
-    height: 100px;
     overflow-y: auto;
 }
 
 
-/* New Scrollable Selection Menu legend*/
+/* Scrollable Selection Menu legend*/
+
 .fpScrolldown * {
     box-sizing: border-box;
 }
@@ -225,15 +108,12 @@
 }
 .fpScrolldown tbody td{
     height:20px;
+    cursor:pointer;
 }
 .fpScrolldown tbody td.include{
     background-color: #b9b9b9;
 }
-.fpScrolldown tbody td.exclude{
-    background-color: white;
-}
 .fpScrolldown thead th {
-    /*overflow: display;*/
     position: relative;
     height: 80px;
 }
@@ -256,7 +136,6 @@
 .fpScrolldown tbody {
     height: 100px;
     overflow-y: auto;
-    /*display: block;*/
 }
 table{
     margin-top:10px;
