@@ -1,6 +1,6 @@
 /* Legend */
 
-.fpClickLegend td.include, td.exclude{
+/*.fpClickLegend td.include, td.exclude{
   background-color:white;
   color:black;
   border:1px;
@@ -25,19 +25,78 @@
   border-style: solid;
   width:13px;
   height:13px
+}*/
+
+
+
+
+/* Scrolldown selection menu*/
+/*.fpScrolldown { 
+  border-collapse:collapse;
+  width: 50%;
+  margin: 0 auto;
 }
+
+.fpScrolldown tbody, .fpScrolldown thead{
+  display:block;
+}
+
+
+.fpScrolldown tbody{
+  overflow:auto;
+  height:69px;
+}
+
+
+.fpScrolldown th {
+  position: relative;
+  padding: 10px; 
+  height: 10px;
+}
+
+
+
+.fpScrolldown th span {
+  transform-origin: 0 50%;
+  transform: rotate(-45deg); 
+  white-space: nowrap; 
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  font-weight: normal;
+  font-size:12px;
+}
+
+
+.fpScrolldown td {
+  cursor:pointer;
+  width:20px; 
+  height:20px;
+  border:1px solid #ccc;
+}
+
+
+.fpScrolldown td.include {
+  background-color:#acacac;
+}
+.fpScrolldown td.exclude {
+  background-color:white;
+}
+.fpScrolldown td.ignore {
+  background-color: white;
+}
+*/
+
 
 /* Outer fingerprint panel frame*/
 
-.fpPanelOuter {
-  /*max-width: 50%;*/
-  /*max-height:150px;*/
+/*.fpPanelOuter {
   margin: 0 auto;
-  /*margin-bottom: 80px;*/
-}
+}*/
+
 
 /*Fingerprint selection query menu*/
-.fpPanel { 
+/*.fpPanel { 
   border-collapse:collapse;
   width: 50%;
   margin: 0 auto;
@@ -92,61 +151,116 @@
 .fpPanel td.hover {
   background-color:purple;
 }
+*/
 
-/* Scrolldown selection menu*/
-.fpScrolldown { 
-  border-collapse:collapse;
-  width: 50%;
-  margin: 0 auto;
+
+/*Fingerprint selection query menu*/
+.fpSelection * {
+    box-sizing: border-box;
+}
+.fpSelection td, .fpSelection th{
+    width:20px;
+    border: 1px solid white;
+}
+.fpSelection tbody tr {
+    position: relative;
+    border: 1px solid white;
 }
 
-.fpScrolldown tbody, .fpScrolldown thead{
-  display:block;
+.fpSelection tbody td{
+    height:20px;
+    border:1px solid #acacac;
 }
-
-
-.fpScrolldown tbody{
-  overflow:auto;
-  height:69px;
-}
-
-
-.fpScrolldown th {
-  position: relative;
-  padding: 10px; 
-  height: 10px;
-}
-
-
-
-.fpScrolldown th span {
-  transform-origin: 0 50%;
-  transform: rotate(-45deg); 
-  white-space: nowrap; 
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  font-weight: normal;
-  font-size:12px;
-}
-
-
-.fpScrolldown td {
-  cursor:pointer;
-  width:20px; 
-  height:20px;
-  border:1px solid #ccc;
-}
-
-
-.fpScrolldown td.include {
-  background-color:#acacac;
-}
-.fpScrolldown td.exclude {
+.fpSelection tbody td.include{
   background-color:white;
+  color:black;
 }
-.fpScrolldown td.ignore {
-  background-color: white;
+.fpSelection tbody td.exclude{
+    background-color: white;
+    color:black;
+}
+.fpSelection thead th {
+    position: relative;
+    height: 80px;
+}
+.terminal-cell {
+    width: 5px;
+}
+.fpSelection thead th span {
+    transform-origin: 0 50%;
+    transform: rotate(-40deg);
+    white-space: nowrap;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    font-weight: normal;
+    font-size: 12px;
+}
+.fpSelection thead, tbody {
+    display: block;
+}
+.fpSelection tbody {
+    height: 100px;
+    overflow-y: auto;
 }
 
 
+/* New Scrollable Selection Menu legend*/
+.fpScrolldown * {
+    box-sizing: border-box;
+}
+.fpScrolldown td, .fpScrolldown th{
+    width:20px;
+    border: 1px solid white;
+}
+.fpScrolldown tbody tr {
+    position: relative;
+    border: 1px solid white;
+}
+.fpScrolldown tbody tr.selected {
+    background-color: #eaeaf8;
+}
+.fpScrolldown tbody tr:hover {
+    background-color: #e1e1ee;
+}
+.fpScrolldown tbody td{
+    height:20px;
+}
+.fpScrolldown tbody td.include{
+    background-color: #b9b9b9;
+}
+.fpScrolldown tbody td.exclude{
+    background-color: white;
+}
+.fpScrolldown thead th {
+    /*overflow: display;*/
+    position: relative;
+    height: 80px;
+}
+.terminal-cell {
+    width: 5px;
+}
+.fpScrolldown thead th span {
+    transform-origin: 0 50%;
+    transform: rotate(-40deg);
+    white-space: nowrap;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    font-weight: normal;
+    font-size: 12px;
+}
+.fpScrolldown thead, tbody {
+    display: block;
+}
+.fpScrolldown tbody {
+    height: 100px;
+    overflow-y: auto;
+    /*display: block;*/
+}
+table{
+    margin-top:10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}

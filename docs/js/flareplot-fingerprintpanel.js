@@ -112,18 +112,61 @@ function threeStateSelection(el, row, col){
 }
 
 
+// function initFingerprintPanel(containerId, columnNames, callback, show_header, col_label_height){
+//     // Creates the grid and attaches printClick callback to each cell
+//     var numRows = 1;
+//     var numCols = columnNames.length;
+
+//     var outerPanel = d3.select(containerId).append("div")
+//         .attr("class", "fpPanelOuter")
+//         .attr("id", "fingerprintOuter")
+
+//     var panel = d3.select("#fingerprintOuter").append("table")
+//         .attr("class", "fpPanel")
+//         .attr("id", "fingerprint")
+
+
+//     // Column Headers
+//     var column_header_panel = panel.append("thead").append("tr");
+//     var col_headers = []
+//     for (var c = 0; c < numCols; ++c){
+//         var col_header = column_header_panel.append("th").style("height", col_label_height).append("span");
+//         if(show_header){
+//             col_header.html(columnNames[c]);
+//             col_headers.push(col_header);
+//         }else{
+//             col_header.html("");
+//             col_headers.push(col_header)
+//         }
+//     }
+
+
+//     // Fingerprint cells
+//     for (var r = 0; r < numRows; ++r){
+//         var tr = panel.append("tbody").append('tr');
+//         for (var c = 0; c < numCols; ++c){
+//             var cell = tr.append('td');
+//             cell.html("")
+//             cell.col_header = columnNames[c]; // Attribute to keep track of column header
+//             cell.on('click', function(el, r, c){
+//                 return function(){
+//                     callback(el, r, c);
+//                 }
+//             }(cell, r, c), false);
+//         }
+//     }
+
+//     return panel
+// }
+
 function initFingerprintPanel(containerId, columnNames, callback, show_header, col_label_height){
     // Creates the grid and attaches printClick callback to each cell
     var numRows = 1;
     var numCols = columnNames.length;
 
-    var outerPanel = d3.select(containerId).append("div")
-        .attr("class", "fpPanelOuter")
-        .attr("id", "fingerprintOuter")
-
-    var panel = d3.select("#fingerprintOuter").append("table")
-        .attr("class", "fpPanel")
-        .attr("id", "fingerprint")
+    var panel = d3.select(containerId).append("table")
+        .attr("class", "fpSelection")
+        .attr("id", "scrolldown");
 
 
     // Column Headers
@@ -214,21 +257,78 @@ function threeStateRowSelection(tr, r, columnNames){
 }
 
 
+// function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_list, callback, show_header, col_label_height){
+//     // Creates the grid and attaches printClick callback to each cell
+//     var numRows = fingerprint_list.length;
+//     var numCols = columnNames.length;
+    
+
+//     var outerPanel = d3.select(containerId).append("div")
+//         .attr("class", "fpPanelOuter")
+//         .attr("id", "fingerprintOuter")
+
+//     var panel = d3.select("#fingerprintOuter").append("table")
+//         .attr("class", "fpScrolldown")
+//         .attr("id", "scrolldown");
+
+
+
+//     // Column Headers
+//     var column_header_panel = panel.append("thead").append("tr");
+//     var col_headers = [];
+//     for (var c = 0; c < numCols; c++){
+//         var col_header = column_header_panel.append("th").style("height", col_label_height).append("span");
+//         if(show_header){
+//             col_header.html(columnNames[c]);
+//             col_headers.push(col_header)
+//         }else{
+//             col_header.html("");
+//             col_headers.push(col_header)
+//         }
+//     }
+
+
+//     // Fingerprint cells
+//     var scroll_panel_body = panel.append("tbody")
+//     for (var r = 0; r < numRows; r++){
+//         var fpattern = fingerprint_list[r][0].split(",").map(Number);
+//         var count = fingerprint_list[r][1];
+
+//         var tr = scroll_panel_body.append('tr');
+//         for (var c = 0; c < numCols; c++){
+
+//             var cell = tr.append('td')
+//             cell.col_header = columnNames[c]; // Attribute to keep track of column header
+//             if(fpattern.includes(c)){
+//                 cell[0][0].className = 'include';
+//             }else{
+//                 cell[0][0].className = 'exclude';
+//             }
+//         }
+//         tr.on('click', function(tr, r, columnNames){
+//             return function(){
+//                 callback(tr, r, columnNames);
+//             }
+//         }(tr, r, columnNames), false);
+
+//     }
+
+//     return panel
+// }
+
+
 function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_list, callback, show_header, col_label_height){
     // Creates the grid and attaches printClick callback to each cell
     var numRows = fingerprint_list.length;
     var numCols = columnNames.length;
     
 
-    var outerPanel = d3.select(containerId).append("div")
-        .attr("class", "fpPanelOuter")
+    var outerPanel = d3.select(containerId).append('div')
+        .attr("class", 'fpPanelOuter')
         .attr("id", "fingerprintOuter")
-
     var panel = d3.select("#fingerprintOuter").append("table")
         .attr("class", "fpScrolldown")
         .attr("id", "scrolldown");
-
-
 
     // Column Headers
     var column_header_panel = panel.append("thead").append("tr");
@@ -258,7 +358,8 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
             cell.col_header = columnNames[c]; // Attribute to keep track of column header
             if(fpattern.includes(c)){
                 cell[0][0].className = 'include';
-            }else{
+            }
+            else{
                 cell[0][0].className = 'exclude';
             }
         }
