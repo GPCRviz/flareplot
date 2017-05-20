@@ -1,3 +1,32 @@
+/* Legend */
+
+.fpClickLegend td.include, td.exclude{
+  background-color:white;
+  color:black;
+  border:1px;
+  border-color:#acacac;
+  border-style: solid;
+  width:15px;
+  height:15px
+  text-align:center;
+}
+
+.fpScrollLegend td.include{
+  background-color:#acacac;
+  color:#acacac;
+  width:15px;
+  height:15px
+}
+.fpScrollLegend td.exclude {
+  background-color:white;
+  color:white;
+  border:1px;
+  border-color:#acacac;
+  border-style: solid;
+  width:13px;
+  height:13px
+}
+
 /* Outer fingerprint panel frame*/
 
 .fpPanelOuter {

@@ -218,6 +218,7 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
     // Creates the grid and attaches printClick callback to each cell
     var numRows = fingerprint_list.length;
     var numCols = columnNames.length;
+    
 
     var outerPanel = d3.select(containerId).append("div")
         .attr("class", "fpPanelOuter")
@@ -226,6 +227,8 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
     var panel = d3.select("#fingerprintOuter").append("table")
         .attr("class", "fpScrolldown")
         .attr("id", "scrolldown");
+
+
 
     // Column Headers
     var column_header_panel = panel.append("thead").append("tr");
