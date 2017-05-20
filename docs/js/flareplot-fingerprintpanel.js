@@ -1,16 +1,16 @@
-var includeElems = []
-var include_nodes = []
+var includeElems = [];
+var include_nodes = [];
 
-var excludeElems = []
-var exclude_nodes = []
+var excludeElems = [];
+var exclude_nodes = [];
 
 var frameDict;
-var frameIndex_to_collabel
+var frameIndex_to_collabel;
 
 
 function getFrameDict(contents){
     // Get mapping from column label to index
-    var content_dict = JSON.parse(contents)
+    var content_dict = JSON.parse(contents);
     if("frameDict" in content_dict){
         return content_dict["frameDict"];
     }
@@ -20,7 +20,7 @@ function getFrameDict(contents){
 function getFingerprintColumns(contents){
     // Get fingerprint column labels
     var column_labels = []
-    var frameDict = JSON.parse(contents)["frameDict"]
+    frameDict = JSON.parse(contents)["frameDict"];
     for (key in frameDict){
         column_labels.push(frameDict[key]);
     }
@@ -51,7 +51,6 @@ function updateIntersectFrames(){
     }else{
         flareplot.framesIntersectSubtract(include_sel, exclude_sel)
     }
-    
 }
 
 function twoStateSelection(el, row, col){
@@ -59,11 +58,10 @@ function twoStateSelection(el, row, col){
     include_nodes = [];
 
     var index = includeElems.indexOf(el)
-    if(index >= 0){ 
+    if(index >= 0){
         el[0][0].className = "ignore";
         includeElems.splice(index, 1);
-    } 
-    else{
+    } else {
         includeElems.push(el)
     }
     if(includeElems.length != 0){
@@ -119,20 +117,20 @@ function initFingerprintPanel(containerId, columnNames, callback, show_header, c
     var numRows = 1;
     var numCols = columnNames.length;
 
-    var outerPanel = d3.select(containerId).append('div')
+    var outerPanel = d3.select(containerId).append("div")
         .attr("class", "fpPanelOuter")
         .attr("id", "fingerprintOuter")
 
-    var panel = d3.select("#fingerprintOuter").append('table')
-        .attr('class', 'fpPanel')
-        .attr('id', 'fingerprint')
+    var panel = d3.select("#fingerprintOuter").append("table")
+        .attr("class", "fpPanel")
+        .attr("id", "fingerprint")
 
 
     // Column Headers
-    var column_header_panel = panel.append("thead").append('tr');
+    var column_header_panel = panel.append("thead").append("tr");
     var col_headers = []
     for (var c = 0; c < numCols; ++c){
-        var col_header = column_header_panel.append('th').style('height', col_label_height).append("span");
+        var col_header = column_header_panel.append("th").style("height", col_label_height).append("span");
         if(show_header){
             col_header.html(columnNames[c]);
             col_headers.push(col_header);
@@ -140,7 +138,6 @@ function initFingerprintPanel(containerId, columnNames, callback, show_header, c
             col_header.html("");
             col_headers.push(col_header)
         }
-        
     }
 
 
@@ -170,7 +167,7 @@ function calcFingerprints(contents){
         return 0;
     }
 
-    var fingerprint_dict = {} 
+    var fingerprint_dict = {};
     var content_dict = JSON.parse(contents);
     var edges = content_dict["edges"];
     for (var i = 0; i < edges.length; i++){
@@ -222,19 +219,19 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
     var numRows = fingerprint_list.length;
     var numCols = columnNames.length;
 
-    var outerPanel = d3.select(containerId).append('div')
+    var outerPanel = d3.select(containerId).append("div")
         .attr("class", "fpPanelOuter")
         .attr("id", "fingerprintOuter")
 
-    var panel = d3.select("#fingerprintOuter").append('table')
-        .attr('class', 'fpScrolldown')
-        .attr('id', 'scrolldown')
+    var panel = d3.select("#fingerprintOuter").append("table")
+        .attr("class", "fpScrolldown")
+        .attr("id", "scrolldown");
 
     // Column Headers
-    var column_header_panel = panel.append("thead").append('tr');
-    var col_headers = []
+    var column_header_panel = panel.append("thead").append("tr");
+    var col_headers = [];
     for (var c = 0; c < numCols; c++){
-        var col_header = column_header_panel.append('th').style('height', col_label_height).append("span")
+        var col_header = column_header_panel.append("th").style("height", col_label_height).append("span");
         if(show_header){
             col_header.html(columnNames[c]);
             col_headers.push(col_header)

@@ -51,9 +51,9 @@
             </div>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="" target="content-frame">Temporal</a></li>
-                <li><a href="" target="content-frame">Comparative</a></li>
-                <li><a href="" target="content-frame">Upload</a></li>
+                <li><a href="?p=time">Temporal</a></li>
+                <li><a href="?p=compare">Comparative</a></li>
+                <li><a href="?p=upload">Upload</a></li>
                 <li><a href="https://github.com/GPCRviz/flareplot/tree/master/embedding">Embed</a></li>
                 <li><a href="#footer">About</a></li>
             </ul>
@@ -65,7 +65,25 @@
 
 <!-- Demo area -->
 <div class="container">
-    <iframe src="demos/mor_demo.html" width="100%" height="760px" name="content-frame" frameBorder="0"></iframe>
+    <iframe src="" width="100%" height="760px" name="content-frame" id="content-frame" frameBorder="0"></iframe>
+    <script>
+        function parse_URL_arg(s, url){
+            var match = url.match("[\?&]"+s+"=([^&]*)");
+            console.log(match);
+            if (match) { return match[1]; }
+            else { return undefined; }
+        }
+
+        var page = parse_URL_arg("p", window.location.href);
+        if (page=="compare") {
+            document.getElementById("content-frame").src = "demos_compare/gpcr_interactome_demo.html";
+        } else if (page=="upload") {
+            document.getElementById("content-frame").src="upload.html";
+        } else {
+            document.getElementById("content-frame").src="demos_time/mor_demo.html";
+        }
+
+    </script>
 </div>
 
 

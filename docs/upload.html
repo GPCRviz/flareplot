@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Diversity in the GPCR interactome across human tissues">
+
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Javascript libs -->
+    <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/flareplot-main.js"></script>
+    <script type="text/javascript" src="js/flareplot-selectors.js"></script>
+    <script type="text/javascript" src="js/flareplot-rangeslider.js"></script>
+    <script type="text/javascript" src="js/flareplot-fingerprintpanel.js"></script>
+    <script type="text/javascript" src="js/flareplot-selectors.js"></script>
+
+    <!-- Visualization CSS -->
+    <link href="css/flareplot-main.css" rel="stylesheet">
+    <link href="css/flareplot-selectors.css" rel="stylesheet">
+    <link href="css/flareplot-rangeslider.css" rel="stylesheet">
+    <link href="css/flareplot-fingerprintpanel.css" rel="stylesheet">
+    <link href="css/flareplot-selectors.css" rel="stylesheet">
+
+    <link href="css/demos.css" rel="stylesheet">
+
+    <style>
+        #flareDiv div{
+            position: relative;
+            left: 50%;
+            margin-left: -300px;
+        }
+        #flareDiv p{
+            text-align: center;
+        }
+        #sliderDiv {
+            height: 30px;
+            width: 600px;
+            position: relative;
+            left: 50%;
+            margin-left: -300px;
+            margin-top: 20px;
+        }
+        .fileUpload {
+            width: 140px;
+            left: 50%;
+            position: relative;
+            overflow: hidden;
+            margin-left: -70px;
+            margin: 10px;
+        }
+        .fileUpload input.upload {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+    </style>
+
+
+</head>
+
+<body>
+<!--<a href="../index.html" class="logo">Flareplot</a>-->
+<!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
+<div class="container" id="flareDiv">
+    <div style="height:200px;"></div>
+    <p>
+        Flareplots take a specially formatted JSON file as input. A set of scripts are provided for generating
+        these input files:
+    </p>
+    <p style="font-weight: bolder; font-size:1.5em">
+        <a href="https://github.com/GPCRviz/flareplot/tree/master/input">Description and scripts for generating JSON
+        input</a>
+    </p>
+    <p>
+        After generating the JSON it can be uploaded here.
+    </p>
+    <div>
+        <div class="fileUpload btn btn-primary">
+            <span>Upload JSON</span>
+            <input type="file" id="uploader" class="upload" />
+        </div>
+    </div>
+</div>
+
+<div class="container" id="sliderDiv"></div>
+
+<script>
+    var flareplot;
+    var slider;
+
+    function fileRead(contents){
+        d3.select("#flareDiv").text("");
+
+        // Set up flareplot
+        flareplot = createFlareplot(600, contents, "#flareDiv");
+
+        // Set up selector if there's more than one tree or track
+        var selectorContainer = d3.select("#maincontent").append("div");
+        if( !selectorContainer ){
+            selectorContainer.remove();
+        }
+
+        // If frameDict is in contents create a fingerprint, otherwise create a slider
+        frameDict = getFrameDict(contents);
+        console.log(frameDict);
+        if(frameDict){
+            flareplot.framesIntersect([]);//show all interactions to begin with
+            var columnNames = getFingerprintColumns(contents);
+            var numRows = 1;
+            panel = initFingerprintPanel("#maincontent", columnNames, numRows, twoStateSelection);
+            panel.on("click", updateIntersectFrames)
+        } else {
+            slider = createFlareplotSlider(flareplot, "#sliderDiv");
+        }
+
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var contents = e.target.result;
+        fileRead(contents);
+    };
+    function handleFile() {
+        d3.select("#flareDiv").html("<p>Loading ...</p>");
+        var file = this.files[0];
+        reader.readAsText(file);
+    }
+    var uploader = document.getElementById("uploader");
+    uploader.addEventListener("change", handleFile, false);
+
+
+</script>
+
+<!--<a href="gpcr_interactome_demo.html" class="rightNav">&#9654;</a>-->
+<!--<a href="gpcr_interactome_demo2.html" class="leftNav">&#9664;</a>-->
+
+</body>
+</html>
