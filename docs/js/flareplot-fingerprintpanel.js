@@ -108,7 +108,7 @@ function threeStateSelection(el, row, col){
         exclude_nodes.push(excludeElems[j].col_header);
     }
 
-    console.log("Include Nodes: ", include_nodes, "Exclude Nodes: ", exclude_nodes)
+    console.log("Intersect Nodes: ", include_nodes, "Exclude Nodes: ", exclude_nodes)
 }
 
 
@@ -157,10 +157,10 @@ function initFingerprintPanel(containerId, columnNames, callback, show_header, c
     .attr("id", "selectLegend")
     .append('tr')
 
-    legend.append('td').attr('class', 'include').html("&#10003")
-    legend.append('td').attr('class', 'text').html("&nbsp &nbsp Include &nbsp &nbsp")
-    legend.append('td').attr('class', 'exclude').html("&#10007")
-    legend.append('td').attr('class', 'text').html("&nbsp &nbsp Exclude &nbsp &nbsp")
+    legend.append("td").attr("class", "include").html("&#10003")
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Intersect &nbsp &nbsp")
+    legend.append("td").attr("class", "exclude").html("&#10007")
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Exclude &nbsp &nbsp")
 
     return panel
 }
@@ -251,7 +251,7 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
         var fpattern = fingerprint_list[r][0].split(",").map(Number);
         var count = fingerprint_list[r][1];
 
-        var tr = scroll_panel_body.append('tr');
+        var tr = scroll_panel_body.append("tr");
         for (var c = 0; c < numCols; c++){
 
             var cell = tr.append('td')
@@ -277,7 +277,7 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
         .append('tr')
 
     legend.append('td').attr('class', 'include')
-    legend.append('td').attr('class', 'text').html("&nbsp &nbsp Include &nbsp &nbsp")
+    legend.append('td').attr('class', 'text').html("&nbsp &nbsp Intersect &nbsp &nbsp")
     legend.append('td').attr('class', 'exclude')
     legend.append('td').attr('class', 'text').html("&nbsp &nbsp Exclude &nbsp &nbsp")
 
