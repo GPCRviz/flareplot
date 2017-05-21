@@ -27,11 +27,6 @@
     <link href="css/demos.css" rel="stylesheet">
 
     <style>
-        #flareDiv div{
-            position: relative;
-            left: 50%;
-            margin-left: -300px;
-        }
         #flareDiv p{
             text-align: center;
         }
@@ -43,13 +38,24 @@
             margin-left: -300px;
             margin-top: 20px;
         }
+        img.center {
+            display: block;
+            margin: 0 auto;
+        }
+        #workflow {
+            width: 80%;
+            opacity:0.3;
+        }
+        p {
+            margin: 2rem 0 2rem 0;
+        }
         .fileUpload {
             width: 140px;
             left: 50%;
             position: relative;
             overflow: hidden;
-            margin-left: -70px;
             margin: 10px;
+            margin-left: -70px;
         }
         .fileUpload input.upload {
             position: absolute;
@@ -71,23 +77,21 @@
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
 <div class="container" id="flareDiv">
-    <div style="height:200px;"></div>
+    <div style="height:100px;"></div>
+    <img src="img/workflow.png" class="center" id="workflow">
     <p>
         Flareplots take a specially formatted JSON file as input. A set of scripts are provided for generating
         these input files:
     </p>
     <p style="font-weight: bolder; font-size:1.5em">
-        <a href="https://github.com/GPCRviz/flareplot/tree/master/input">Description and scripts for generating JSON
-        input</a>
+        <a href="https://github.com/GPCRviz/flareplot/tree/master/input">JSON scripts and specifications</a>
     </p>
     <p>
         After generating the JSON it can be uploaded here.
     </p>
-    <div>
-        <div class="fileUpload btn btn-primary">
-            <span>Upload JSON</span>
-            <input type="file" id="uploader" class="upload" />
-        </div>
+    <div class="fileUpload btn btn-primary">
+        <span>Upload JSON</span>
+        <input type="file" id="uploader" class="upload" />
     </div>
 </div>
 
@@ -102,6 +106,11 @@
 
         // Set up flareplot
         flareplot = createFlareplot(600, contents, "#flareDiv");
+        d3.select("#flareDiv div")
+            .style("position","relative")
+            .style("width","600px")
+            .style("margin-left","auto")
+            .style("margin-right","auto");
 
         // Set up selector if there's more than one tree or track
         var selectorContainer = d3.select("#maincontent").append("div");
