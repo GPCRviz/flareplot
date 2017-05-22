@@ -196,8 +196,12 @@
         if(frameDict){
             flareplot.framesIntersect([]);//show all interactions to begin with
             var columnNames = getFingerprintColumns(contents);
-            var numRows = 1;
-            panel = initFingerprintPanel("#flareDiv", columnNames, numRows, twoStateSelection);
+            panel = initFingerprintPanel("#flareDiv", 
+                columnNames, 
+                threeStateSelection, 
+                true, 
+                '75px'
+            );
             panel.on("click", updateIntersectFrames)
         } else {
             slider = createFlareplotSlider(flareplot, "#sliderDiv");
