@@ -224,7 +224,6 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
     // Creates the grid and attaches printClick callback to each cell
     var numRows = fingerprint_list.length;
     var numCols = columnNames.length;
-    
 
     var panel = d3.select(containerId).append("table")
         .attr("class", "fpScrolldown")
@@ -274,12 +273,12 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
     var legend = d3.select(containerId).append("table")
         .attr("class", "fpScrollLegend")
         .attr("id", "scrollLegend")
-        .append('tr')
+        .append("tr")
 
-    legend.append('td').attr('class', 'include')
-    legend.append('td').attr('class', 'text').html("&nbsp &nbsp Intersect &nbsp &nbsp")
-    legend.append('td').attr('class', 'exclude')
-    legend.append('td').attr('class', 'text').html("&nbsp &nbsp Exclude &nbsp &nbsp")
+    legend.append("td").attr("class", "include")
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Intersect &nbsp &nbsp")
+    legend.append("td").attr("class", "exclude")
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Exclude &nbsp &nbsp")
 
     return panel
 }

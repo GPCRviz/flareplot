@@ -27,8 +27,8 @@
     <link href="css/demos.css" rel="stylesheet">
 
     <style>
-        #flareDiv p{
-            /*text-align: center;*/
+        #flareDiv{
+            text-align: justify;
         }
         #sliderDiv {
             height: 30px;
@@ -57,6 +57,15 @@
         .rightDiv {
             width:50%;
             overflow: auto;
+            text-align: right;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 5px;
         }
         #smallFPjson pre{
             margin-bottom: 0px;
@@ -98,7 +107,8 @@
 <!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
 <div class="container" id="flareDiv">
 
-    <img src="img/workflow.png" class="center" id="workflow">
+    <!--<img src="img/workflow.png" class="center" id="workflow">-->
+    <div style="height:40px"></div>
     <p>
         Flareplots take specially formatted JSON files as input:
     </p>
@@ -108,16 +118,16 @@
     <pre>
 {
   "edges":[
-    {"name1":"ARG135", "name2":"ASP134", "frames":[0,1,2,3,4,6,7,8,9]},
-    {"name1":"ASP134", "name2":"TRP161", "frames":[4,5,6,7]},
-    {"name1":"TYR223", "name2":"ARG135", "frames":[4,5,6,9]},
-    {"name1":"TYR223", "name2":"TYR306", "frames":[0,1,2,5,6,7,8]},
-    {"name1":"TYR306", "name2":"VAL54",  "frames":[1,4,5,6,7,8]}
+    {"name1":"ARG135", "name2":"ASP134", "frames":[0,1,2,4,5,6,7]},
+    {"name1":"ASP134", "name2":"TRP161", "frames":[2,3,4,5]},
+    {"name1":"TYR223", "name2":"ARG135", "frames":[2,3,4,7]},
+    {"name1":"TYR223", "name2":"TYR306", "frames":[0,1,3,4,5,6]},
+    {"name1":"TYR306", "name2":"VAL54",  "frames":[1,2,3,4,5,6]}
   ]
 }</pre>
             </td>
             <td id="smallFPcontainer">
-                <input type="number" min="0" max="9" step="1" value="0" size="6" id="smallFPspinner">
+                <input type="number" min="0" max="7" step="1" value="0" size="6" id="smallFPspinner">
             </td>
         </tr>
     </table>
@@ -132,33 +142,43 @@
         });
     </script>
     <p>
-        Here ARG135 and ASP134 interact at times 0 to 4 and 6 to 9, and so on.
+        Here ARG135 and ASP134 interact at times 0 to 2 and 4 to 7, and so on. It is also possible to introduce
+        custom grouping of nodes (called 'trees'), annotate nodes with colors (called 'tracks'), and configure
+        interactive controllers (time-slider or comparison tool). For details see the
+        <a href="https://github.com/GPCRviz/flareplot/tree/master/input">JSON documentation</a>.
         <!--<a href="https://github.com/GPCRviz/flareplot/tree/master/input">JSON input documentation</a>.-->
     </p>
+    <div style="height:40px"></div>
     <div class="leftDiv">
         <p>Try one of our examples ..</p>
         <ul>
             <li>
-                <a href="javascript:loadExample('resources/mor-active-rep1-wb.json')">
+                <a href="javascript:loadExample('resources/mor-active-rep1-wb.json')" class="btn btn-primary">
                     mor-active-rep1-wb.json
-                </a> [14MB, <a href="resources/mor-active-rep1-wb.json">raw</a>].
+                </a> [14MB, <a href="resources/mor-active-rep1-wb.json" target="new">raw</a>]
             </li>
             <li>
-                <a href="javascript:loadExample('resources/top7_mcmc.json')">
+                <a href="javascript:loadExample('resources/top7_mcmc.json')" class="btn btn-primary">
                     top7_mcmc.json
-                </a> [21MB, <a href="sesources/top7_mcmc.json">raw</a>].
+                </a> [21MB, <a href="resources/top7_mcmc.json" target="new">raw</a>]
             </li>
             <li>
-                <a href="javascript:loadExample('resources/gpcr_brain.json')">
-                    top7_mcmc.json
-                </a> [21MB, <a href="sesources/top7_mcmc.json">raw</a>].
+                <a href="javascript:loadExample('resources/gpcr_brain.json')" class="btn btn-primary">
+                    gpcr_brain.json
+                </a> [20KB, <a href="resources/gpcr_brain.json" target="new">raw</a>]
             </li>
 
         </ul>
     </div>
     <div class="rightDiv">
         <p>
-            or upload your own ...
+            or generate your own json ...
+        </p>
+        <a href="https://github.com/GPCRviz/flareplot/tree/master/input" class="btn btn-primary">
+            JSON scripts
+        </a>
+        <p>
+            and then upload it here ...
         </p>
         <div class="fileUpload btn btn-primary">
             <span>Upload JSON</span>
@@ -196,11 +216,11 @@
         if(frameDict){
             flareplot.framesIntersect([]);//show all interactions to begin with
             var columnNames = getFingerprintColumns(contents);
-            panel = initFingerprintPanel("#flareDiv", 
-                columnNames, 
-                threeStateSelection, 
-                true, 
-                '75px'
+            panel = initFingerprintPanel("#flareDiv",
+                columnNames,
+                threeStateSelection,
+                true,
+                "75px"
             );
             panel.on("click", updateIntersectFrames)
         } else {
