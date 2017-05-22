@@ -28,7 +28,7 @@
 
     <style>
         #flareDiv p{
-            text-align: center;
+            /*text-align: center;*/
         }
         #sliderDiv {
             height: 30px;
@@ -43,19 +43,39 @@
             margin: 0 auto;
         }
         #workflow {
-            width: 80%;
+            width: 50%;
             opacity:0.3;
         }
         p {
             margin: 2rem 0 2rem 0;
+            font-size: 1.7rem;
+        }
+        .leftDiv {
+            float: left;
+            width: 50%;
+        }
+        .rightDiv {
+            width:50%;
+            overflow: auto;
+        }
+        #smallFPjson pre{
+            margin-bottom: 0px;
+            font-size: 1.2rem;
+
+        }
+        #smallFPspinner {
+            position: absolute;
+            right:0px;
+            bottom:0px;
+
         }
         .fileUpload {
             width: 140px;
-            left: 50%;
+            /*left: 50%;*/
             position: relative;
             overflow: hidden;
-            margin: 10px;
-            margin-left: -70px;
+            /*margin: 10px;*/
+            /*margin-left: -70px;*/
         }
         .fileUpload input.upload {
             position: absolute;
@@ -77,21 +97,73 @@
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
 <div class="container" id="flareDiv">
-    <div style="height:100px;"></div>
+
     <img src="img/workflow.png" class="center" id="workflow">
     <p>
-        Flareplots take a specially formatted JSON file as input. A set of scripts are provided for generating
-        these input files:
+        Flareplots take specially formatted JSON files as input:
     </p>
-    <p style="font-weight: bolder; font-size:1.5em">
-        <a href="https://github.com/GPCRviz/flareplot/tree/master/input">JSON scripts and specifications</a>
-    </p>
+    <table>
+        <tr>
+            <td id="smallFPjson">
+    <pre>
+{
+  "edges":[
+    {"name1":"ARG135", "name2":"ASP134", "frames":[0,1,2,3,4,6,7,8,9]},
+    {"name1":"ASP134", "name2":"TRP161", "frames":[4,5,6,7]},
+    {"name1":"TYR223", "name2":"ARG135", "frames":[4,5,6,9]},
+    {"name1":"TYR223", "name2":"TYR306", "frames":[0,1,2,5,6,7,8]},
+    {"name1":"TYR306", "name2":"VAL54",  "frames":[1,4,5,6,7,8]}
+  ]
+}</pre>
+            </td>
+            <td id="smallFPcontainer">
+                <input type="number" min="0" max="9" step="1" value="0" size="6" id="smallFPspinner">
+            </td>
+        </tr>
+    </table>
+    <script>
+        var leftHeight = d3.select("#smallFPjson").node().offsetHeight;
+        var smallFPcontents = d3.select("#smallFPjson pre").text();
+        var smallFP = createFlareplot(leftHeight, smallFPcontents, "#smallFPcontainer");
+        d3.select("#smallFPcontainer").style("width", leftHeight+"px");
+        d3.select("#smallFPspinner").on("input", function(){
+            smallFP.setFrame( this.value );
+
+        });
+    </script>
     <p>
-        After generating the JSON it can be uploaded here.
+        Here ARG135 and ASP134 interact at times 0 to 4 and 6 to 9, and so on.
+        <!--<a href="https://github.com/GPCRviz/flareplot/tree/master/input">JSON input documentation</a>.-->
     </p>
-    <div class="fileUpload btn btn-primary">
-        <span>Upload JSON</span>
-        <input type="file" id="uploader" class="upload" />
+    <div class="leftDiv">
+        <p>Try one of our examples ..</p>
+        <ul>
+            <li>
+                <a href="javascript:loadExample('resources/mor-active-rep1-wb.json')">
+                    mor-active-rep1-wb.json
+                </a> [14MB, <a href="resources/mor-active-rep1-wb.json">raw</a>].
+            </li>
+            <li>
+                <a href="javascript:loadExample('resources/top7_mcmc.json')">
+                    top7_mcmc.json
+                </a> [21MB, <a href="sesources/top7_mcmc.json">raw</a>].
+            </li>
+            <li>
+                <a href="javascript:loadExample('resources/gpcr_brain.json')">
+                    top7_mcmc.json
+                </a> [21MB, <a href="sesources/top7_mcmc.json">raw</a>].
+            </li>
+
+        </ul>
+    </div>
+    <div class="rightDiv">
+        <p>
+            or upload your own ...
+        </p>
+        <div class="fileUpload btn btn-primary">
+            <span>Upload JSON</span>
+            <input type="file" id="uploader" class="upload" />
+        </div>
     </div>
 </div>
 
@@ -146,6 +218,11 @@
     var uploader = document.getElementById("uploader");
     uploader.addEventListener("change", handleFile, false);
 
+    function loadExample(fileName){
+        d3.text(fileName, function(json_text){
+            fileRead(json_text);
+        });
+    }
 
 </script>
 

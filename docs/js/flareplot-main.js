@@ -395,6 +395,7 @@ function createFlareplot(width, inputGraph, containerSelector){
          * @param frameNum a number indicating the frame to set.
          */
         function setFrame(frameNum){
+            frameNum = parseInt(frameNum);
             rangeSum(frameNum,frameNum+1);
         }
 

@@ -53,7 +53,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="?p=time">Temporal</a></li>
                 <li><a href="?p=compare">Comparative</a></li>
-                <li><a href="?p=upload">Upload</a></li>
+                <li><a href="?p=create">Create</a></li>
                 <li><a href="https://github.com/GPCRviz/flareplot/tree/master/embedding">Embed</a></li>
                 <li><a href="#footer">About</a></li>
             </ul>
@@ -77,8 +77,8 @@
         var page = parse_URL_arg("p", window.location.href);
         if (page=="compare") {
             document.getElementById("content-frame").src = "demos_compare/gpcr_interactome_demo.html";
-        } else if (page=="upload") {
-            document.getElementById("content-frame").src="upload.html";
+        } else if (page=="create") {
+            document.getElementById("content-frame").src="create.html";
         } else {
             document.getElementById("content-frame").src="demos_time/mor_demo.html";
         }
@@ -120,7 +120,7 @@
     <div class="container footer-below">
         <div class="row">
             <div class="col-lg-12">
-                Copyright &copy; Stanford University 2016
+                Copyright &copy; Stanford University 2017
             </div>
         </div>
     </div>
