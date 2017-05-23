@@ -174,7 +174,6 @@ FlarePlot includes a fingerprint panel that allows the user to select for edges 
         }
 
         var plot = createFlareplot(500, jsonData, "#flare-container");
-        createRangeSlider("#slider-container", plot);
         frameDict = getFrameDict(jsonData)
         if(frameDict){
           flareplot.framesIntersect([]) //show all interactions to begin with
