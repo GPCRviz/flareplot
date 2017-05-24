@@ -9,9 +9,11 @@
 
     <!-- Javascript libs -->
     <script type="text/javascript" src="../vendor/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../vendor/pv/pv.min.js"></script>
     <script type="text/javascript" src="../js/flareplot-main.js"></script>
     <script type="text/javascript" src="../js/flareplot-selectors.js"></script>
     <script type="text/javascript" src="../js/flareplot-rangeslider.js"></script>
+    <script type="text/javascript" src="../js/flareplot-pv.js"></script>
 
     <!-- Visualization CSS -->
     <link href="../css/flareplot-main.css" rel="stylesheet">
@@ -21,6 +23,9 @@
     <link href="../css/demos.css" rel="stylesheet">
 
     <style>
+        .node {
+            font-size: 8px;
+        }
         #flareDiv div{
             position: relative;
             left: 50%;
@@ -28,7 +33,7 @@
         }
         #sliderDiv {
             height: 30px;
-            width: 600px;
+            width: 500px;
             position: relative;
             left: 50%;
             margin-left: -300px;
@@ -62,15 +67,23 @@
 <body>
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
-<div class="container" id="flareDiv"></div>
-<div class="container" id="sliderDiv"></div>
-<div class="button" id="regroupDiv">Regroup</div>
+<div style="position:relative;width:1000px;left:50%;margin-left:-500px">
+    <div style="float:left; width:500px">
+        <div class="container" id="flareDiv"></div>
+        <div class="container" id="sliderDiv"></div>
+    </div>
+    <div style="overflow:auto;width:500px">
+        <div class="container" id="pvDiv" ></div>
+    </div>
+</div>
+<!--<div class="button" id="regroupDiv">Regroup</div>-->
+
 <script>
     var flareplot;
     var slider;
 
     function fileRead(contents){
-        flareplot = createFlareplot(600, contents, "#flareDiv");
+        flareplot = createFlareplot(500, contents, "#flareDiv");
         slider = createFlareplotSlider(flareplot, "#sliderDiv");
 
         var curGroup = 0;
@@ -80,17 +93,23 @@
                 flareplot.setTrack(curGroup);
                 flareplot.setTree(curGroup);
             });
+
+        createProteinViewer(flareplot, "../resources/5c1m.pdb", document.getElementById("pvDiv"), 500, 550);
+
+//        flareplot.addEdgeHoverListener(function(e){
+//            console.log("Hovering on:");
+//            console.log(e);
+//        })
     }
 
-    d3.text("../resources/top7_mcmc.json", function(json_text){
+    d3.text("../resources/mor-active-rep1-wb_small.json", function(json_text){
         fileRead(json_text);
     });
 
-
 </script>
 
-<a href="mor_demo.html" class="rightNav">&#9654;</a>
-<a href="mor_side-by-side.html" class="leftNav">&#9664;</a>
+<a href="top7_demo.html" class="rightNav">&#9654;</a>
+<a href="mor_demo.html" class="leftNav">&#9664;</a>
 
 </body>
 </html>

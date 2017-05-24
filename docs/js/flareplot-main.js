@@ -32,6 +32,7 @@ function createFlareplot(width, inputGraph, containerSelector){
     var selectedTree = 0;
     var selectedTrack = 0;
     var toggledNodes = {};
+    var visibleEdges = [];
     var splineDico;
 
     return (function() {
@@ -441,10 +442,19 @@ function createFlareplot(width, inputGraph, containerSelector){
                 .domain([1,Math.max(1,rangeEnd-rangeStart)])
                 .range([2,10]);
 
+            visibleEdges = [];
+
             path.style("stroke-width",
                 function(d,i){
                     var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd-1);
-                    return count==0?count:widthScale(count);
+                    if (count>0){
+                        var e = {edge:graph.edges[i], weight:count/(rangeEnd-rangeStart)};
+                        e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
+                        visibleEdges.push(e);
+                        return widthScale(count);
+                    } else {
+                        return 0;
+                    }
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
@@ -456,6 +466,9 @@ function createFlareplot(width, inputGraph, containerSelector){
                 //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
                 .attr("d", function(d, i) { return line(splines[i]); });
+
+            // fireFrameListeners(visibleEdges);
+            fireFrameListeners({type:"sum", start:rangeStart, end:rangeEnd});
         }
 
         /**
@@ -588,6 +601,13 @@ function createFlareplot(width, inputGraph, containerSelector){
                     return ( d.source.key in toggledNodes || d.target.key in toggledNodes)
                 });
 
+            visibleEdges.forEach(function(e){
+                if(e.edge.name1==d.name || e.edge.name2==d.name){
+                    e.toggled = toggled;
+                }
+            });
+
+            fireNodeToggleListeners(d);
         }
 
 
@@ -820,26 +840,34 @@ function createFlareplot(width, inputGraph, containerSelector){
                 .attr("d", function(d, i) { return line(splines[i]); })
         }
 
+        function getEdges(){
+            return visibleEdges;
+        }
+
         var nodeToggleListeners = [];
         var nodeHoverListeners  = [];
         var edgeToggleListeners = [];
         var edgeHoverListeners  = [];
+        var frameListeners  = [];
 
         function addNodeToggleListener(l){ nodeToggleListeners.push(l); }
         function addNodeHoverListener(l){  nodeHoverListeners.push(l);  }
         function addEdgeToggleListener(l){ edgeToggleListeners.push(l); }
         function addEdgeHoverListener(l){  edgeHoverListeners.push(l);  }
+        function addFrameListener(l){  frameListeners.push(l);  }
 
         function fireNodeToggleListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
-        function fireNodeHoverListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
-        function fireEdgeToggleListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
-        function fireEdgeHoverListeners(n){ nodeToggleListeners.forEach(function(l){l(n);}); }
+        function fireNodeHoverListeners(n){ nodeHoverListeners.forEach(function(l){l(n);}); }
+        function fireEdgeToggleListeners(n){ edgeToggleListeners.forEach(function(l){l(n);}); }
+        function fireEdgeHoverListeners(n){ edgeHoverListeners.forEach(function(l){l(n);}); }
+        function fireFrameListeners(f){ frameListeners.forEach(function(l){l(f);}); }
 
         create_bundle();
 
         return {
             getNumFrames: getNumFrames,
             setFrame: setFrame,
+            getEdges: getEdges,
             framesIntersect: framesIntersect,
             framesSum: framesSum,
             framesIntersectSubtract: framesIntersectSubtract,
@@ -852,6 +880,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             addNodeHoverListener: addNodeHoverListener,
             addEdgeToggleListener: addEdgeToggleListener,
             addEdgeHoverListener: addEdgeHoverListener,
+            addFrameListener: addFrameListener,
             graph: graph//, for debugging purposes
         }
     }) ();
