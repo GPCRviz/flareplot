@@ -135,7 +135,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                 .text(function(d) { return d.key; })
                 .on("mouseover", mouseoverNode)
                 .on("mouseout", mouseoutNode)
-                .on("click", toggleNode);
+                .on("click", function(d){ toggleNode(d.name); });
 
 
             var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
@@ -161,7 +161,13 @@ function createFlareplot(width, inputGraph, containerSelector){
                     return "rotate("+x+")" ;
                 })
                 .style("fill", function(d){ return d.color; })
-                .attr("d", arc);
+                .attr("d", arc)
+                .on("click", function(d){
+                    //Locate corresponding node
+                    nodes.filter(function(n){ return n.name==d.nodeName; })
+                        .forEach(function(n){ toggleNode(n.name); });
+
+                });
 
             setFrame(0);
         }
@@ -585,12 +591,14 @@ function createFlareplot(width, inputGraph, containerSelector){
             throw "framesSum must take either two integers (range), or an array (subset) as argument";
         }
 
-        function toggleNode(d){
-            var toggled = !d3.select(this.parentNode).classed("toggledNode");
-            d3.select(this.parentNode)
+        function toggleNode(nodeName){
+            var svgNodeElement = svg.selectAll("g.node#node-"+nodeName).node();
+            console.log(svgNodeElement);
+            var toggled = !d3.select(svgNodeElement).classed("toggledNode");
+            d3.select(svgNodeElement)
                 .classed("toggledNode", function(){return toggled; });
 
-            var name = d.name.substring(d.name.lastIndexOf(".")+1);
+            var name = nodeName.substring(nodeName.lastIndexOf(".")+1);
             if(!toggled)
                 delete toggledNodes[name];
             else
@@ -602,12 +610,12 @@ function createFlareplot(width, inputGraph, containerSelector){
                 });
 
             visibleEdges.forEach(function(e){
-                if(e.edge.name1==d.name || e.edge.name2==d.name){
+                if(e.edge.name1==nodeName || e.edge.name2==nodeName){
                     e.toggled = toggled;
                 }
             });
 
-            fireNodeToggleListeners(d);
+            fireNodeToggleListeners(nodeName);
         }
 
 

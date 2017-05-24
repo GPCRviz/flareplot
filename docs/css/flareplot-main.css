@@ -54,6 +54,10 @@ path.arc {
     stroke-opacity: 1;
 }
 
+.trackElement{
+    cursor: pointer;
+}
+
 svg text {
     -webkit-user-select: none;
     -moz-user-select: none;
