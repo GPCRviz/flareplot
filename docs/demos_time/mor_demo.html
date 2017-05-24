@@ -95,9 +95,6 @@
             .style("left","10px")
             .style("top","10px")
             .style("font-size","9pt")
-            .style("padding","5px")
-            .style("border-top","1px solid #CCC")
-            .style("border-bottom","1px solid #CCC")
             .style("opacity", 0.0)
             .text("Here is a network of molecular interactions across 5000 MD simulation frames of the pain-related mu-opioid receptor.");
 
@@ -107,10 +104,9 @@
             .style("width","150px")
             .style("left","50%")
             .style("margin-left","-470px")
-            .style("text-align","right")
             .style("top","300px")
+            .style("text-align","right")
             .style("font-size","9pt")
-            .style("padding","5px")
             .style("opacity", 0.0)
             .text("Clicking a residue name will highlight adjacent edges");
 
@@ -120,10 +116,9 @@
             .style("width","120px")
             .style("left","50%")
             .style("margin-left","-300px")
-            .style("text-align","center")
             .style("top","570px")
+            .style("text-align","center")
             .style("font-size","9pt")
-            .style("padding","5px")
             .style("opacity", 0.0)
             .text("Pull the slider to select a time-range");
 
@@ -131,21 +126,24 @@
             .append("div")
             .style("position","absolute")
             .style("width","120px")
-            .style("right","50px")
+            .style("right","70px")
             .style("margin-left","-300px")
-            .style("text-align","center")
             .style("top","50%")
+            .style("text-align","center")
             .style("margin-top","-25px")
             .style("font-size","9pt")
-            .style("padding","5px")
             .style("opacity", 0.0)
-            .text("When you're done playing check out the next demo");
+            .text("When you're done playing, check out the next demo");
 
 
-        infoDiv.transition().duration(1000).style("opacity", 1.0);
-        nodeDiv.transition().delay(3000).duration(1000).style("opacity", 1.0);
-        sldrDiv.transition().delay(6000).duration(1000).style("opacity", 1.0);
-        nextDiv.transition().delay(9000).duration(1000).style("opacity", 1.0);
+        infoDiv.transition().duration(1000)
+            .style("opacity", 1.0);
+        nodeDiv.transition().delay(2000).duration(1000)
+            .style("opacity", 1.0);
+        sldrDiv.transition().delay(4000).duration(1000)
+            .style("opacity", 1.0);
+        nextDiv.transition().delay(6000).duration(1000)
+            .style("opacity", 1.0);
     }
 
 </script>
