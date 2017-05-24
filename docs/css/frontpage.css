@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
 /*@import url('https://fonts.googleapis.com/css?family=Playfair+Display');*/
 
 /* Styling for button */
@@ -101,6 +101,10 @@ nav, h1, h2, h3, h4, h5, h6 {
 
 .navbar-brand {
     font-size: 3.0rem;
+}
+
+.nav-active {
+    font-weight: 700;
 }
 
 @media (min-width: 1200px) {

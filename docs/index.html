@@ -74,13 +74,23 @@
             else { return undefined; }
         }
 
+        function highlightMenuItem(itemText){
+            d3.selectAll("ul.nav li")
+                .classed("nav-active", false)
+                .filter(function(){ return d3.select(this).select("a").text()==itemText; })
+                .classed("nav-active", true);
+        }
+
         var page = parse_URL_arg("p", window.location.href);
         if (page=="compare") {
             document.getElementById("content-frame").src = "demos_compare/gpcr_interactome_demo.html";
+            highlightMenuItem("Comparative");
         } else if (page=="create") {
             document.getElementById("content-frame").src="create.html";
+            highlightMenuItem("Create");
         } else {
             document.getElementById("content-frame").src="demos_time/mor_demo.html";
+            highlightMenuItem("Temporal");
         }
 
     </script>
