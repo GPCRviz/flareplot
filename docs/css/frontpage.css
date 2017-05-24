@@ -82,6 +82,10 @@ ul.nav a:hover {
 
 }
 
+.rdivider {
+    border-right: 1px solid #eee;
+}
+
 nav a {
     color: black;
 }
