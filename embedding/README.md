@@ -132,6 +132,62 @@ This will place a range-slider below the plot. The appearance can be changed by 
 
 TODO
 
+## Navigating comparative data
+
+FlarePlot includes a fingerprint panel that allows the user to select for edges between nodes that are included or excluded from a particular column of the data frame. To use it
+  * Format json input to have a frameDict mapping indices to column names
+  * Include the required js and css file
+  * Place a container div
+  * Call 'initFingerprintPanel' or 'initScrollableFingerprintPanel' with the container selector, and the 'plot' object
+
+```html
+<html>
+<head>
+    <!-- FlarePlot dependencies -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+    <!-- FlarePlot javascript files -->
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-fingerprintpanel.js"></script>
+
+    <!-- FlarePlot styling -->
+    <link href="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.css" rel="stylesheet"></link>
+    <link href="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-fingerprintpanel.css" rel="stylesheet"></link>
+</head>
+<body>
+    <div id="flare-container"></div>
+    <div id="slider-container" style="width:500px"></div>
+    <script>
+        var jsonData = {
+          "edges": [
+            {"name1":"A", "name2":"B", "frames":[2,3]},
+            {"name1":"A", "name2":"C", "frames":[0,1]},
+            {"name1":"A", "name2":"D", "frames":[0,1,2,3]},
+            {"name1":"B", "name2":"D", "frames":[2]}
+          ],
+          "frameDict": {
+            "0":"B2AR",
+            "1":"mOR",
+            "2":"dOR",
+            "3":"A2A"
+          }
+        }
+
+        var plot = createFlareplot(500, jsonData, "#flare-container");
+        frameDict = getFrameDict(jsonData)
+        if(frameDict){
+          flareplot.framesIntersect([]) //show all interactions to begin with
+
+          var columnNames = getFingerprintColumns(contents);
+          panel = initFingerprintPanel("#maincontent", columnNames, threeStateSelection, true, '75px');
+          panel.on("click", updateIntersectFrames)
+        }
+    </script>
+</body>
+</html>
+```
+This will place a fingerprint panel below the plot. The appearance can be changed by modifying the corresponding css. 
+
 # Developer API
 
 The following functions are available after a `plot` object has been created:
