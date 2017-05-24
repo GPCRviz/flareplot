@@ -10,7 +10,6 @@ function createProteinViewer(flareplot, pdbFile, container, width, height) {
         antialias: true,
         quality: "medium"
     };
-    container.style.border="1px solid #EEE";
     container.style.width=width+"px";
     var viewer = pv.Viewer(container, options);
     var struc;
