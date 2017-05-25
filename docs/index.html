@@ -51,8 +51,9 @@
             </div>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="?p=time">Temporal</a></li>
-                <li class="rdivider"><a href="?p=compare">Comparative</a></li>
+                <li><a href="?p=demos">Demos</a></li>
+                <!--<li><a href="?p=time">Temporal</a></li>-->
+                <!--<li class="rdivider"><a href="?p=compare">Comparative</a></li>-->
                 <li><a href="?p=create">Create</a></li>
                 <li><a href="https://github.com/GPCRviz/flareplot/tree/master/embedding">Embed</a></li>
                 <li><a href="#footer">About</a></li>
@@ -82,15 +83,16 @@
         }
 
         var page = parse_URL_arg("p", window.location.href);
-        if (page=="compare") {
-            document.getElementById("content-frame").src = "demos_compare/gpcr_interactome_demo.html";
-            highlightMenuItem("Comparative");
-        } else if (page=="create") {
+        if (page=="create") {
             document.getElementById("content-frame").src="create.html";
             highlightMenuItem("Create");
+//        } else if (page=="compare") {
+//            document.getElementById("content-frame").src = "demos_compare/gpcr_interactome_demo.html";
+//            highlightMenuItem("Comparative");
         } else {
             document.getElementById("content-frame").src="demos_time/mor_demo.html";
-            highlightMenuItem("Temporal");
+            highlightMenuItem("Demos");
+//            highlightMenuItem("Temporal");
         }
 
     </script>
