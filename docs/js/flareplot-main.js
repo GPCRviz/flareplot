@@ -121,6 +121,8 @@ function createFlareplot(width, inputGraph, containerSelector){
 
 
 
+
+
             svg.selectAll("g.node")
                 .data(nodes.filter(function(n) { return !n.children; }), function(d) { return d.key; })
                 .enter().append("svg:g")
@@ -198,10 +200,10 @@ function createFlareplot(width, inputGraph, containerSelector){
 
             //Fill nodeNames from edges
             graph.edges.forEach(function (e) {
-                if (!(graph.nodeNames.indexOf(e.name1) > -1)) {
+                if (graph.nodeNames.indexOf(e.name1) == -1) {
                     graph.nodeNames.push(e.name1);
                 }
-                if (!(graph.nodeNames.indexOf(e.name2) > -1)) {
+                if (graph.nodeNames.indexOf(e.name2) == -1) {
                     graph.nodeNames.push(e.name2);
                 }
             });
@@ -485,6 +487,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             //splines = bundle(links);
             //splineDico = buildSplineIndex(splines);
             var path = svg.selectAll("path.link");
+            visibleEdges = [];
 
             path.style("stroke-width",
                 function(d,i) {
@@ -502,6 +505,9 @@ function createFlareplot(width, inputGraph, containerSelector){
                         }
                     }
 
+                    var e = {edge:graph.edges[i], weight:1};
+                    e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
+                    visibleEdges.push(e);
                     return 2;
                 })
                 .attr("class", function(d) {
@@ -513,6 +519,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
                 .attr("d", function(d, i) { return line(splines[i]); });
 
+            fireFrameListeners({type:"intersect", intersected:subset, excluded:subtract});
         }
 
         /**
@@ -523,6 +530,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             //splines = bundle(links);
             //splineDico = buildSplineIndex(splines);
             var path = svg.selectAll("path.link");
+            visibleEdges = [];
 
             var widthScale = d3.scale.linear()
                 .domain([1,subset.length])
@@ -535,6 +543,10 @@ function createFlareplot(width, inputGraph, containerSelector){
                         var iud = graph.edges[i].frames.indexUpDown(f);
                         if( iud[0] == iud[1] ){ count++; }
                     });
+                    var e = {edge:graph.edges[i], weight:count/subset.length};
+                    e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
+                    visibleEdges.push(e);
+
                     return count==0?0:widthScale(count);
                 })
                 .attr("class", function(d) {
@@ -547,6 +559,8 @@ function createFlareplot(width, inputGraph, containerSelector){
                 //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
                 .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
                 .attr("d", function(d, i) { return line(splines[i]); });
+
+            fireFrameListeners({type:"setsum", set:subset});
         }
 
         /**
@@ -593,7 +607,6 @@ function createFlareplot(width, inputGraph, containerSelector){
 
         function toggleNode(nodeName){
             var svgNodeElement = svg.selectAll("g.node#node-"+nodeName).node();
-            console.log(svgNodeElement);
             var toggled = !d3.select(svgNodeElement).classed("toggledNode");
             d3.select(svgNodeElement)
                 .classed("toggledNode", function(){return toggled; });

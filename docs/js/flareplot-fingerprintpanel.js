@@ -70,7 +70,7 @@ function twoStateSelection(el, row, col){
             include_nodes.push(includeElems[i].col_header);
         }
     }
-    console.log(include_nodes)
+    // console.log(include_nodes)
 }
 
 
@@ -108,7 +108,7 @@ function threeStateSelection(el, row, col){
         exclude_nodes.push(excludeElems[j].col_header);
     }
 
-    console.log("Intersect Nodes: ", include_nodes, "Exclude Nodes: ", exclude_nodes)
+    // console.log("Intersect Nodes: ", include_nodes, "Exclude Nodes: ", exclude_nodes)
 }
 
 

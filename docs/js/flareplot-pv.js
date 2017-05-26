@@ -3,7 +3,7 @@
  */
 
 
-function createProteinViewer(flareplot, pdbFile, container, width, height) {
+function createProteinViewer(flareplot, pdbFile, container, width, height, callback) {
     var options = {
         width: width,
         height: height,
@@ -14,15 +14,6 @@ function createProteinViewer(flareplot, pdbFile, container, width, height) {
     var viewer = pv.Viewer(container, options);
     var struc;
 
-    pv.io.fetchPdb(pdbFile, function (structure) {
-        struc = structure;
-        viewer.trace("protein", structure, {color: color.ssSuccession()});
-        var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G"]});
-        viewer.ballsAndSticks("ligands", ligands);
-        viewer.fitTo(structure);
-        viewer.setRotation([1, 0, 0, 0, 0, 1, 0, -1, 0]);
-        console.log("Done fetching structure");
-    });
 
     var nameToResiTable = {
         "1x28": ["64", ""],
@@ -331,8 +322,8 @@ function createProteinViewer(flareplot, pdbFile, container, width, height) {
     }
 
     function updateColors(clustered) {
-        viewer.rm('protein');
-        var geom = viewer.trace('protein', struc, {color: color.ssSuccession()});
+        viewer.rm("protein");
+        var geom = viewer.trace("protein", struc, {color: color.ssSuccession()});
         if (clustered) {
             function clusterCol() {
                 return new pv.color.ColorOp(function (atom, out, index) {
@@ -346,4 +337,21 @@ function createProteinViewer(flareplot, pdbFile, container, width, height) {
             geom.colorBy(clusterCol());
         }
     }
+
+    var ret = {
+        getPV: function() { return viewer; }
+    };
+
+    pv.io.fetchPdb(pdbFile, function (structure) {
+        struc = structure;
+        viewer.trace("protein", structure, {color: color.ssSuccession()});
+        var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G", "BF0"]});
+        viewer.ballsAndSticks("ligands", ligands);
+        viewer.fitTo(structure);
+        // viewer.setRotation([1, 0, 0, 0, 0, 1, 0, -1, 0]);
+        callback(ret);
+    });
+
+    return ret;
+
 }
