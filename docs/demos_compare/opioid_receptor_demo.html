@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Diversity in the GPCR interactome across human tissues">
+
+    <!-- Javascript libs -->
+    <script type="text/javascript" src="../vendor/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../vendor/pv/pv.min.js"></script>
+    <script type="text/javascript" src="../js/flareplot-main.js"></script>
+    <script type="text/javascript" src="../js/flareplot-selectors.js"></script>
+    <script type="text/javascript" src="../js/flareplot-fingerprintpanel.js"></script>
+    <script type="text/javascript" src="../js/flareplot-pv.js"></script>
+
+    <!-- Visualization CSS -->
+    <link href="../css/flareplot-main.css" rel="stylesheet">
+    <link href="../css/flareplot-selectors.css" rel="stylesheet">
+    <link href="../css/flareplot-fingerprintpanel.css" rel="stylesheet">
+
+    <link href="../css/demos.css" rel="stylesheet">
+
+    <style>
+        #flareDiv div{
+            position: relative;
+            left: 50%;
+            margin-left: -300px;
+        }
+    </style>
+
+</head>
+
+<body>
+<!--<a href="../index.html" class="logo">Flareplot</a>-->
+<!--<h1>Diversity in the GPCR interactome across human tissues</h1>-->
+<div><h1> Non-covalent sidechain contacts in opioid receptors </h1></div>
+<div style="position:relative;width:1100px;left:50%;margin-left:-550px">
+    <div style="float:left; width:600px">
+        <div class="container" id="flareDiv"></div>
+    </div>
+    <div style="overflow:auto;width:500px">
+        <div class="container" id="pvDiv" style="overflow:hidden"></div>
+    </div>
+</div>
+<script>
+    var flareplot;
+    var panel;
+
+    function fileRead(contents){
+        flareplot = createFlareplot(600, contents, "#flareDiv");
+
+        // Create fingerprint panel if frameDict is included in contents
+        flareplot.framesIntersect([]); //show all interactions to begin with
+
+        var columnNames = getFingerprintColumns(contents);
+        var fingerprint_list = calcFingerprints(contents);
+        panel = initScrollableFingerprintPanel(
+            "#flareDiv", // Container selector
+            columnNames,
+            fingerprint_list,
+            threeStateRowSelection,
+            true, // Show header
+            '100px' // Height of column headers
+        );
+        panel.on("click", updateIntersectFrames);
+
+
+        createProteinViewer(flareplot, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
+            sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
+//            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
+        });
+
+
+    }
+
+    function loadExample(fileName){
+        d3.text(fileName, function(json_text){
+            fileRead(json_text);
+        });
+    }
+
+    window.onload = function(){
+        loadExample('../resources/opioid/hbss.json');
+    };
+</script>
+
+</body>
+</html>
