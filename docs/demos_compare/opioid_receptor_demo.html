@@ -49,7 +49,7 @@
     var panel;
 
     function fileRead(contents){
-        console.log(contents)
+//        console.log(contents)
         flareplot = createFlareplot(600, contents, "#flareDiv");
 
         // Create fingerprint panel if frameDict is included in contents
@@ -71,9 +71,7 @@
         createProteinViewer(flareplot, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
 //            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
-        });
-
-
+        }).setEdgeFilter(function(){ return true; })
     }
 
     function loadExample(fileName){
