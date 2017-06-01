@@ -13,7 +13,7 @@
     <script type="text/javascript" src="../js/flareplot-main.js"></script>
     <script type="text/javascript" src="../js/flareplot-selectors.js"></script>
     <script type="text/javascript" src="../js/flareplot-fingerprintpanel.js"></script>
-    <script type="text/javascript" src="../js/flareplot-pv.js"></script>
+    <script type="text/javascript" src="../js/flareplot-atomic-pv.js"></script>
 
     <!-- Visualization CSS -->
     <link href="../css/flareplot-main.css" rel="stylesheet">
@@ -49,7 +49,6 @@
     var panel;
 
     function fileRead(contents){
-        console.log(contents)
         flareplot = createFlareplot(600, contents, "#flareDiv");
 
         // Create fingerprint panel if frameDict is included in contents
@@ -68,7 +67,7 @@
         panel.on("click", updateIntersectFrames);
 
 
-        createProteinViewer(flareplot, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
+        createAtomicProteinViewer(flareplot, contents, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
 //            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
         });
