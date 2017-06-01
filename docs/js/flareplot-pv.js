@@ -13,7 +13,7 @@ function createProteinViewer(flareplot, pdbFile, container, width, height, callb
     container.style.width=width+"px";
     var viewer = pv.Viewer(container, options);
     var struc;
-
+    var edgefilter = function(e){ return e.toggled; };
 
     var nameToResiTable = {
         "1x28": ["64", ""],
@@ -291,7 +291,7 @@ function createProteinViewer(flareplot, pdbFile, container, width, height, callb
         viewer.rm("interactions");
         var cm = viewer.customMesh("interactions");
         flareplot.getEdges()
-            .filter(function(e){ return e.toggled; })
+            .filter(edgefilter)
             .forEach(function(e){
                 var name1 = e.edge.name1;
                 var name2 = e.edge.name2;
@@ -338,8 +338,13 @@ function createProteinViewer(flareplot, pdbFile, container, width, height, callb
         }
     }
 
+    function setEdgeFilter(f){
+        edgefilter = f;
+    }
+
     var ret = {
-        getPV: function() { return viewer; }
+        getPV: function() { return viewer; },
+        setEdgeFilter: setEdgeFilter
     };
 
     pv.io.fetchPdb(pdbFile, function (structure) {
