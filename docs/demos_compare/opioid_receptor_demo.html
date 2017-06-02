@@ -14,6 +14,7 @@
     <script type="text/javascript" src="../js/flareplot-selectors.js"></script>
     <script type="text/javascript" src="../js/flareplot-fingerprintpanel.js"></script>
     <script type="text/javascript" src="../js/flareplot-atomic-pv.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
     <!-- Visualization CSS -->
     <link href="../css/flareplot-main.css" rel="stylesheet">
@@ -48,6 +49,7 @@
     var flareplot;
     var panel;
 
+
     function fileRead(contents){
         flareplot = createFlareplot(600, contents, "#flareDiv");
 
@@ -57,17 +59,19 @@
         var columnNames = getFingerprintColumns(contents);
         var fingerprint_list = calcFingerprints(contents);
         panel = initScrollableFingerprintPanel(
-            "#flareDiv", // Container selector
+            "#flareDiv", 
             columnNames,
             fingerprint_list,
             threeStateRowSelection,
-            true, // Show header
-            '100px' // Height of column headers
+            true, 
+            '100px'
         );
         panel.on("click", updateIntersectFrames);
 
 
-        createAtomicProteinViewer(flareplot, contents, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
+        // Can switch for any column header and corresponding pdb structure 
+        var column_header = "OPRM_MOUSE_4DKL_A";
+        createAtomicProteinViewer(flareplot, contents, column_header, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
 //            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
         }).setEdgeFilter(function(){ return true; })
