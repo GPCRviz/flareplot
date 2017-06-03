@@ -73,49 +73,76 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
         }
     }
 
+
+    var active_residues = [];
+
     function updateInteractions() {
         viewer.rm("interactions");
+        // viewer.rm("selected_residues");
         var cm = viewer.customMesh("interactions");
         flareplot.getEdges()
-            .filter(function(e){ return e.toggled; })
-            .forEach(function(e){
-                var name1 = e.edge.name1;
-                var name2 = e.edge.name2;
-                var resi1 = nameToResi(name1);
-                var resi2 = nameToResi(name2);
+        .filter(function(e){ 
 
-                if (resi1 !== undefined && resi2 !== undefined) {
-                    var key = name1 + ":" + name2
-                    atomic_interactions = residue_to_atomic_contacts[key][receptorIndex]
-                    if(atomic_interactions !== undefined){
-                        for (i = 0; i < atomic_interactions.length; i++){
-                            var pv_atom_obj = []
-                            var atoms = atomic_interactions[i].split(":")
-                            for (j = 0; j < atoms.length; j++){
-                                var resi_atom = atoms[j].split("-");
-                                var residue = resi_atom[0];
-                                var resid = residue.substring(3, residue.length);
+            return e.toggled; })
+        .forEach(function(e){
+            var name1 = e.edge.name1;
+            var name2 = e.edge.name2;
+            var resi1 = nameToResi(name1);
+            var resi2 = nameToResi(name2);
 
+            if (resi1 !== undefined && resi2 !== undefined && (name1 !== name2)) {
+                var key = name1 + ":" + name2;
+                atomic_interactions = residue_to_atomic_contacts[key][receptorIndex]
+                if(atomic_interactions !== undefined){
+                    for (i = 0; i < atomic_interactions.length; i++){
+                        var pv_atom_obj = [];
+                        var atoms = atomic_interactions[i].split(":");
+                        for (j = 0; j < atoms.length; j++){
+                            var resi_atom = atoms[j].split("-");
+                            var residue = resi_atom[0];
+                            var resid = residue.substring(3, residue.length);
 
-                                var atom_type = resi_atom[1];
-                                var atom = struc.atom("A." + resid + "." + atom_type)
-                                pv_atom_obj.push(atom)
+                            var atom_type = resi_atom[1];
+                            pv_atom_obj.push([resid, atom_type]);
+                        }
+
+                        var edgew = 0.05 * e.weight;
+                        if(pv_atom_obj.length == 2){
+                            resid1 = pv_atom_obj[0][0].toString();
+                            resid2 = pv_atom_obj[1][0].toString();
+                            atom_type1 = pv_atom_obj[0][1];
+                            atom_type2 = pv_atom_obj[1][1];
+                            atom1 = struc.atom("A." + resid1 + "." + atom_type1);
+                            atom2 = struc.atom("A." + resid2 + "." + atom_type2);
+
+                            console.log(resid1, atom_type1, resid2, atom_type2);
+                            cm.addTube(atom1.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
+
+                            if(active_residues.indexOf(resid1) == -1){
+                                active_residues.push(resid1);
+                            }else{
+                                active_residues.splice(resid1, 1);
                             }
 
-                            var edgew = 0.25 * e.weight;
-                            if(pv_atom_obj.length == 2){
-                                atom1 = pv_atom_obj[0]
-                                atom2 = pv_atom_obj[1]
-                                cm.addTube(atom1.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
-
+                            if(active_residues.indexOf(resid2) == -1){
+                                active_residues.push(resid2);
+                            }else{
+                                active_residues.splice(resid2, 1);
                             }
 
+                            console.log("active_residues", active_residues)
 
+                            // Update the two residue pairs to lines 
+                            pv.io.fetchPdb(pdbFile, function (structure) {
+                                struc = structure;
+                                var selected_residues = structure.select({rnums:active_residues})
+                                viewer.ballsAndSticks("selected_residues", selected_residues);
+                            });
                         }
                     }
-                    
                 }
-            });
+            }
+        });
     }
 
     flareplot.addFrameListener(updateInteractions);
@@ -156,10 +183,13 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
 
     pv.io.fetchPdb(pdbFile, function (structure) {
         struc = structure;
-        viewer.cartoon("protein", structure, {color: color.ssSuccession()});
-        var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G", "BF0"]});
-        viewer.ballsAndSticks("ligands", ligands);
+        viewer.tube("protein", structure, {color: color.ssSuccession()});
+        // var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G", "BF0"]});
+        // viewer.ballsAndSticks("ligands", ligands);
         viewer.fitTo(structure);
+        viewer.forEach(function(object){
+            object.setOpacity(0.5);
+        });
         // viewer.setRotation([1, 0, 0, 0, 0, 1, 0, -1, 0]);
         callback(ret);
     });
