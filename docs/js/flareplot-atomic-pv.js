@@ -94,6 +94,7 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                 var key = name1 + ":" + name2;
                 atomic_interactions = residue_to_atomic_contacts[key][receptorIndex]
                 if(atomic_interactions !== undefined){
+                    console.log(atomic_interactions)
                     for (i = 0; i < atomic_interactions.length; i++){
                         var pv_atom_obj = [];
                         var atoms = atomic_interactions[i].split(":");
@@ -117,6 +118,8 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                         atom_type2 = pv_atom_obj[1][1];
                         atom1 = struc.atom("A." + resid1 + "." + atom_type1);
                         atom2 = struc.atom("A." + resid2 + "." + atom_type2);
+
+                        // Add residue indices to update visualization
                         if(active_residues.indexOf(resid1) == -1){
                             active_residues.push(resid1);
                         }else{
@@ -129,9 +132,12 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                             active_residues.splice(resid2, 1);
                         }
 
+                        // Residue to residue interaction
                         if(pv_atom_obj.length == 2){
                             cm.addTube(atom1.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
                         }
+
+                        // Water-mediated interactions
                         else if(pv_atom_obj.length == 3){
                             water1 = pv_atom_obj[2][0].toString();
 
@@ -142,6 +148,8 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                             cm.addTube(atom1.pos(), atom3.pos(), edgew, {cap: true, color: "#333"});
                             cm.addTube(atom3.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
                         }
+
+                        // Extended water-mediated interactions
                         else if(pv_atom_obj.length == 4){
                             water1 = pv_atom_obj[2][0].toString();
                             water2 = pv_atom_obj[3][0].toString();
@@ -149,15 +157,17 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                             atom_type3 = pv_atom_obj[2][1];
                             atom_type4 = pv_atom_obj[3][1];
 
+                            console.log(resid1+"."+atom_type1, resid2 + "." + atom_type2, water1 + "." + atom_type3, water2 + "." + atom_type4)
+
                             atom3 = struc.atom("A." + water1 + "." + atom_type3);
                             atom4 = struc.atom("A." + water2 + "." + atom_type4);
 
                             cm.addTube(atom1.pos(), atom3.pos(), edgew, {cap: true, color: "#333"});
                             cm.addTube(atom3.pos(), atom4.pos(), edgew, {cap: true, color: "#333"});
-                            cm.addTube(atom4.pos(), atom1.pos(), edgew, {cap: true, color: "#333"});
+                            cm.addTube(atom4.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
                         }
 
-                        // Update the two residue pairs to lines 
+                        // Show the residues involved in the interactions
                         pv.io.fetchPdb(pdbFile, function (structure) {
                             struc = structure;
                             var selected_residues = structure.select({rnums:active_residues})
