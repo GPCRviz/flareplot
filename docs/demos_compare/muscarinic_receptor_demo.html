@@ -13,7 +13,8 @@
     <script type="text/javascript" src="../js/flareplot-main.js"></script>
     <script type="text/javascript" src="../js/flareplot-selectors.js"></script>
     <script type="text/javascript" src="../js/flareplot-fingerprintpanel.js"></script>
-    <script type="text/javascript" src="../js/flareplot-pv.js"></script>
+    <script type="text/javascript" src="../js/flareplot-atomic-pv.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
     <!-- Visualization CSS -->
     <link href="../css/flareplot-main.css" rel="stylesheet">
@@ -35,7 +36,7 @@
 <body>
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Diversity in the GPCR interactome across human tissues</h1>-->
-<div><h1> Non-covalent sidechain contacts in muscarinic receptors </h1></div>
+<div><h1> Non-covalent sidechain contacts in opioid receptors </h1></div>
 <div style="position:relative;width:1100px;left:50%;margin-left:-550px">
     <div style="float:left; width:600px">
         <div class="container" id="flareDiv"></div>
@@ -48,6 +49,7 @@
     var flareplot;
     var panel;
 
+
     function fileRead(contents){
         flareplot = createFlareplot(600, contents, "#flareDiv");
 
@@ -57,22 +59,22 @@
         var columnNames = getFingerprintColumns(contents);
         var fingerprint_list = calcFingerprints(contents);
         panel = initScrollableFingerprintPanel(
-            "#flareDiv", // Container selector
+            "#flareDiv", 
             columnNames,
             fingerprint_list,
             threeStateRowSelection,
-            true, // Show header
-            '100px' // Height of column headers
+            true, 
+            '100px'
         );
         panel.on("click", updateIntersectFrames);
 
 
-        createProteinViewer(flareplot, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
+        // Can switch for any column header and corresponding pdb structure 
+        var column_header = "ACM2_HUMAN_3UON_A";
+        createAtomicProteinViewer(flareplot, contents, column_header, "../resources/3uon_wloop.pdb", pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
 //            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
-        });
-
-
+        }).setEdgeFilter(function(){ return true; })
     }
 
     function loadExample(fileName){
@@ -82,7 +84,7 @@
     }
 
     window.onload = function(){
-        loadExample('../resources/muscarinic/hbss.json');
+        loadExample('../resources/muscarinic/wb2.json');
     };
 </script>
 

@@ -36,7 +36,7 @@
 <body>
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Diversity in the GPCR interactome across human tissues</h1>-->
-<div><h1> Non-covalent sidechain contacts in opioid receptors </h1></div>
+<div><h1> Extended water-mediated contacts in opioid receptors </h1></div>
 <div style="position:relative;width:1100px;left:50%;margin-left:-550px">
     <div style="float:left; width:600px">
         <div class="container" id="flareDiv"></div>
@@ -58,7 +58,6 @@
 
         var columnNames = getFingerprintColumns(contents);
         var fingerprint_list = calcFingerprints(contents);
-        console.log(fingerprint_list)
         panel = initScrollableFingerprintPanel(
             "#flareDiv", 
             columnNames,
@@ -72,6 +71,7 @@
 
         // Can switch for any column header and corresponding pdb structure 
         var column_header = "OPRM_MOUSE_4DKL_A";
+        // var column_header = "OPRD_HUMAN_4N6H_A";
         createAtomicProteinViewer(flareplot, contents, column_header, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
 //            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
@@ -85,7 +85,7 @@
     }
 
     window.onload = function(){
-        loadExample('../resources/opioid/hbss.json');
+        loadExample('../resources/opioid/wb2.json');
     };
 </script>
 
