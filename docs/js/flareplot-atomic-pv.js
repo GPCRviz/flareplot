@@ -77,13 +77,21 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
     var active_residues = [];
 
     function updateInteractions() {
+        viewer.rm("selected_residues");
+        // viewer.clear();
+        // pv.io.fetchPdb(pdbFile, function (structure) {
+        //     struc = structure;
+        //     viewer.tube("protein", structure, {color: color.ssSuccession()});
+        //     viewer.forEach(function(object){
+        //         object.setOpacity(0.5);
+        //     });
+        // });
+        active_residues = [];
         viewer.rm("interactions");
-        // viewer.rm("selected_residues");
+        
         var cm = viewer.customMesh("interactions");
         flareplot.getEdges()
-        .filter(function(e){ 
-
-            return e.toggled; })
+        // .filter(function(e){ return e.toggled; })
         .forEach(function(e){
             var name1 = e.edge.name1;
             var name2 = e.edge.name2;
@@ -97,6 +105,8 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                     for (i = 0; i < atomic_interactions.length; i++){
                         var pv_atom_obj = [];
                         var atoms = atomic_interactions[i].split(":");
+
+                        // Parse atoms into the resid and atomtype
                         for (j = 0; j < atoms.length; j++){
                             var resi_atom = atoms[j].split("-");
                             var residue = resi_atom[0];
@@ -106,7 +116,8 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                             pv_atom_obj.push([resid, atom_type]);
                         }
 
-                        var edgew = 0.05 * e.weight;
+                        // create atom structure and tube between atom coordinates
+                        var edgew = 0.1 * e.weight;
                         if(pv_atom_obj.length == 2){
                             resid1 = pv_atom_obj[0][0].toString();
                             resid2 = pv_atom_obj[1][0].toString();
@@ -130,7 +141,7 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                                 active_residues.splice(resid2, 1);
                             }
 
-                            console.log("active_residues", active_residues)
+                            // console.log("active_residues", active_residues)
 
                             // Update the two residue pairs to lines 
                             pv.io.fetchPdb(pdbFile, function (structure) {
