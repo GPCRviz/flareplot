@@ -20,7 +20,7 @@
     <link href="../css/flareplot-main.css" rel="stylesheet">
     <link href="../css/flareplot-selectors.css" rel="stylesheet">
     <link href="../css/flareplot-fingerprintpanel.css" rel="stylesheet">
-
+    <link href="../css/flareplot-atomic-pv.css" rel="stylesheet">
     <link href="../css/demos.css" rel="stylesheet">
 
     <style>
@@ -36,12 +36,33 @@
 <body>
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Diversity in the GPCR interactome across human tissues</h1>-->
-<div><h1> Water-mediated contacts in opioid receptors </h1></div>
-<div style="position:relative;width:1100px;left:50%;margin-left:-550px">
+<div><h1> Non-covalent contacts in opioid receptors </h1></div>
+<div style="position:relative;width:1200px;left:50%;margin-left:-600px">
+    <div style="float:left; width:100px" class="dropdown">
+
+        <button onclick="myFunction()" class="dropbtn">Interactions</button>
+        <div id="interactionsDropdown" class="dropdown-content">
+            <a onclick="load_network('sb')">sb</a>
+            <a onclick="load_network('pc')">pc</a>
+            <a onclick="load_network('ps')">ps</a>
+            <a onclick="load_network('ts')">ts</a>
+            <a onclick="load_network('vdw')">vdw</a>
+            <a onclick="load_network('hbbb')">hbbb</a>
+            <a onclick="load_network('hbsb')">hbsb</a>
+            <a onclick="load_network('hbss')">hbss</a>
+            <a onclick="load_network('wb')">wb</a>
+            <a onclick="load_network('wb2')">wb2</a>
+            <a onclick="load_network('hlb')">hlb</a>
+            <a onclick="load_network('hls')">hls</a>
+            <a onclick="load_network('lwb')">lwb</a>
+            <a onclick="load_network('lwb2')">lwb2</a>            
+        </div>
+    </div>
+
     <div style="float:left; width:600px">
         <div class="container" id="flareDiv"></div>
     </div>
-    <div style="overflow:auto;width:500px">
+    <div style="float:left; width:500px">
         <div class="container" id="pvDiv" style="overflow:hidden"></div>
     </div>
 </div>
@@ -84,9 +105,37 @@
         });
     }
 
+        /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("interactionsDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    
+
     window.onload = function(){
         loadExample('../resources/opioid/wb.json');
     };
+
+    function load_network(interaction_type){
+        document.getElementById("flareDiv").innerHTML = "";
+        document.getElementById("pvDiv").innerHTML = "";
+        loadExample('../resources/opioid/' + interaction_type + ".json")
+    }
 </script>
 
 </body>

@@ -219,8 +219,10 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
         struc = structure;
         viewer.tube("protein", structure, {color: color.ssSuccession()});
         viewer.spheres("water", structure.select({rnames:["HOH"]}))
+        
         // var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G", "BF0"]});
         // viewer.ballsAndSticks("ligands", ligands);
+
         viewer.fitTo(structure);
         viewer.forEach(function(object){
             object.setOpacity(0.5);
