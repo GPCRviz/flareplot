@@ -144,7 +144,11 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                             atom_type3 = pv_atom_obj[2][1];
 
                             atom3 = struc.atom("A." + water1 + "." + atom_type3);
+
+                            // Render water as spheres
+                            cm.addSphere(atom3.pos(), 1, { color : 'red' });
                             
+                            // Render tubes to show connections
                             cm.addTube(atom1.pos(), atom3.pos(), edgew, {cap: true, color: "#333"});
                             cm.addTube(atom3.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
                         }
@@ -162,6 +166,11 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                             atom3 = struc.atom("A." + water1 + "." + atom_type3);
                             atom4 = struc.atom("A." + water2 + "." + atom_type4);
 
+                            // Render water as spheres
+                            cm.addSphere(atom3.pos(), 1, { color : 'red' });
+                            cm.addSphere(atom4.pos(), 1, { color : 'red' });
+
+                            // Render tubes to show connections
                             cm.addTube(atom1.pos(), atom3.pos(), edgew, {cap: true, color: "#333"});
                             cm.addTube(atom3.pos(), atom4.pos(), edgew, {cap: true, color: "#333"});
                             cm.addTube(atom4.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
@@ -218,7 +227,6 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
     pv.io.fetchPdb(pdbFile, function (structure) {
         struc = structure;
         viewer.tube("protein", structure, {color: color.ssSuccession()});
-        viewer.spheres("water", structure.select({rnames:["HOH"]}))
         
         // var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G", "BF0"]});
         // viewer.ballsAndSticks("ligands", ligands);
