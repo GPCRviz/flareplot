@@ -2,7 +2,6 @@
  * Edited by akma327 on 5/31/17.
  */
 
-
 function getResidueToAtomContacts(contents){
     // Get mapping from column label to index
     var content_dict = JSON.parse(contents);
@@ -44,6 +43,14 @@ function getReceptorIndex(contents, uniprot){
     }
 }
 
+function getChain(column_header){
+    col_head_comp = column_header.split("_")
+    if(col_head_comp.length == 4){
+        return col_head_comp[3] + ".";
+    }else{
+        return "A.";
+    }
+}
 
 function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, container, width, height, callback) {
     var options = {
@@ -67,7 +74,11 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
     function nameToResi(name) {
         if (name in nameToResiTable) {
             return nameToResiTable[name][0];
-        } else {
+        } 
+        else if(name.indexOf("LIG") !== -1){
+            return name;
+        }
+        else {
             console.log("Error looking up " + name);
             return undefined;
         }
@@ -90,34 +101,40 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
             var resi1 = nameToResi(name1);
             var resi2 = nameToResi(name2);
 
-            if (resi1 !== undefined && resi2 !== undefined && (name1 !== name2)) {
+            if (resi1 !== undefined && resi2 !== undefined) {
                 var key = name1 + ":" + name2;
                 atomic_interactions = residue_to_atomic_contacts[key][receptorIndex]
                 if(atomic_interactions !== undefined){
                     console.log(atomic_interactions)
                     for (i = 0; i < atomic_interactions.length; i++){
                         var pv_atom_obj = [];
-                        var atoms = atomic_interactions[i].split(":");
-
+                        
                         // Parse atoms into the resid and atomtype
+                        var atoms = atomic_interactions[i].split(":");
                         for (j = 0; j < atoms.length; j++){
                             var resi_atom = atoms[j].split("-");
                             var residue = resi_atom[0];
-                            var resid = residue.substring(3, residue.length);
-
                             var atom_type = resi_atom[1];
+                            
+                            var resname = residue.substring(0,3);
+                            var resid = residue.substring(3, residue.length);
                             pv_atom_obj.push([resid, atom_type]);
                         }
+                        console.log(pv_atom_obj)
 
                         // create atom structure and tube between atom coordinates
                         var edgew = 0.1 * e.weight;
 
-                        resid1 = pv_atom_obj[0][0].toString();
-                        resid2 = pv_atom_obj[1][0].toString();
-                        atom_type1 = pv_atom_obj[0][1];
-                        atom_type2 = pv_atom_obj[1][1];
-                        atom1 = struc.atom("A." + resid1 + "." + atom_type1);
-                        atom2 = struc.atom("A." + resid2 + "." + atom_type2);
+                        var resid1 = pv_atom_obj[0][0].toString();
+                        var resid2 = pv_atom_obj[1][0].toString();
+                        var atom_type1 = pv_atom_obj[0][1];
+                        var atom_type2 = pv_atom_obj[1][1];
+                        var chain = getChain(column_header);
+
+                        var atom1 = struc.atom(chain + resid1 + "." + atom_type1);
+                        var atom2 = struc.atom(chain + resid2 + "." + atom_type2);
+
+                        console.log(resid1, atom_type1, resid2, atom_type2)
 
                         // Add residue indices to update visualization
                         if(active_residues.indexOf(resid1) == -1){

@@ -93,7 +93,7 @@
         // Can switch for any column header and corresponding pdb structure 
         var column_header = "OPRM_MOUSE_4DKL_A";
         // var column_header = "OPRD_HUMAN_4N6H_A";
-        createAtomicProteinViewer(flareplot, contents, column_header, "../resources/4dkl_wloop.pdb", pvDiv, 500, 700, function(sv){
+        createAtomicProteinViewer(flareplot, contents, column_header, "../resources/OPRM_MOUSE_4DKL_A.pdb", pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
 //            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
         }).setEdgeFilter(function(){ return true; })
