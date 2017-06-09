@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +19,7 @@
     <link href="../css/flareplot-main.css" rel="stylesheet">
     <link href="../css/flareplot-selectors.css" rel="stylesheet">
     <link href="../css/flareplot-fingerprintpanel.css" rel="stylesheet">
-
+    <link href="../css/flareplot-atomic-pv.css" rel="stylesheet">
     <link href="../css/demos.css" rel="stylesheet">
 
     <style>
@@ -36,46 +35,72 @@
 <body>
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Diversity in the GPCR interactome across human tissues</h1>-->
-<div><h1> Non-covalent sidechain contacts in opioid receptors </h1></div>
-<div style="position:relative;width:1100px;left:50%;margin-left:-550px">
+<div><h1 id="title"> Water-mediated contacts in OPRD_HUMAN_4N6H_A </h1></div>
+<div style="position:relative;width:1300px;left:50%;margin-left:-650px">
+    
+    <!-- Interaction Dropdown -->
+    <div style="float:left; width:100px" class="dropdown">
+        <button onclick="myFunction1()" class="dropbtn">Interactions</button>
+        <div id="interactionsDropdown" class="dropdown-content">
+            <a onclick="load_network('sb')">sb</a>
+            <a onclick="load_network('pc')">pc</a>
+            <a onclick="load_network('ps')">ps</a>
+            <a onclick="load_network('ts')">ts</a>
+            <a onclick="load_network('vdw')">vdw</a>
+            <a onclick="load_network('hbbb')">hbbb</a>
+            <a onclick="load_network('hbsb')">hbsb</a>
+            <a onclick="load_network('hbss')">hbss</a>
+            <a onclick="load_network('wb')">wb</a>
+            <a onclick="load_network('wb2')">wb2</a>
+            <a onclick="load_network('hlb')">hlb</a>
+            <a onclick="load_network('hls')">hls</a>
+            <a onclick="load_network('lwb')">lwb</a>
+            <a onclick="load_network('lwb2')">lwb2</a>            
+        </div>
+    </div>
+
     <div style="float:left; width:600px">
         <div class="container" id="flareDiv"></div>
     </div>
-    <div style="overflow:auto;width:500px">
+    <div style="float:left; width:500px">
         <div class="container" id="pvDiv" style="overflow:hidden"></div>
     </div>
+
+    <!-- Structure Dropdown -->
+    <div style="float:left; width:100px" class="dropdown">
+        <button onclick="myFunction2()" class="dropbtn">Structures</button>
+        <div id="structuresDropdown" class="dropdown-content">
+            <a onclick="load_structure('0')">ACM1_HUMAN_5CXV_A</a>
+            <a onclick="load_structure('1')">ACM2_HUMAN_3UON_A</a>
+            <a onclick="load_structure('2')">ACM3_RAT_4DAJ_A</a>           
+            <a onclick="load_structure('3')">ACM4_HUMAN_5DSG_B</a>  
+        </div>
+    </div>
+
 </div>
 <script>
-    var flareplot;
-    var panel;
-
     // Input: Directory or list of network json paths and path to structures being compared
     var network_dir = "../resources/muscarinic/networks/";
-    var structures = ["../resources/muscarinic/structures/ACM1_HUMAN_5CXV_A.pdb",
+    var structure_files = ["../resources/muscarinic/structures/ACM1_HUMAN_5CXV_A.pdb",
                     "../resources/muscarinic/structures/ACM2_HUMAN_3UON_A.pdb",
                     "../resources/muscarinic/structures/ACM3_RAT_4DAJ_A.pdb",
                     "../resources/muscarinic/structures/ACM4_HUMAN_5DSG_B.pdb"]
+
+    var flareplot;
+    var panel;
+    var pdbFile; // Stores which pdb the viewer is displaying
+    var interaction_type; // Stores which interaction network the viewer is displaying
+    
+
 
     function fileRead(contents){
         flareplot = createFlareplot(600, contents, "#flareDiv");
 
         // Create fingerprint panel if frameDict is included in contents
         flareplot.framesIntersect([]); //show all interactions to begin with
-
-//        var columnNames = getFingerprintColumns(contents);
-//        var fingerprint_list = calcFingerprints(contents);
-//        panel = initScrollableFingerprintPanel(
-//            "#flareDiv",
-//            columnNames,
-//            fingerprint_list,
-//            threeStateRowSelection,
-//            true,
-//            '100px'
-//        );
-//        panel.on("click", updateIntersectFrames);
-
         panel = createFingerprintPanel(flareplot, "#flareDiv", true, "100px");
-        createAtomicProteinViewer(flareplot, contents, structures, pvDiv, 500, 700, function(sv){
+
+        createAtomicProteinViewer(flareplot, contents, pdbFile, pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
         });
     }
@@ -86,9 +111,61 @@
         });
     }
 
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction1() {
+        document.getElementById("interactionsDropdown").classList.toggle("show");
+    }
+
+    function myFunction2() {
+        document.getElementById("structuresDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    
+
+    // Default initialize page to first structure and wb interactions
     window.onload = function(){
-        loadExample(network_dir + 'hbss.json');
+        pdbFile = structure_files[0];
+        interaction_type = "wb";
+        document.getElementById("title").innerHTML = interactionLabel(interaction_type) + " in " + pdb_to_colheader(pdbFile)
+        loadExample(network_dir + interaction_type + ".json")
     };
+
+    // Update network upon selecting interaction type
+    function load_network(itype){
+        document.getElementById("flareDiv").innerHTML = "";
+        document.getElementById("pvDiv").innerHTML = "";
+
+        // Update interaction type
+        interaction_type = itype;
+        document.getElementById("title").innerHTML = interactionLabel(itype) + " in " + pdb_to_colheader(pdbFile)
+        loadExample(network_dir + interaction_type + ".json")
+    }
+
+    // Update structure upon selecting pdb
+    function load_structure(pdb_index){
+        document.getElementById("flareDiv").innerHTML = "";
+        document.getElementById("pvDiv").innerHTML = "";
+
+        // Update structure
+        pdbFile = structure_files[pdb_index];
+        document.getElementById("title").innerHTML = interactionLabel(interaction_type) + " in " + pdb_to_colheader(pdbFile)
+        loadExample(network_dir + interaction_type + ".json")
+    }
 </script>
 
 </body>

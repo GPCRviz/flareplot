@@ -2,6 +2,40 @@
  * Edited by akma327 on 5/31/17.
  */
 
+function interactionLabel(itype){
+    // Map itype acronym to description (ie wb to Water-mediated )
+    if(itype === "sb"){
+        return "Salt bridges";
+    }else if(itype === "pc"){
+        return "Pi-cation contacts";
+    }else if(itype === "ps"){
+        return "Pi-stacking contacts";
+    }else if(itype === "ts"){
+        return "T-stacking contacts";
+    }else if(itype === "vdw"){
+        return "Van Der Waals contacts"
+    }else if(itype === "hbbb"){
+        return "Backbone-backbone hydrogen bond contacts";
+    }else if(itype === "hbsb"){
+        return "Sidechain-backbone hydrogen bond contacts";
+    }else if(itype === "hbss"){
+        return "Sidechain-sidechain hydrogen bond contacts";
+    }else if(itype === "wb"){
+        return "Water-mediated contacts";
+    }else if(itype === "wb2"){
+        return "Extended water-mediated contacts";
+    }else if(itype === "hlb"){
+        return "Ligand-backbone hydrogen bond contacts";
+    }else if(itype === "hls"){
+        return "Ligand-sidechain hydrogen bond contacts";
+    }else if(itype === "lwb"){
+        return "Water-mediated ligand contacts";
+    }else if(itype === "lwb2"){
+        return "Extended water-mediated ligand contacts";
+    }
+}   
+
+
 function getResidueToAtomContacts(contents){
     // Get mapping from column label to index
     var content_dict = contents;
@@ -14,25 +48,6 @@ function getResidueToAtomContacts(contents){
     return;
 }
 
-
-// function getNameToResiTable(uniprot){
-//     // Gets the mapping from gpcrdb to resid for a particular uniprot
-//     var uniprot_to_gpcrdb = (function () {
-//         var uniprot_to_gpcrdb;
-//         $.ajax({
-//             'async': false,
-//             'global': false,
-//             'url': '../tables/uniprot_to_gpcrdb.json',
-//             'dataType': "json",
-//             'success': function (data) {
-//                 uniprot_to_gpcrdb = data;
-//             }
-//         });
-//         return uniprot_to_gpcrdb;
-//     })();
-//     return uniprot_to_gpcrdb[uniprot]
-// }
-
 function getReceptorIndex(contents, uniprot){
     // Get the index of uniprot receptor from frameDict
     var frameDict = contents.frameDict;
@@ -44,6 +59,7 @@ function getReceptorIndex(contents, uniprot){
 }
 
 function getChain(column_header){
+    // Get the chain id from column header (ie A from OPRD_HUMAN_4N6H_A)
     col_head_comp = column_header.split("_")
     if(col_head_comp.length == 4){
         return col_head_comp[3] + ".";
@@ -52,11 +68,15 @@ function getChain(column_header){
     }
 }
 
-function createAtomicProteinViewer(flareplot, contents, structures, container, width, height, callback) {
-    // Hard coded OPRM_MOUSE_4DKL_A for now
+function pdb_to_colheader(pdbFile){
+    // Convert pdb file path to column_header (ie ../resources/opioid/structures/OPRD_HUMAN_4N6H_A.pdb to OPRD_HUMAN_4N6H_A)
+    var x = pdbFile.split("/")
+    var column_header = x[x.length - 1].split(".")[0]
+    return column_header
+}
 
-    var column_header = "OPRK_HUMAN_4DJH_A";
-    var pdbFile = structures[1];
+function createAtomicProteinViewer(flareplot, contents, pdbFile, container, width, height, callback) {
+    var column_header = pdb_to_colheader(pdbFile);
 
     var options = {
         width: width,
@@ -116,7 +136,6 @@ function createAtomicProteinViewer(flareplot, contents, structures, container, w
                 var key = name1 + ":" + name2;
                 atomic_interactions = residue_to_atomic_contacts[key][receptorIndex]
                 if(atomic_interactions !== undefined){
-                    // console.log(atomic_interactions)
                     for (i = 0; i < atomic_interactions.length; i++){
                         var pv_atom_obj = [];
 
@@ -131,7 +150,6 @@ function createAtomicProteinViewer(flareplot, contents, structures, container, w
                             var resid = residue.substring(3, residue.length);
                             pv_atom_obj.push([resid, atom_type]);
                         }
-                        // console.log(pv_atom_obj)
 
                         // create atom structure and tube between atom coordinates
                         var edgew = 0.1 * e.weight;
@@ -171,7 +189,7 @@ function createAtomicProteinViewer(flareplot, contents, structures, container, w
 
                             atom_type3 = pv_atom_obj[2][1];
 
-                            atom3 = struc.atom("A." + water1 + "." + atom_type3);
+                            atom3 = struc.atom(chain + water1 + "." + atom_type3);
 
                             // Render water as spheres
                             cm.addSphere(atom3.pos(), 1, { color : 'red' });
@@ -189,10 +207,8 @@ function createAtomicProteinViewer(flareplot, contents, structures, container, w
                             atom_type3 = pv_atom_obj[2][1];
                             atom_type4 = pv_atom_obj[3][1];
 
-                            // console.log(resid1+"."+atom_type1, resid2 + "." + atom_type2, water1 + "." + atom_type3, water2 + "." + atom_type4)
-
-                            atom3 = struc.atom("A." + water1 + "." + atom_type3);
-                            atom4 = struc.atom("A." + water2 + "." + atom_type4);
+                            atom3 = struc.atom(chain + water1 + "." + atom_type3);
+                            atom4 = struc.atom(chain + water2 + "." + atom_type4);
 
                             // Render water as spheres
                             cm.addSphere(atom3.pos(), 1, { color : 'red' });
@@ -219,34 +235,34 @@ function createAtomicProteinViewer(flareplot, contents, structures, container, w
     flareplot.addFrameListener(updateInteractions);
     flareplot.addNodeToggleListener(updateInteractions);
 
-    function indexToClusterColor(idx) {
-        var colTab = {"": [0.5, 0.5, 0.5, 1], "1": [0, 1, 1, 1], "2": [1, 0, 1, 1]};
-        for (var key in nameToResiTable) {
-            if (nameToResiTable.hasOwnProperty(key)) {
-                if (nameToResiTable[key][0] == "" + idx) {
-                    return colTab[nameToResiTable[key][1]];
-                }
-            }
-        }
-        return colTab[""];
-    }
+    // function indexToClusterColor(idx) {
+    //     var colTab = {"": [0.5, 0.5, 0.5, 1], "1": [0, 1, 1, 1], "2": [1, 0, 1, 1]};
+    //     for (var key in nameToResiTable) {
+    //         if (nameToResiTable.hasOwnProperty(key)) {
+    //             if (nameToResiTable[key][0] == "" + idx) {
+    //                 return colTab[nameToResiTable[key][1]];
+    //             }
+    //         }
+    //     }
+    //     return colTab[""];
+    // }
 
-    function updateColors(clustered) {
-        viewer.rm("protein");
-        var geom = viewer.trace("protein", struc, {color: color.ssSuccession()});
-        if (clustered) {
-            function clusterCol() {
-                return new pv.color.ColorOp(function (atom, out, index) {
-                    var col = indexToClusterColor(atom.residue().num());
-                    out[index + 0] = col[0];
-                    out[index + 1] = col[1];
-                    out[index + 2] = col[2];
-                });
-            }
+    // function updateColors(clustered) {
+    //     viewer.rm("protein");
+    //     var geom = viewer.trace("protein", struc, {color: color.ssSuccession()});
+    //     if (clustered) {
+    //         function clusterCol() {
+    //             return new pv.color.ColorOp(function (atom, out, index) {
+    //                 var col = indexToClusterColor(atom.residue().num());
+    //                 out[index + 0] = col[0];
+    //                 out[index + 1] = col[1];
+    //                 out[index + 2] = col[2];
+    //             });
+    //         }
 
-            geom.colorBy(clusterCol());
-        }
-    }
+    //         geom.colorBy(clusterCol());
+    //     }
+    // }
 
     var ret = {
         getPV: function() { return viewer; }
@@ -254,18 +270,24 @@ function createAtomicProteinViewer(flareplot, contents, structures, container, w
 
     pv.io.fetchPdb(pdbFile, function (structure) {
         struc = structure;
-        viewer.tube("protein", structure, {color: color.ssSuccession()});
-
-        // var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G", "BF0"]});
-        // viewer.ballsAndSticks("ligands", ligands);
-
-        viewer.fitTo(structure);
+        viewer.tube("protein", struc, {color: color.ssSuccession()});
+        viewer.fitTo(struc);
         viewer.forEach(function(object){
             object.setOpacity(0.5);
         });
-        // viewer.setRotation([1, 0, 0, 0, 0, 1, 0, -1, 0]);
         callback(ret);
     });
+
+    // pv.io.fetchPdb(pdbFiles[2], function (structure) {
+    //     struc = structure;
+    //     viewer.tube("protein", struc, {color: color.ssSuccession()});
+    //     viewer.fitTo(struc);
+    //     viewer.forEach(function(object){
+    //         object.setOpacity(0.5);
+    //     });
+    //     callback(ret);
+    // });
+
 
     return ret;
 
