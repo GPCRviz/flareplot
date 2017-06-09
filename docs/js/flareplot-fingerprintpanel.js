@@ -58,7 +58,7 @@ function updateIntersectFrames(){
 }
 
 function twoStateSelection(el, row, col){
-    // Allows users to toggle between include or ignore 
+    // Allows users to toggle between include or ignore
     include_nodes = [];
 
     var index = includeElems.indexOf(el)
@@ -143,9 +143,9 @@ function initFingerprintPanel(containerId, columnNames, callback, show_header, c
 
     // Fingerprint cells
     for (var r = 0; r < numRows; ++r){
-        var tr = panel.append("tbody").append('tr');
+        var tr = panel.append("tbody").append("tr");
         for (var c = 0; c < numCols; ++c){
-            var cell = tr.append('td');
+            var cell = tr.append("td");
             cell.html("")
             cell.col_header = columnNames[c]; // Attribute to keep track of column header
             cell.on('click', function(el, r, c){
@@ -159,14 +159,14 @@ function initFingerprintPanel(containerId, columnNames, callback, show_header, c
     var legend = d3.select(containerId).append("table")
     .attr("class", "fpSelectLegend")
     .attr("id", "selectLegend")
-    .append('tr')
+    .append("tr");
 
-    legend.append("td").attr("class", "include").html("&#10003")
-    legend.append("td").attr("class", "text").html("&nbsp &nbsp Intersect &nbsp &nbsp")
-    legend.append("td").attr("class", "exclude").html("&#10007")
-    legend.append("td").attr("class", "text").html("&nbsp &nbsp Exclude &nbsp &nbsp")
+    legend.append("td").attr("class", "include").html("&#10003");
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Intersect &nbsp &nbsp");
+    legend.append("td").attr("class", "exclude").html("&#10007");
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Exclude &nbsp &nbsp");
 
-    return panel
+    return panel;
 }
 
 
@@ -178,7 +178,10 @@ function calcFingerprints(contents){
     }
 
     var fingerprint_dict = {};
-    var content_dict = JSON.parse(contents);
+    if( typeof contents === "string" ){
+        centent_dict = JSON.parse(contents);
+    }
+    // var content_dict = JSON.parse(contents);
     var edges = content_dict["edges"];
     for (var i = 0; i < edges.length; i++){
         var e = edges[i];
@@ -257,16 +260,16 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
         var tr = scroll_panel_body.append("tr");
         for (var c = 0; c < numCols; c++){
 
-            var cell = tr.append('td')
+            var cell = tr.append("td")
             cell.col_header = columnNames[c]; // Attribute to keep track of column header
             if(fpattern.includes(c)){
-                cell[0][0].className = 'include';
+                cell[0][0].className = "include";
             }
             else{
-                cell[0][0].className = 'exclude';
+                cell[0][0].className = "exclude";
             }
         }
-        tr.on('click', function(tr, r, columnNames){
+        tr.on("click", function(tr, r, columnNames){
             return function(){
                 callback(tr, r, columnNames);
             }
@@ -277,12 +280,12 @@ function initScrollableFingerprintPanel(containerId, columnNames, fingerpint_lis
     var legend = d3.select(containerId).append("table")
         .attr("class", "fpScrollLegend")
         .attr("id", "scrollLegend")
-        .append("tr")
+        .append("tr");
 
-    legend.append("td").attr("class", "include")
-    legend.append("td").attr("class", "text").html("&nbsp &nbsp Intersect &nbsp &nbsp")
-    legend.append("td").attr("class", "exclude")
-    legend.append("td").attr("class", "text").html("&nbsp &nbsp Exclude &nbsp &nbsp")
+    legend.append("td").attr("class", "include");
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Intersect &nbsp &nbsp");
+    legend.append("td").attr("class", "exclude");
+    legend.append("td").attr("class", "text").html("&nbsp &nbsp Exclude &nbsp &nbsp");
 
     return panel
 }
