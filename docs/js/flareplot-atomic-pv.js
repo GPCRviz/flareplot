@@ -52,7 +52,12 @@ function getChain(column_header){
     }
 }
 
-function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, container, width, height, callback) {
+function createAtomicProteinViewer(flareplot, contents, structures, container, width, height, callback) {
+    // Hard coded OPRM_MOUSE_4DKL_A for now
+
+    var column_header = "OPRK_HUMAN_4DJH_A";
+    var pdbFile = structures[1];
+
     var options = {
         width: width,
         height: height,
@@ -68,7 +73,6 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
 
     var col_header_comp = column_header.split("_")
     var uniprot = col_header_comp[0] + "_" + col_header_comp[1];
-    // var nameToResiTable = getNameToResiTable(uniprot);
     var nameToResiTable;
     d3.json("../tables/uniprot_to_gpcrdb.json", function(data){
         nameToResiTable = data[uniprot];

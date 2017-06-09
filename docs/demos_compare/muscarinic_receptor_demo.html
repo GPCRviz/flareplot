@@ -49,6 +49,12 @@
     var flareplot;
     var panel;
 
+    // Input: Directory or list of network json paths and path to structures being compared
+    var network_dir = "../resources/muscarinic/networks/";
+    var structures = ["../resources/muscarinic/structures/ACM1_HUMAN_5CXV_A.pdb",
+                    "../resources/muscarinic/structures/ACM2_HUMAN_3UON_A.pdb",
+                    "../resources/muscarinic/structures/ACM3_RAT_4DAJ_A.pdb",
+                    "../resources/muscarinic/structures/ACM4_HUMAN_5DSG_B.pdb"]
 
     function fileRead(contents){
         flareplot = createFlareplot(600, contents, "#flareDiv");
@@ -69,12 +75,9 @@
 //        panel.on("click", updateIntersectFrames);
 
         panel = createFingerprintPanel(flareplot, "#flareDiv", true, "100px");
-
-        // Can switch for any column header and corresponding pdb structure 
-        var column_header = "ACM2_HUMAN_3UON_A";
-        createAtomicProteinViewer(flareplot, contents, column_header, "../resources/3uon_wloop.pdb", pvDiv, 500, 700, function(sv){
+        createAtomicProteinViewer(flareplot, contents, structures, pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
-        });//.setEdgeFilter(function(){ return true; })
+        });
     }
 
     function loadExample(fileName){
@@ -84,7 +87,7 @@
     }
 
     window.onload = function(){
-        loadExample('../resources/muscarinic/hbss.json');
+        loadExample(network_dir + 'hbss.json');
     };
 </script>
 

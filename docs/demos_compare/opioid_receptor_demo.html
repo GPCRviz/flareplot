@@ -70,6 +70,12 @@
     var flareplot;
     var panel;
 
+    // Input: Directory or list of network json paths and path to structures being compared
+    var network_dir = "../resources/opioid/networks/";
+    var structures = ["../resources/opioid/structures/OPRD_HUMAN_4N6H_A.pdb", 
+                    "../resources/opioid/structures/OPRK_HUMAN_4DJH_A.pdb",
+                    "../resources/opioid/structures/OPRM_MOUSE_4DKL_A.pdb"];
+
 
     function fileRead(contents){
         flareplot = createFlareplot(600, contents, "#flareDiv");
@@ -91,13 +97,9 @@
 
         panel = createFingerprintPanel(flareplot, "#flareDiv", true, "100px");
 
-        // Can switch for any column header and corresponding pdb structure 
-        var column_header = "OPRM_MOUSE_4DKL_A";
-        // var column_header = "OPRD_HUMAN_4N6H_A";
-        createAtomicProteinViewer(flareplot, contents, column_header, "../resources/OPRM_MOUSE_4DKL_A.pdb", pvDiv, 500, 700, function(sv){
+        createAtomicProteinViewer(flareplot, contents, structures, pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
-//            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
-        });//.setEdgeFilter(function(){ return true; })
+        });
     }
 
     function loadExample(fileName){
@@ -129,13 +131,13 @@
     
 
     window.onload = function(){
-        loadExample('../resources/opioid/wb.json');
+        loadExample(network_dir + 'wb.json');
     };
 
     function load_network(interaction_type){
         document.getElementById("flareDiv").innerHTML = "";
         document.getElementById("pvDiv").innerHTML = "";
-        loadExample('../resources/opioid/' + interaction_type + ".json")
+        loadExample(network_dir + interaction_type + ".json")
     }
 </script>
 
