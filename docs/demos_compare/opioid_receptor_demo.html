@@ -77,18 +77,19 @@
         // Create fingerprint panel if frameDict is included in contents
         flareplot.framesIntersect([]); //show all interactions to begin with
 
-        var columnNames = getFingerprintColumns(contents);
-        var fingerprint_list = calcFingerprints(contents);
-        panel = initScrollableFingerprintPanel(
-            "#flareDiv", 
-            columnNames,
-            fingerprint_list,
-            threeStateRowSelection,
-            true, 
-            '100px'
-        );
-        panel.on("click", updateIntersectFrames);
+//        var columnNames = getFingerprintColumns(contents);
+//        var fingerprint_list = calcFingerprints(contents);
+//        panel = initScrollableFingerprintPanel(
+//            "#flareDiv",
+//            columnNames,
+//            fingerprint_list,
+//            threeStateRowSelection,
+//            true,
+//            '100px'
+//        );
+//        panel.on("click", updateIntersectFrames);
 
+        panel = createFingerprintPanel(flareplot, "#flareDiv", true, "100px");
 
         // Can switch for any column header and corresponding pdb structure 
         var column_header = "OPRM_MOUSE_4DKL_A";
@@ -96,11 +97,11 @@
         createAtomicProteinViewer(flareplot, contents, column_header, "../resources/OPRM_MOUSE_4DKL_A.pdb", pvDiv, 500, 700, function(sv){
             sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
 //            sv.getPV().setRotation([1,0,0,0,1,-1,0,1,0]);
-        }).setEdgeFilter(function(){ return true; })
+        });//.setEdgeFilter(function(){ return true; })
     }
 
     function loadExample(fileName){
-        d3.text(fileName, function(json_text){
+        d3.json(fileName, function(json_text){
             fileRead(json_text);
         });
     }

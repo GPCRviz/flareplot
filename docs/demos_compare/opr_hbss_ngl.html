@@ -9,12 +9,11 @@
 
     <!-- Javascript libs -->
     <script type="text/javascript" src="../vendor/d3/d3.v3.min.js"></script>
-    <script type="text/javascript" src="../vendor/pv/pv.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/arose/ngl/master/dist/ngl.js"></script>
     <script type="text/javascript" src="../js/flareplot-main.js"></script>
     <script type="text/javascript" src="../js/flareplot-selectors.js"></script>
     <script type="text/javascript" src="../js/flareplot-fingerprintpanel.js"></script>
-    <script type="text/javascript" src="../js/flareplot-atomic-pv.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="../js/flareplot-pv.js"></script>
 
     <!-- Visualization CSS -->
     <link href="../css/flareplot-main.css" rel="stylesheet">
@@ -29,6 +28,10 @@
             left: 50%;
             margin-left: -300px;
         }
+        #nglDiv{
+            width:500px;
+            height:700px;
+        }
     </style>
 
 </head>
@@ -36,19 +39,17 @@
 <body>
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Diversity in the GPCR interactome across human tissues</h1>-->
-<div><h1> Non-covalent sidechain contacts in opioid receptors </h1></div>
 <div style="position:relative;width:1100px;left:50%;margin-left:-550px">
     <div style="float:left; width:600px">
         <div class="container" id="flareDiv"></div>
     </div>
     <div style="overflow:auto;width:500px">
-        <div class="container" id="pvDiv" style="overflow:hidden"></div>
+        <div class="container" id="nglDiv" style="overflow:hidden"></div>
     </div>
 </div>
 <script>
     var flareplot;
-    var panel;
-
+    var stage;
 
     function fileRead(contents){
         flareplot = createFlareplot(600, contents, "#flareDiv");
@@ -56,37 +57,47 @@
         // Create fingerprint panel if frameDict is included in contents
         flareplot.framesIntersect([]); //show all interactions to begin with
 
-//        var columnNames = getFingerprintColumns(contents);
-//        var fingerprint_list = calcFingerprints(contents);
-//        panel = initScrollableFingerprintPanel(
-//            "#flareDiv",
-//            columnNames,
-//            fingerprint_list,
-//            threeStateRowSelection,
-//            true,
-//            '100px'
-//        );
-//        panel.on("click", updateIntersectFrames);
+        var columnNames = getFingerprintColumns(contents);
+        var panel = initFingerprintPanel("#flareDiv", columnNames, threeStateSelection, true, "75px");
+        panel.on("click", updateIntersectFrames);
 
-        panel = createFingerprintPanel(flareplot, "#flareDiv", true, "100px");
 
-        // Can switch for any column header and corresponding pdb structure 
-        var column_header = "ACM2_HUMAN_3UON_A";
-        createAtomicProteinViewer(flareplot, contents, column_header, "../resources/3uon_wloop.pdb", pvDiv, 500, 700, function(sv){
-            sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
-        });//.setEdgeFilter(function(){ return true; })
+        //Set up ngl
+        stage = new NGL.Stage( "nglDiv" );
+        d3.select("#nglDiv canvas").style("background-color","white");
+
+        window.addEventListener( "resize", function( event ){
+            stage.handleResize();
+        }, false );
+
+// Load PDB entry 1CRN
+       stage.loadFile( "../resources/4dkl_wloop.pdb", { name: "myProtein", defaultRepresentation: true } )
+            .then( function(o){
+                o.autoView(1000);  // focus on the whole structure
+            });
+    }
+    function addContact() {
+        var repr = stage.getComponentsByName( "myProtein" ).addRepresentation( "distance", {
+            atomPair: [ [ "100.CA", "200.CA" ] ],
+            labelVisible: false,
+            color: "skyblue"
+        } );
+        console.log(repr);
+        console.log(stage.getComponentsByName("myProtein"));//.removeRepresentation(repr);
     }
 
     function loadExample(fileName){
-        d3.json(fileName, function(json_text){
+        d3.text(fileName, function(json_text){
             fileRead(json_text);
         });
     }
 
     window.onload = function(){
-        loadExample('../resources/muscarinic/hbss.json');
+        loadExample('../resources/opr_hbss.json');
     };
 </script>
+<div style="height:200px"></div>
+<a href="javascript:addContact()">Add contact</a>
 
 </body>
 </html>

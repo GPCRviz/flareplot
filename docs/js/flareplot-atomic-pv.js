@@ -4,7 +4,7 @@
 
 function getResidueToAtomContacts(contents){
     // Get mapping from column label to index
-    var content_dict = JSON.parse(contents);
+    var content_dict = contents;
     if("residue_to_atomic_contacts" in content_dict){
         return content_dict["residue_to_atomic_contacts"];
     }
@@ -15,27 +15,27 @@ function getResidueToAtomContacts(contents){
 }
 
 
-function getNameToResiTable(uniprot){
-    // Gets the mapping from gpcrdb to resid for a particular uniprot
-    var uniprot_to_gpcrdb = (function () {
-        var uniprot_to_gpcrdb;
-        $.ajax({
-            'async': false,
-            'global': false,
-            'url': '../tables/uniprot_to_gpcrdb.json',
-            'dataType': "json",
-            'success': function (data) {
-                uniprot_to_gpcrdb = data;
-            }
-        });
-        return uniprot_to_gpcrdb;
-    })(); 
-    return uniprot_to_gpcrdb[uniprot]
-}
+// function getNameToResiTable(uniprot){
+//     // Gets the mapping from gpcrdb to resid for a particular uniprot
+//     var uniprot_to_gpcrdb = (function () {
+//         var uniprot_to_gpcrdb;
+//         $.ajax({
+//             'async': false,
+//             'global': false,
+//             'url': '../tables/uniprot_to_gpcrdb.json',
+//             'dataType': "json",
+//             'success': function (data) {
+//                 uniprot_to_gpcrdb = data;
+//             }
+//         });
+//         return uniprot_to_gpcrdb;
+//     })();
+//     return uniprot_to_gpcrdb[uniprot]
+// }
 
 function getReceptorIndex(contents, uniprot){
     // Get the index of uniprot receptor from frameDict
-    var frameDict = getFrameDict(contents);
+    var frameDict = contents.frameDict;
     for (var receptorIndex in frameDict){
         if(frameDict[receptorIndex].indexOf(uniprot) !== -1){
             return receptorIndex;
@@ -68,13 +68,20 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
 
     var col_header_comp = column_header.split("_")
     var uniprot = col_header_comp[0] + "_" + col_header_comp[1];
-    var nameToResiTable = getNameToResiTable(uniprot);
-    
+    // var nameToResiTable = getNameToResiTable(uniprot);
+    var nameToResiTable;
+    d3.json("../tables/uniprot_to_gpcrdb.json", function(data){
+        nameToResiTable = data[uniprot];
+    });
 
     function nameToResi(name) {
+        if (!nameToResiTable){
+            console.error.log("Resi table not yet loaded");
+            return undefined;
+        }
         if (name in nameToResiTable) {
             return nameToResiTable[name][0];
-        } 
+        }
         else if(name.indexOf("LIG") !== -1){
             return name;
         }
@@ -91,7 +98,7 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
         viewer.rm("selected_residues");
         active_residues = [];
         viewer.rm("interactions");
-        
+
         var cm = viewer.customMesh("interactions");
         flareplot.getEdges()
         // .filter(function(e){ return e.toggled; })
@@ -105,22 +112,22 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                 var key = name1 + ":" + name2;
                 atomic_interactions = residue_to_atomic_contacts[key][receptorIndex]
                 if(atomic_interactions !== undefined){
-                    console.log(atomic_interactions)
+                    // console.log(atomic_interactions)
                     for (i = 0; i < atomic_interactions.length; i++){
                         var pv_atom_obj = [];
-                        
+
                         // Parse atoms into the resid and atomtype
                         var atoms = atomic_interactions[i].split(":");
                         for (j = 0; j < atoms.length; j++){
                             var resi_atom = atoms[j].split("-");
                             var residue = resi_atom[0];
                             var atom_type = resi_atom[1];
-                            
+
                             var resname = residue.substring(0,3);
                             var resid = residue.substring(3, residue.length);
                             pv_atom_obj.push([resid, atom_type]);
                         }
-                        console.log(pv_atom_obj)
+                        // console.log(pv_atom_obj)
 
                         // create atom structure and tube between atom coordinates
                         var edgew = 0.1 * e.weight;
@@ -134,7 +141,7 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                         var atom1 = struc.atom(chain + resid1 + "." + atom_type1);
                         var atom2 = struc.atom(chain + resid2 + "." + atom_type2);
 
-                        console.log(resid1, atom_type1, resid2, atom_type2)
+                        // console.log(resid1, atom_type1, resid2, atom_type2)
 
                         // Add residue indices to update visualization
                         if(active_residues.indexOf(resid1) == -1){
@@ -164,7 +171,7 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
 
                             // Render water as spheres
                             cm.addSphere(atom3.pos(), 1, { color : 'red' });
-                            
+
                             // Render tubes to show connections
                             cm.addTube(atom1.pos(), atom3.pos(), edgew, {cap: true, color: "#333"});
                             cm.addTube(atom3.pos(), atom2.pos(), edgew, {cap: true, color: "#333"});
@@ -178,7 +185,7 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
                             atom_type3 = pv_atom_obj[2][1];
                             atom_type4 = pv_atom_obj[3][1];
 
-                            console.log(resid1+"."+atom_type1, resid2 + "." + atom_type2, water1 + "." + atom_type3, water2 + "." + atom_type4)
+                            // console.log(resid1+"."+atom_type1, resid2 + "." + atom_type2, water1 + "." + atom_type3, water2 + "." + atom_type4)
 
                             atom3 = struc.atom("A." + water1 + "." + atom_type3);
                             atom4 = struc.atom("A." + water2 + "." + atom_type4);
@@ -244,7 +251,7 @@ function createAtomicProteinViewer(flareplot, contents, column_header, pdbFile, 
     pv.io.fetchPdb(pdbFile, function (structure) {
         struc = structure;
         viewer.tube("protein", structure, {color: color.ssSuccession()});
-        
+
         // var ligands = structure.select({rnames: ["YCM", "4VO", "OLC", "CLR", "P04", "P6G", "BF0"]});
         // viewer.ballsAndSticks("ligands", ligands);
 

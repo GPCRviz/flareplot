@@ -51,18 +51,20 @@
         if(frameDict){
             flareplot.framesIntersect([]); //show all interactions to begin with
 
-            var columnNames = getFingerprintColumns(contents);
-            var fingerprint_list = calcFingerprints(contents);
-            panel = initScrollableFingerprintPanel(
-                "#maincontent", // Container selector
-                columnNames,
-                fingerprint_list,
-                threeStateRowSelection,
-                true, // Show header
-                '70px' // Height of column headers
-            );
+//            var columnNames = getFingerprintColumns(contents);
+//            var fingerprint_list = calcFingerprints(contents);
+//            panel = initScrollableFingerprintPanel(
+//                "#maincontent", // Container selector
+//                columnNames,
+//                fingerprint_list,
+//                threeStateRowSelection,
+//                true, // Show header
+//                '70px' // Height of column headers
+//            );
+//
+//            panel.on("click", updateIntersectFrames);
 
-            panel.on("click", updateIntersectFrames);
+//            panel = createComparePanel(flareplot, "#maincontent", true, "70px");
         }
     }
 
