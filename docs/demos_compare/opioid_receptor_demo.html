@@ -80,9 +80,9 @@
 <script>
     // Input: Directory or list of network json paths and path to structures being compared
     var network_dir = "../resources/opioid/networks/";
-    var structure_files = ["../resources/opioid/structures/OPRD_HUMAN_4N6H_A.pdb", 
-                    "../resources/opioid/structures/OPRK_HUMAN_4DJH_A.pdb",
-                    "../resources/opioid/structures/OPRM_MOUSE_4DKL_A.pdb"];
+    var structure_files = ["../resources/opioid/structures/noh/OPRD_HUMAN_4N6H_A.pdb", 
+                    "../resources/opioid/structures/noh/OPRK_HUMAN_4DJH_A.pdb",
+                    "../resources/opioid/structures/noh/OPRM_MOUSE_4DKL_A.pdb"];
 
     var flareplot;
     var panel;
@@ -98,8 +98,8 @@
         flareplot.framesIntersect([]); //show all interactions to begin with
         panel = createFingerprintPanel(flareplot, "#flareDiv", true, "100px");
 
-        createAtomicProteinViewer(flareplot, contents, pdbFile, pvDiv, 500, 700, function(sv){
-            sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
+        createAtomicProteinViewer(flareplot, contents, pdbFile, structure_files, pvDiv, 500, 700, function(sv){
+            // sv.getPV().setRotation([0,0,1,0,-1,0,1,0,0]);
         });
     }
 

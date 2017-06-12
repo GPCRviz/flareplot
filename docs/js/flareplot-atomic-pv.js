@@ -75,7 +75,7 @@ function pdb_to_colheader(pdbFile){
     return column_header
 }
 
-function createAtomicProteinViewer(flareplot, contents, pdbFile, container, width, height, callback) {
+function createAtomicProteinViewer(flareplot, contents, pdbFile, structure_files, container, width, height, callback) {
     var column_header = pdb_to_colheader(pdbFile);
 
     var options = {
@@ -86,7 +86,8 @@ function createAtomicProteinViewer(flareplot, contents, pdbFile, container, widt
     };
     container.style.width=width+"px";
     var viewer = pv.Viewer(container, options);
-    var struc;
+    var struc; // structure the user selected to view
+    var background_struc; // keeps track of the background reference structure to align camera to
 
     var residue_to_atomic_contacts = getResidueToAtomContacts(contents);
     var receptorIndex = getReceptorIndex(contents, column_header);
@@ -268,27 +269,34 @@ function createAtomicProteinViewer(flareplot, contents, pdbFile, container, widt
         getPV: function() { return viewer; }
     };
 
+
+    // Load in every aligned structure as a background
+    for (i = 0; i < structure_files.length; i++){
+        var single_struc = structure_files[i];
+        pv.io.fetchPdb(single_struc, function (structure) {
+            background_struc = structure;
+            viewer.tube("protein_" + i.toString(), background_struc, {color: color.ssSuccession()});
+            viewer.fitTo(background_struc);
+            viewer.forEach(function(object){
+                object.setOpacity(0.5);
+            });
+            callback(ret);
+        });
+    }
+
+    // Load in another copy of the actual structure the user selected to analyze
     pv.io.fetchPdb(pdbFile, function (structure) {
         struc = structure;
         viewer.tube("protein", struc, {color: color.ssSuccession()});
         viewer.fitTo(struc);
+        viewer.fitTo(background_struc);
         viewer.forEach(function(object){
             object.setOpacity(0.5);
         });
         callback(ret);
     });
-
-    // pv.io.fetchPdb(pdbFiles[2], function (structure) {
-    //     struc = structure;
-    //     viewer.tube("protein", struc, {color: color.ssSuccession()});
-    //     viewer.fitTo(struc);
-    //     viewer.forEach(function(object){
-    //         object.setOpacity(0.5);
-    //     });
-    //     callback(ret);
-    // });
-
-
+    
+    
     return ret;
 
 }
