@@ -275,11 +275,9 @@ function createAtomicProteinViewer(flareplot, contents, pdbFile, structure_files
         var single_struc = structure_files[i];
         pv.io.fetchPdb(single_struc, function (structure) {
             background_struc = structure;
-            viewer.tube("protein_" + i.toString(), background_struc, {color: color.ssSuccession()});
+            var background_protein = viewer.points("protein_" + i.toString(), background_struc, {color: color.ssSuccession()});
             viewer.fitTo(background_struc);
-            viewer.forEach(function(object){
-                object.setOpacity(0.5);
-            });
+            background_protein.setOpacity(0.0);
             callback(ret);
         });
     }
@@ -287,12 +285,10 @@ function createAtomicProteinViewer(flareplot, contents, pdbFile, structure_files
     // Load in another copy of the actual structure the user selected to analyze
     pv.io.fetchPdb(pdbFile, function (structure) {
         struc = structure;
-        viewer.tube("protein", struc, {color: color.ssSuccession()});
+        var protein = viewer.tube("protein", struc, {color: color.ssSuccession()});
         viewer.fitTo(struc);
         viewer.fitTo(background_struc);
-        viewer.forEach(function(object){
-            object.setOpacity(0.5);
-        });
+        protein.setOpacity(0.50);
         callback(ret);
     });
     
