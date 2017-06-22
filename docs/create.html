@@ -211,18 +211,10 @@
         }
 
         // If frameDict is in contents create a fingerprint, otherwise create a slider
-        if (contents.frameDict) {
-            let frameDict = contents.frameDict;
-            console.log(frameDict);
+        let frameDict = flareplot.graph.frameDict;
+        if (frameDict) {
             flareplot.framesIntersect([]);//show all interactions to begin with
-            var columnNames = getFingerprintColumns(contents);
-            panel = initFingerprintPanel("#flareDiv",
-                columnNames,
-                threeStateSelection,
-                true,
-                "75px"
-            );
-            panel.on("click", updateIntersectFrames)
+            panel = createFingerprintPanel(flareplot, "#flareDiv", true, "75px");
         } else {
             slider = createFlareplotSlider(flareplot, "#sliderDiv");
         }
@@ -235,7 +227,7 @@
         fileRead(contents);
     };
     function handleFile() {
-        d3.select("#flareDiv").html("<p>Loading ...</p>");
+        d3.select("#flareDiv").html("<pk>Loading ...</p>");
         var file = this.files[0];
         reader.readAsText(file);
     }
