@@ -211,9 +211,9 @@
         }
 
         // If frameDict is in contents create a fingerprint, otherwise create a slider
-        frameDict = getFrameDict(contents);
-        console.log(frameDict);
-        if(frameDict){
+        if (contents.frameDict) {
+            let frameDict = contents.frameDict;
+            console.log(frameDict);
             flareplot.framesIntersect([]);//show all interactions to begin with
             var columnNames = getFingerprintColumns(contents);
             panel = initFingerprintPanel("#flareDiv",
