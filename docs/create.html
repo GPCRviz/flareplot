@@ -67,9 +67,6 @@
         li {
             margin-bottom: 5px;
         }
-        svg {
-            overflow: visible; 
-        }
         #smallFPjson pre{
             margin-bottom: 0px;
             font-size: 1.2rem;
@@ -206,6 +203,8 @@
             .style("width","600px")
             .style("margin-left","auto")
             .style("margin-right","auto");
+
+        d3.select("svg").style("overflow","visible");
 
         // Set up selector if there's more than one tree or track
         var selectorContainer = d3.select("#maincontent").append("div");
