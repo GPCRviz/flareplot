@@ -2918,7 +2918,7 @@
     }
   ],
   "defaults":{
-    "edgeColor":"rgba(100,100,100,100)",
+    "edgeColor":"rgba(100,100,100)",
     "edgeWidth":1
   }
 }
