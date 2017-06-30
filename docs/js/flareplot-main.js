@@ -19,7 +19,6 @@ function createFlareplot(width, inputGraph, containerSelector){
         inputGraph = JSON.parse(inputGraph);
     }
 
-    var stdEdgeColor = "rgba(0,0,0,200)";
     var svg;
     var div;
     var bundle;
@@ -112,7 +111,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                 .style("stroke-width",function(d){
                     return 0;
                 })
-                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .style("stroke",function(d){ return d.color; })
                 .style("fill","none")
                 .attr("d", function(d, i) { return line(splines[i]); })
                 .on("mouseover", function(d){ fireEdgeHoverListeners(d); })
@@ -228,8 +227,6 @@ function createFlareplot(width, inputGraph, containerSelector){
                 });
             });
 
-            //console.log(graph.nodeNames);
-
             // =========== Parse `trees` section ========== \\
             function addToMap(nodeMap, fullName) {
                 var i = fullName.lastIndexOf(".");
@@ -277,7 +274,8 @@ function createFlareplot(width, inputGraph, containerSelector){
                         source: t.tree[e.name1],
                         target: t.tree[e.name2],
                         key: "" + t.tree[e.name1].key + "-" + t.tree[e.name2].key,
-                        color: e.color || graph.defaults.edgeColor || "rgba(100,100,100,100)",
+                        color: e.color || graph.defaults.edgeColor || "rgba(100,100,100)",
+                        opacity: e.opacity || graph.defaults.edgeOpacity || 1,
                         width: e.width || graph.defaults.edgeWidth || 1
                     };
 
@@ -288,6 +286,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                             target: edge.target,
                             key: edge.key,
                             color: edge.color,
+                            opacity: edge.opacity,
                             width: 1
                         };
                         t.allEdges.push({
@@ -295,6 +294,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                             target: edge.target,
                             key: edge.key,
                             color: edge.color,
+                            opacity: edge.opacity,
                             width: 1
                         });
                     } else {
@@ -341,6 +341,25 @@ function createFlareplot(width, inputGraph, containerSelector){
                 });
             });
 
+            // =========== Parse `defaults` section ========== \\
+
+            //From https://stackoverflow.com/questions/566203/changing-css-values-with-javascript
+            function insertCSSrule(selector, property, value) {
+                for (var i=0; i<document.styleSheets.length;i++) {//Loop through all styles
+                    try {
+                        document.styleSheets[i].insertRule(selector+ ' {'+property+':'+value+'}', document.styleSheets[i].cssRules.length);
+                    } catch(err) {//IE
+                        try {
+                            document.styleSheets[i].addRule(selector, property+':'+value);
+                        } catch(err) {}
+                    }
+                }
+            }
+
+            if (graph.defaults.edgeOpacity) {
+                insertCSSrule(".link", "stroke-opacity", graph.defaults.edgeOpacity);
+                insertCSSrule(".link", "opacity", graph.defaults.edgeOpacity);
+            }
 
             return graph;
         }
@@ -431,7 +450,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     return ret;
                 })
                 //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
-                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .style("stroke",function(d){ return d.color; })
                 .attr("d", function(d, i) { return line(splines[i]); });
 
         }
@@ -472,7 +491,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     return ret;
                 })
                 //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
-                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .style("stroke",function(d){ return d.color; })
                 .attr("d", function(d, i) { return line(splines[i]); });
 
             // fireFrameListeners(visibleEdges);
@@ -516,7 +535,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                         ret+=" toggled";
                     return ret;
                 })
-                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .style("stroke",function(d){ return d.color; })
                 .attr("d", function(d, i) { return line(splines[i]); });
 
             fireFrameListeners({type:"intersect", intersected:subset, excluded:subtract});
@@ -557,7 +576,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     return ret;
                 })
                 //.attr("class", function(d) { return "link source-" + d.source.key + " target-" + d.target.key; })
-                .style("stroke",function(d){ return ("color" in d)?d.color:stdEdgeColor; })
+                .style("stroke",function(d){ return d.color; })
                 .attr("d", function(d, i) { return line(splines[i]); });
 
             fireFrameListeners({type:"setsum", set:subset});

@@ -38,16 +38,12 @@ path.arc {
     font-weight: bold;
 }
 
-.link.source {
-    stroke: #2ca02c;
-}
-
 .node.source {
     font-weight: bold;
 }
 
-.link.target {
-    stroke: #2ca02c;
+.link.target, .link.source {
+    opacity: 1;
 }
 
 .link.toggled{
