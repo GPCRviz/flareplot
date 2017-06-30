@@ -219,8 +219,8 @@
             flareplot.framesIntersect([]);//show all interactions to begin with
             panel = createFingerprintPanel(flareplot, "#flareDiv", true, "75px");
         } else {
-            const maxNumFrames = d3.max(flareplot.graph.edges, function(e){return e.frames.length;});
-            if (maxNumFrames>1)
+            const maxFrame = d3.max(flareplot.graph.edges, function(e){ return e.frames[e.frames.length-1]; });
+            if (maxFrame>0)
                 slider = createFlareplotSlider(flareplot, "#sliderDiv");
         }
 
