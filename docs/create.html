@@ -29,6 +29,7 @@
     <style>
         #flareDiv{
             text-align: justify;
+            padding-top: 15px;
         }
         #sliderDiv {
             height: 30px;
@@ -174,7 +175,7 @@
         <p>
             or generate your own json ...
         </p>
-        <a href="https://github.com/GPCRviz/flareplot/tree/master/input" class="btn btn-primary">
+        <a href="https://github.com/GPCRviz/flareplot/tree/master/input" target="new" class="btn btn-primary">
             JSON scripts
         </a>
         <p>
@@ -204,6 +205,8 @@
             .style("margin-left","auto")
             .style("margin-right","auto");
 
+        d3.select("svg").style("overflow","visible");
+
         // Set up selector if there's more than one tree or track
         var selectorContainer = d3.select("#maincontent").append("div");
         if( !selectorContainer ){
@@ -211,20 +214,14 @@
         }
 
         // If frameDict is in contents create a fingerprint, otherwise create a slider
-        frameDict = getFrameDict(contents);
-        console.log(frameDict);
-        if(frameDict){
+        let frameDict = flareplot.graph.frameDict;
+        if (frameDict) {
             flareplot.framesIntersect([]);//show all interactions to begin with
-            var columnNames = getFingerprintColumns(contents);
-            panel = initFingerprintPanel("#flareDiv",
-                columnNames,
-                threeStateSelection,
-                true,
-                "75px"
-            );
-            panel.on("click", updateIntersectFrames)
+            panel = createFingerprintPanel(flareplot, "#flareDiv", true, "75px");
         } else {
-            slider = createFlareplotSlider(flareplot, "#sliderDiv");
+            const maxFrame = d3.max(flareplot.graph.edges, function(e){ return e.frames[e.frames.length-1]; });
+            if (maxFrame>0)
+                slider = createFlareplotSlider(flareplot, "#sliderDiv");
         }
 
     }
@@ -235,7 +232,7 @@
         fileRead(contents);
     };
     function handleFile() {
-        d3.select("#flareDiv").html("<p>Loading ...</p>");
+        d3.select("#flareDiv").html("<pk>Loading ...</p>");
         var file = this.files[0];
         reader.readAsText(file);
     }
