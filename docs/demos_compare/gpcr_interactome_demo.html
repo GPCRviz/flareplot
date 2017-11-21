@@ -48,7 +48,8 @@
         }
 
         // Create fingerprint panel if frameDict is included in contents
-        frameDict = getFrameDict(contents)
+        //frameDict = getFrameDict(contents)
+        frameDict = flareplot.graph.frameInfo;
         if(frameDict){
             flareplot.framesIntersect([]) //show all interactions to begin with
 

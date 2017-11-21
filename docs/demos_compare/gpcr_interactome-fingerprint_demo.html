@@ -47,9 +47,11 @@
         }
 
         // Create fingerprint panel if frameDict is included in contents
-        frameDict = getFrameDict(contents);
+        //frameDict = getFrameDict(contents);
+        frameDict = flareplot.graph.frameDict;
         if(frameDict){
             flareplot.framesIntersect([]); //show all interactions to begin with
+
 
 //            var columnNames = getFingerprintColumns(contents);
 //            var fingerprint_list = calcFingerprints(contents);
@@ -63,9 +65,11 @@
 //            );
 //
 //            panel.on("click", updateIntersectFrames);
-
+//
 //            panel = createComparePanel(flareplot, "#maincontent", true, "70px");
+            panel = createFingerprintPanel(flareplot, "#maincontent", true, "70px");
         }
+
     }
 
     var reader = new FileReader();

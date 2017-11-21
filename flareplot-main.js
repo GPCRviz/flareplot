@@ -588,7 +588,6 @@ function createFlareplot(width, inputGraph, containerSelector){
 
         }
 
-
         function mouseoverNode(d) {
             svg.selectAll("path.link.target-" + d.key)
                 .classed("target", true)
