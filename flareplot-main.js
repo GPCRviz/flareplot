@@ -447,7 +447,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             path.style("stroke-width",
                 function(d,i){
                     var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd-1);
-                    return count==(rangeEnd-rangeStart)?2:0;
+                    return count==(rangeEnd-rangeStart)?(2 * graph.edges[i].width):0;
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
@@ -486,12 +486,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                         e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
                         visibleEdges.push(e);
 
-                        //Hack to make user-specified edge-widths show up
-                        if((rangeEnd-rangeStart)==1){
-                            return graph.edges[i].width * widthScale(count);
-                        }
-
-                        return widthScale(count);
+                        return widthScale(count) * graph.edges[i].width;
                     } else {
                         return 0;
                     }
@@ -540,7 +535,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     var e = {edge:graph.edges[i], weight:1};
                     e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
                     visibleEdges.push(e);
-                    return 2;
+                    return 2 * e.width;
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
@@ -579,7 +574,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
                     visibleEdges.push(e);
 
-                    return count==0?0:widthScale(count);
+                    return count==0?0:(widthScale(count) * e.width);
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
