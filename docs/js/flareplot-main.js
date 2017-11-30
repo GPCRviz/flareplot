@@ -227,6 +227,14 @@ function createFlareplot(width, inputGraph, containerSelector){
                 });
             });
 
+            // =========== Parse `edges` section ========== \\
+
+            //Go through edges and ensure that default widths have been assigned
+            graph.edges.forEach(function (e) {
+                e.width = e.width || graph.defaults.edgeWidth || 1;
+            });
+
+
             // =========== Parse `trees` section ========== \\
             function addToMap(nodeMap, fullName) {
                 var i = fullName.lastIndexOf(".");
@@ -262,8 +270,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             });
 
 
-
-            //Go through graph.edges and convert name1, name2, and frames to target and source object arrays
+            //Go through graph.edges and convert name1, name2, and frames to target and source object arrays.
             graph.trees.forEach(function (t) {
                 t.frames = [];
                 var summaryEdges = {};
@@ -287,7 +294,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                             key: edge.key,
                             color: edge.color,
                             opacity: edge.opacity,
-                            width: 1
+                            width: edge.width
                         };
                         t.allEdges.push({
                             source: edge.source,
@@ -295,10 +302,10 @@ function createFlareplot(width, inputGraph, containerSelector){
                             key: edge.key,
                             color: edge.color,
                             opacity: edge.opacity,
-                            width: 1
+                            width: edge.width
                         });
                     } else {
-                        summaryEdges[edgeKey].width += 1;
+                        summaryEdges[edgeKey].width += edge.width;
                     }
 
                     //edge.source = t.tree[edge.name1]; console.assert(edge.source);
@@ -440,7 +447,7 @@ function createFlareplot(width, inputGraph, containerSelector){
             path.style("stroke-width",
                 function(d,i){
                     var count = graph.edges[i].frames.rangeCount(rangeStart, rangeEnd-1);
-                    return count==rangeEnd-rangeStart?2:0;
+                    return count==(rangeEnd-rangeStart)?2:0;
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
@@ -478,6 +485,12 @@ function createFlareplot(width, inputGraph, containerSelector){
                         var e = {edge:graph.edges[i], weight:count/(rangeEnd-rangeStart)};
                         e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
                         visibleEdges.push(e);
+
+                        //Hack to make user-specified edge-widths show up
+                        if((rangeEnd-rangeStart)==1){
+                            return graph.edges[i].width * widthScale(count);
+                        }
+
                         return widthScale(count);
                     } else {
                         return 0;
