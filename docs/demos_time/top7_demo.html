@@ -53,6 +53,16 @@
             background-color: #a1a5bd;
         }
 
+        .rangeText{
+            position: absolute;
+            right: 5px;
+            bottom: 0px;
+            z-index: 10;
+            font-family: sans;
+            font-size: 0.8em;
+            /*color: "#BBDDEE";*/
+            color: #8489a3;
+        }
 
     </style>
 
@@ -63,21 +73,29 @@
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
 <div class="container" id="flareDiv"></div>
-<div class="container" id="sliderDiv"></div>
+<div class="container" id="sliderDiv">
+    <span class="rangeText"></span>
+</div>
 <script>
     var flareplot;
     var slider;
+    var rangeInfo = d3.select(".rangeText")
 
     function fileRead(contents){
         flareplot = createFlareplot(600, contents, "#flareDiv");
         slider = createFlareplotSlider(flareplot, "#sliderDiv");
+        slider.onChange(function(r){
+            if(r.begin==r.end)
+                rangeInfo.text(r.begin+"");
+            else
+                rangeInfo.text(r.begin+" - "+r.end);
+        })
 
     }
 
     d3.text("../resources/top7_mcmc.json", function(json_text){
         fileRead(json_text);
     });
-
 
 </script>
 
