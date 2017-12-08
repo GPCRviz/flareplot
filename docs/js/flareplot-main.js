@@ -108,7 +108,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     }
                     return ret;
                 })
-                .style("stroke-width",function(d){
+                .style("stroke-width",function(){
                     return 0;
                 })
                 .style("stroke",function(d){ return d.color; })
@@ -535,7 +535,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     var e = {edge:graph.edges[i], weight:1};
                     e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
                     visibleEdges.push(e);
-                    return 2 * e.width;
+                    return (2 * e.weight);
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
@@ -574,7 +574,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     e.toggled = e.edge.name1 in toggledNodes || e.edge.name2 in toggledNodes;
                     visibleEdges.push(e);
 
-                    return count==0?0:(widthScale(count) * e.width);
+                    return count==0?0:(widthScale(count) * e.weight);
                 })
                 .attr("class", function(d) {
                     var ret = "link source-" + d.source.key + " target-" + d.target.key;
