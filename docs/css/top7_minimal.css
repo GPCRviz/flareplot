@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+
+* {
+    /*font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+    font-family: "Lato";
+}
+
+body {
+    margin: 0px;
+}
+
+.logo {
+    /*font-family: 'Cambay', sans-serif;*/
+    /*font-family: 'Playfair Display', serif;*/
+
+    position: fixed;
+    top: 10px;
+    left: 10px;
+
+    text-decoration: none;
+    font-size: 2.0rem;
+    color: #939393;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    text-align: center;
+    font-weight: 100;
+    font-size: 1.3em;
+}
+.container {
+    outline: none;
+}
+
+
+.rightNav, .leftNav{
+    position: fixed;
+    top: 50%;
+    font-size: 50px;
+    margin-top: -25px;
+    color: #dedee4;
+    text-decoration: none;
+}
+.rightNav:hover, .leftNav:hover {
+    color: #c4c2e4;
+}
+
+.leftNav {
+    left: 10px;
+}
+.rightNav {
+    right: 10px;
+}
+
+#flareDiv div{
+    position: relative;
+    left: 50%;
+    margin-left: -300px;
+}
+#sliderDiv {
+    height: 30px;
+    width: 600px;
+    position: relative;
+    left: 50%;
+    margin-left: -300px;
+    margin-top: 20px;
+}
+#regroupDiv {
+    position: relative;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: 20px;
+    width: 100px;
+    height: 30px;
+    background-color: #d7deeb;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 30px;
+    border: 2px solid #8489a3;
+    cursor: pointer;
+    border-radius: 5px;
+}
+#regroupDiv:hover {
+    background-color: #a1a5bd;
+}

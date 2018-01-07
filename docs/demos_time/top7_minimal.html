@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Top7 MCMC contact network">
+
+    <!-- Javascript libs -->
+    <script type="text/javascript" src="../vendor/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../js/flareplot-main.js"></script>
+    <script type="text/javascript" src="../js/flareplot-rangeslider.js"></script>
+
+    <!-- Visualization CSS -->
+    <link href="../css/flareplot-main.css" rel="stylesheet">
+    <link href="../css/flareplot-rangeslider.css" rel="stylesheet">
+
+    <link href="../css/top7_minimal.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container" id="flareDiv"></div>
+<div class="container" id="sliderDiv"></div>
+<script>
+    d3.text("../resources/top7_mcmc.json", function(data){
+        var flareplot = createFlareplot(600, data, "#flareDiv");
+        var slider = createFlareplotSlider(flareplot, "#sliderDiv");
+    });
+</script>
+
+</body>
+</html>
+
+
