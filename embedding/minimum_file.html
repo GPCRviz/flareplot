@@ -1,0 +1,22 @@
+<html>
+<head>
+  <!-- FlarePlot dependencies -->
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+
+  <!-- FlarePlot javascript files -->
+  <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
+
+  <!-- FlarePlot css files -->
+  <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.css"></script>
+</head>
+<body>
+
+<div id="flare-container"></div>
+
+<script>
+  d3.text("mor_active_bu72.json", function(flareplot_data){
+    createFlareplot(500, flareplot_data, "#flare-container");
+  });
+</script>
+</body>
+</html>
