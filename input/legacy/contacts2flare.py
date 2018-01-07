@@ -68,7 +68,7 @@ print("Analyzing hbond network in %d frames .."%frame_count)
 hbonds_allframes = md.wernet_nilsson(t)
 hbond_frames = defaultdict(set)
 
-for f,frame in enumerate(t[:20]):
+for f,frame in enumerate(t[:]):
   #hbonds = md.baker_hubbard(frame, periodic=True)
   hbonds = hbonds_allframes[f]
   print("Frame %d .. %d hbonds"%(f,hbonds.shape[0]))
@@ -82,22 +82,6 @@ for f,frame in enumerate(t[:20]):
       key = (min(resi1,resi2), max(resi1,resi2))
       hbond_frames[key].add(f)
 
-
-print("Analyzing network centrality ..")
-
-#Build networkx graph
-centrality = defaultdict(int)
-for resi1,resi2 in hbond_frames:
-  interaction_count = len(hbond_frames[(resi1,resi2)])
-  weight = interaction_count/frame_count
-  centrality[resi1] += weight
-  centrality[resi2] += weight
-
-#Normalize centrality to the range [0:1]
-min_centrality = min([centrality[v] for v in centrality]) 
-max_centrality = max([centrality[v] for v in centrality]) 
-for v in centrality:
-  centrality[v] = (centrality[v]-min_centrality)/(max_centrality-min_centrality)
 
 
 print("Writing edges to %s .."%out_file)
@@ -114,22 +98,6 @@ for resi1,resi2 in hbond_frames:
 
 
 
-#Collect entries for the centrality track
-centrality_track_entries = []
-def ccol(val):
-  col1 = (255,127,80)
-  col2 = (255,255,255)
-  rgb = tuple([int(c1*val+c2*(1-val)) for c1,c2 in zip(col1,col2)])
-  return '#%02x%02x%02x' % rgb
-
-for tp in tree_paths:
-  try:
-    res_name = tp
-    cent_val = centrality[res_name]
-    centrality_track_entries.append("      { \"nodeName\": \"%d\", \"color\": \"%s\", \"size\":\"%s\" }"%(res_name,ccol(cent_val), cent_val))
-  except ValueError: pass
-  except IndexError: pass
-
 
 #Write everything
 with open(out_file,"w") as of:
@@ -137,13 +105,6 @@ with open(out_file,"w") as of:
   of.write("  \"edges\": [\n")
   of.write(",\n".join(edge_entries))
   of.write("\n")
-  of.write("  ],\n")
-  of.write("    {\n")
-  of.write("    \"trackLabel\": \"Degree centrality\",\n")
-  of.write("    \"trackProperties\": [\n")
-  of.write(",\n".join(centrality_track_entries))
-  of.write("\n")
-  of.write("    ]}\n")
   of.write("  ],\n")
   of.write("  \"defaults\":{\"edgeColor\":\"rgba(50,50,50,100)\", \"edgeWidth\":2 }\n")
   of.write("}\n")
