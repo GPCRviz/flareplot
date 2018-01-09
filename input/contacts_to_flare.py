@@ -67,7 +67,7 @@ def main():
 
     optional.add_argument('--itype',
                           required=False,
-                          default="hbss,hbbb,hbsb",
+                          default="hbss",
                           type=str,
                           help='Interaction types to include (comma separated list)')
     optional.add_argument('--flarelabels',
@@ -201,7 +201,11 @@ def parse_flarelabels(label_file):
 
 def parse_itypes(itype_argument):
     """Parses the itype argument and returns a set of strings with all the selected interaction types """
+    if "all" in itype_argument:
+        return ["sb", "pc", "ps", "ts", "vdw", "hb", "lhb", "hbbb", "hbsb",
+                "hbss", "wb", "wb2", "hls", "hlb", "lwb", "lwb2"]
     return set(itype_argument.split(","))
+
 
 def create_graph(contacts, resi_labels):
     """
@@ -268,7 +272,7 @@ def create_graph(contacts, resi_labels):
             continue
 
         # Create contact_key if it doesn't exist
-        if not contact_key in resi_edges:
+        if contact_key not in resi_edges:
             edge = {"name1": a1_label, "name2": a2_label, "frames": []}
             resi_edges[contact_key] = edge
             ret["edges"].append(edge)
@@ -302,4 +306,6 @@ if __name__ == "__main__":
     main()
 
 
-
+__license__ = "Apache License 2.0"
+__maintainer__ = "Rasmus Fonseca"
+__email__ = "fonseca.rasmus@gmail.com"
