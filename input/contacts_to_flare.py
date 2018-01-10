@@ -251,6 +251,7 @@ def create_graph(contacts, resi_labels):
         "edges": []
     }
 
+    # print(resi_labels)
     # Strip atom3, atom4, and atom names
     # unique_chains = set([c[2][0] for c in contacts] + [c[3][0] for c in contacts])
     contacts = [(c[0], c[1], c[2][0:3], c[3][0:3]) for c in contacts]
@@ -265,11 +266,15 @@ def create_graph(contacts, resi_labels):
         contact_key = a1_key + a2_key
 
         # Look up labels
-        a1_label = a1_key if resi_labels is None else resi_labels[a1_key]["label"]
-        a2_label = a2_key if resi_labels is None else resi_labels[a2_key]["label"]
-        if a1_label is None or a2_label is None:
-            print("Omitting contact "+str(contact)+" as it doesn't appear in flare-label file")
-            continue
+        if resi_labels:
+            if a1_key not in resi_labels or a2_key not in resi_labels:
+                print("Omitting contact "+str(contact)+" as it doesn't appear in flare-label file")
+                continue
+            a1_label = resi_labels[a1_key]["label"]
+            a2_label = resi_labels[a2_key]["label"]
+        else:
+            a1_label = a1_key
+            a2_label = a2_key
 
         # Create contact_key if it doesn't exist
         if contact_key not in resi_edges:
