@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
 
 """
-Take a set of single-flare files and convert them into a multi-flare file.
+Take a list of single-flare files and convert them to a multi-flare file.
 
+See https://github.com/GPCRviz/flareplot/tree/master/input for detailed
+definitions of different types of flare files. Briefly, a single-flare is a
+flareplot input file where the value of the `frames` attribute of each edge is
+`[0]`. This corresponds e.g. to the contact network of a single protein
+structure. A multi-frame has edges with multiple values in the `frames` list,
+but each index has a label specified in a `frameDict` entry. Multi-frames are
+used to generate finger-print comparison flareplots.
 
+Example
+=======
 """
 
 import json
