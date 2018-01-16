@@ -53,18 +53,23 @@ The edge-width is measured in pixels.
 This section has the format
 ```json
   "trees":[
-    { "treeLabel":<string>, "treePaths":<string-list> },
+    { "treeLabel":<string>, 
+      "treeProperties": [
+        {"path": <string>, "key": <string>},
+        ...
+      ]
+    },
      ...
   ]
 ```
-Each tree has a name and a set of paths. Each "path" is a dot-separated list of branches in the path from the node to the root in a tree. This tree is used to order and group nodes. In the following example, `Asn1` and `Pro2` will be placed in the same group because theyre both children of `helix1` while `His3` will be placed in a separate group. 
+Each tree has a name and a set of paths. Each "path" is a dot-separated list of branches in the path from the node to the root in a tree and is used to group nodes. The optional "key" string wont be visible in the flareplot, but will be used to sort leaf nodes. In the following example, `Asn1` and `Pro2` will be placed in the same group because theyre both children of `helix1` while `His3` will be placed in a separate group. 
 ```json
   "trees":[
     { "treeLabel":"Group-order",
-      "treePaths": [
-        "Root.helix1.Asn1",
-        "Root.helix1.Pro2",
-        "Root.helix2.His3"
+      "treeProperties": [
+        {"path": "Root.helix1.Asn1", "key": "1"},
+        {"path": "Root.helix1.Pro2", "key": "2"},
+        {"path": "Root.helix2.His3", "key": "3"}
       ]
     }
   ]
