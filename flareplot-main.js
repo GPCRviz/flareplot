@@ -40,16 +40,17 @@ function createFlareplot(width, inputGraph, containerSelector){
             cluster = d3.layout.cluster()
                 .size([360, ry - discRad])
                 .sort(function(a, b) {
-                    var aRes = a.key.match(/[0-9]*$/);
-                    var bRes = b.key.match(/[0-9]*$/);
-                    if(aRes.length==0 || bRes.length==0){
-                        aRes = a.key;
-                        bRes = b.key;
-                    }else{
-                        aRes = parseInt(aRes[0]);
-                        bRes = parseInt(bRes[0]);
-                    }
-                    return d3.ascending(aRes, bRes);
+                    // var aRes = a.key.match(/[0-9]*$/);
+                    // var bRes = b.key.match(/[0-9]*$/);
+                    // if(aRes.length==0 || bRes.length==0){
+                    //     aRes = a.key;
+                    //     bRes = b.key;
+                    // }else{
+                    //     aRes = parseInt(aRes[0]);
+                    //     bRes = parseInt(bRes[0]);
+                    // }
+                    //return d3.ascending(aRes, bRes);
+                    return d3.ascending(a.key, b.key);
                 });
 
             graph = preprocessGraph(inputGraph);
@@ -108,7 +109,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     }
                     return ret;
                 })
-                .style("stroke-width",function(d){
+                .style("stroke-width",function(){
                     return 0;
                 })
                 .style("stroke",function(d){ return d.color; })
@@ -183,16 +184,28 @@ function createFlareplot(width, inputGraph, containerSelector){
          */
         function preprocessGraph(graph) {
             "use strict";
-            //Create defaults, trees, and tracks if they don't exist
+            // ======= Create defaults, trees, and tracks if they don't exist ==========
             if (!graph.defaults) {
                 graph.defaults = {};
             }
             if (!graph.trees) {
-                graph.trees = [{"treeLabel": "default", "treePaths": []}];
+                graph.trees = [{"treeLabel": "default", "treeProperties": []}];
             }
             if (!graph.tracks) {
                 graph.tracks = [{"trackLabel": "default", "trackProperties": []}];
             }
+
+            // For backwards compatibility: Create treeProperties from treePaths if they are present
+            graph.trees.forEach(function (t) {
+                if (!t.treeProperties){
+                    t.treeProperties = [];
+                }
+                if (t.treePaths) {
+                    t.treePaths.forEach(function (p) {
+                        t.treeProperties.push({"path": p});
+                    });
+                }
+            });
 
             // =========== Construct `nodeNames` list =========== \\
             graph.nodeNames = [];
@@ -209,8 +222,8 @@ function createFlareplot(width, inputGraph, containerSelector){
 
             //Fill nodeNames from trees
             graph.trees.forEach(function (t) {
-                t.treePaths.forEach(function (p) {
-                    var name = p.substring(p.lastIndexOf(".") + 1);
+                t.treeProperties.forEach(function (p) {
+                    var name = p.path.substring(p.path.lastIndexOf(".") + 1);
                     if (!(graph.nodeNames.indexOf(name) > -1)) {
                         graph.nodeNames.push(name);
                     }
@@ -256,9 +269,13 @@ function createFlareplot(width, inputGraph, containerSelector){
                 var addedNames = [];
                 //Ensure that each tree-object has a `tree` attribute with the hierarchy
                 t.tree = {};
-                t.treePaths.forEach(function (p) {
-                    addToMap(t.tree, p);
-                    addedNames.push(p.substring(p.lastIndexOf(".") + 1));
+                t.treeProperties.forEach(function (p) {
+                    var n = addToMap(t.tree, p.path);
+                    //addedNames.push(p.path.substring(p.path.lastIndexOf(".") + 1));
+                    addedNames.push(n.key);
+                    if (p.key){
+                        n.key = p.key;
+                    }
                 });
 
                 //Ensure that even nodes not mentioned in the treePaths are added to the tree
