@@ -3,6 +3,7 @@
 This folder contains a set of scripts for working with flareplots. The scripts for creating flareplots mainly work on molecular contact networks, but the general transformation scripts apply to any data represented as flare-files. 
 
 ## Time-flare script
+![Time-flare flowchart](../imgs/Timeflare-input-flow.png)
 [`contacts_to_flare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/flare-scripts/contacts_to_flare.py) - Takes a protein contact-file from by MDContactNetwork and generates a flareplot input-file (JSON). Assuming you have [vmd-python](https://github.com/Eigenstate/vmd-python) installed and [MDContactNetwork](https://github.com/akma327/MDContactNetworks) in your `PATH`, the following commands will generate a flareplot JSON with side-chain hydrogen bonds from a trajectory:
 ```bash
 cd examples/timeflare
@@ -10,11 +11,11 @@ dynamic_contacts.py --topology 5xnd_topology.pdb --trajectory 5xnd_trajectory.dc
 contacts_to_flare.py --input 5xnd_all-contacts.tsv --itype hbss --output 5xnd_hbss.json
 ```
 The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
-![Time-flare flowchart](../imgs/Timeflare-input-flow.png)
 
 
 
 ## Multi-flare script
+![Multi-flare flowchart](../imgs/Multiflare-input-flow.png)
 [`flares_to_multiflare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes multiple flare JSONs (with matching labels) and generates a single "multi-flare" that is useful for showing differences and similarities between contact networks. The following commands generates flareplot input for three DHFR crystal structures and groups them together in a multiflare:
 ```bash
 cd examples/multiflare/
@@ -33,4 +34,3 @@ contacts_to_flare.py --input 4KJL_all-contacts.tsv --itype hbss --output 4KJL_hb
 flares_to_multiflare.py --single-flares 4KJ?_hbss.json --output DHFR_compare_hbss.json
 ```
 The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
-![Multi-flare flowchart](../imgs/Multiflare-input-flow.png)
