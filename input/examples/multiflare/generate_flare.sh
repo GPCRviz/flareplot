@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Redefine these
-FLAREPLOTS_DIR="../../"
-MDCONTACTS_DIR="../../../../MDContactNetworks/"  
+FLAREPLOTS_DIR="../../flare-scripts"
+MDCONTACTS_DIR="../../../../MDContactNetworks"  
 
 $MDCONTACTS_DIR/static_contacts.py --topology 4KJJ.pdb --all-interactions --output 4KJJ_all-contacts.tsv
 $MDCONTACTS_DIR/static_contacts.py --topology 4KJK.pdb --all-interactions --output 4KJK_all-contacts.tsv
