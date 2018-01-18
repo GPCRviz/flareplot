@@ -10,11 +10,11 @@ dynamic_contacts.py --topology 5xnd_topology.pdb --trajectory 5xnd_trajectory.dc
 contacts_to_flare.py --input 5xnd_all-contacts.tsv --itype hbss --output 5xnd_hbss.json
 ```
 The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
-![Time-flare flowchart](imgs/Timeflare-input-flow.png)
+![Time-flare flowchart](../imgs/Timeflare-input-flow.png)
 
 
 
-### Multi-flare script
+## Multi-flare script
 [`flares_to_multiflare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes multiple flare JSONs (with matching labels) and generates a single "multi-flare" that is useful for showing differences and similarities between contact networks. The following commands generates flareplot input for three DHFR crystal structures and groups them together in a multiflare:
 ```bash
 cd examples/multiflare/
@@ -33,3 +33,4 @@ contacts_to_flare.py --input 4KJL_all-contacts.tsv --itype hbss --output 4KJL_hb
 flares_to_multiflare.py --single-flares 4KJ?_hbss.json --output DHFR_compare_hbss.json
 ```
 The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
+![Multi-flare flowchart](../imgs/Multiflare-input-flow.png)
