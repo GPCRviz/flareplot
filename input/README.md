@@ -1,6 +1,6 @@
 # Flareplot input files
 
-The input format to flareplots is a JSON file with the format described in the below section. The :file_folder: [`flare-scripts`](https://github.com/GPCRviz/flareplot/tree/master/input/flare-scripts) folder contains premade scripts that generate such input-files from protein structures or simulations which can then be visualized on [the flareplot homepage](https://gpcrviz.github.io/flareplot/?p=create). There are also specific example inputs and scripts to generate plots in :file_folder: [`examples`](https://github.com/GPCRviz/flareplot/tree/master/input/examples).
+The input format to flareplots is a JSON file with the format described in the below section. The :file_folder: [`flare-scripts`](https://github.com/GPCRviz/flareplot/tree/master/input/flare-scripts) folder contains premade scripts that generate such input-files from protein structures or simulations which can then be visualized on [the flareplot homepage](https://gpcrviz.github.io/flareplot/?p=create). There are also specific examples on generating inputs in :file_folder: [`examples`](https://github.com/GPCRviz/flareplot/tree/master/input/examples).
 
 
 ## Input format
