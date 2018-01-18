@@ -2,6 +2,7 @@
 
 The input format to flareplots is a JSON file with the format described in the sections below. We also provide a set of premade scripts that generate such input-files from protein structures or simulations which can then be visualized on [the flareplot homepage](https://gpcrviz.github.io/flareplot/?p=create):
 
+### Time-flare script
 [`contacts_to_flare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes a protein contact-file from by [MDContactNetwork](https://github.com/Eigenstate/vmd-python) and generates a flareplot input-file (JSON). Assuming you have [vmd-python](https://github.com/Eigenstate/vmd-python) installed and [MDContactNetwork](https://github.com/Eigenstate/vmd-python) in your `PATH`, the following commands will generate a flareplot JSON with side-chain hydrogen bonds from a trajectory:
 ```bash
 cd examples/timeflare
@@ -11,6 +12,7 @@ contacts_to_flare.py --input 5xnd_all-contacts.tsv --itype hbss --output 5xnd_hb
 The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
 
 
+### Multi-flare script
 [`flares_to_multiflare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes multiple flare JSONs (with matching labels) and generates a single "multi-flare" that is useful for showing differences and similarities between contact networks. The following commands generates flareplot input for three DHFR crystal structures and groups them together in a multiflare:
 ```bash
 cd examples/multiflare/
@@ -30,6 +32,7 @@ flares_to_multiflare.py --single-flares 4KJ?_hbss.json --output DHFR_compare_hbs
 ```
 The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
 
+### More examples
 For more examples see the [`example`](https://github.com/GPCRviz/flareplot/tree/master/input/examples) folder.
 
 
