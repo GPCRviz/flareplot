@@ -10,6 +10,8 @@ dynamic_contacts.py --topology 5xnd_topology.pdb --trajectory 5xnd_trajectory.dc
 contacts_to_flare.py --input 5xnd_all-contacts.tsv --itype hbss --output 5xnd_hbss.json
 ```
 The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
+![Time-flare flowchart](imgs/Timeflare-input-flow.png)
+
 
 
 ### Multi-flare script
