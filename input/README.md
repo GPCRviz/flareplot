@@ -1,41 +1,10 @@
 # Generating input to flareplot
 
-The input format to flareplots is a JSON file with the format described in the sections below. We also provide a set of premade scripts that generate such input-files from protein structures or simulations which can then be visualized on [the flareplot homepage](https://gpcrviz.github.io/flareplot/?p=create):
-
-### Time-flare script
-[`contacts_to_flare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes a protein contact-file from by MDContactNetwork and generates a flareplot input-file (JSON). Assuming you have [vmd-python](https://github.com/Eigenstate/vmd-python) installed and [MDContactNetwork](https://github.com/akma327/MDContactNetworks) in your `PATH`, the following commands will generate a flareplot JSON with side-chain hydrogen bonds from a trajectory:
-```bash
-cd examples/timeflare
-dynamic_contacts.py --topology 5xnd_topology.pdb --trajectory 5xnd_trajectory.dcd --all-interactions --output 5xnd_all-contacts.tsv
-contacts_to_flare.py --input 5xnd_all-contacts.tsv --itype hbss --output 5xnd_hbss.json
-```
-The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
+The input format to flareplots is a JSON file with the format described in the below section. We also provide a set of premade scripts that generate such input-files from protein structures or simulations which can then be visualized on [the flareplot homepage](https://gpcrviz.github.io/flareplot/?p=create)
 ![Time-flare flowchart](imgs/Timeflare-input-flow.png)
+For more details see the [`flare-scripts`](https://github.com/GPCRviz/flareplot/tree/master/input/flare-scripts) folder.
 
-
-
-### Multi-flare script
-[`flares_to_multiflare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes multiple flare JSONs (with matching labels) and generates a single "multi-flare" that is useful for showing differences and similarities between contact networks. The following commands generates flareplot input for three DHFR crystal structures and groups them together in a multiflare:
-```bash
-cd examples/multiflare/
-
-# Generate contact networks
-static_contacts.py --topology 4KJJ.pdb --all-interactions --output 4KJJ_all-contacts.tsv
-static_contacts.py --topology 4KJK.pdb --all-interactions --output 4KJK_all-contacts.tsv
-static_contacts.py --topology 4KJL.pdb --all-interactions --output 4KJL_all-contacts.tsv
-
-# Generate single-frame flare JSONS
-contacts_to_flare.py --input 4KJJ_all-contacts.tsv --itype hbss --output 4KJJ_hbss.json
-contacts_to_flare.py --input 4KJK_all-contacts.tsv --itype hbss --output 4KJK_hbss.json
-contacts_to_flare.py --input 4KJL_all-contacts.tsv --itype hbss --output 4KJL_hbss.json
-
-# Combine them into a multi-flare
-flares_to_multiflare.py --single-flares 4KJ?_hbss.json --output DHFR_compare_hbss.json
-```
-The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
-
-### More examples
-For more examples see the [`example`](https://github.com/GPCRviz/flareplot/tree/master/input/examples) folder.
+We also provide some specific example inputs and scripts to generate plots in the [`examples`](https://github.com/GPCRviz/flareplot/tree/master/input/examples) folder.
 
 
 ## Input format
