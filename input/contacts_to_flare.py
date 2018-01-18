@@ -78,6 +78,8 @@ def main():
 
     args = parser.parse_args()
 
+    print("Parsing %s contacts from %s" % (args.itype, args.input.name))
+
     # Read contacts and generate graph
     itypes = parse_itypes(args.itype)
     contacts = parse_contacts(args.input, itypes)
@@ -96,6 +98,7 @@ def main():
     args.output.write(pretty_json)
     args.output.close()
     #print(pretty_json)
+    print("Done - wrote flare-json to %s" % args.output.name)
 
 
 def parse_contacts(contact_file, itypes):
@@ -261,6 +264,8 @@ def create_graph(contacts, resi_labels):
         # Compose a key for atom1 and atom2 that ignores the order of residues
         a1_key = ":".join(contact[2][0:3])
         a2_key = ":".join(contact[3][0:3])
+        if a1_key == a2_key:
+            continue
         if a1_key > a2_key:
             a1_key, a2_key = a2_key, a1_key
         contact_key = a1_key + a2_key
