@@ -4,7 +4,7 @@ This folder contains a set of scripts for working with flareplots. The scripts f
 
 ## Time-flare script
 ![Time-flare flowchart](../imgs/Timeflare-input-flow.png)
-[`contacts_to_flare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/flare-scripts/contacts_to_flare.py) - Takes a protein contact-file from by MDContactNetwork and generates a flareplot input-file (JSON). Assuming you have [vmd-python](https://github.com/Eigenstate/vmd-python) installed and [MDContactNetwork](https://github.com/akma327/MDContactNetworks) in your `PATH`, the following commands will generate a flareplot JSON with side-chain hydrogen bonds from a trajectory:
+[`contacts_to_flare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/flare-scripts/contacts_to_flare.py) takes a protein contact-file from by MDContactNetwork and generates a flareplot input-file (JSON). Assuming you have [vmd-python](https://github.com/Eigenstate/vmd-python) installed and [MDContactNetwork](https://github.com/akma327/MDContactNetworks) in your `PATH`, the following commands will generate a flareplot JSON with side-chain hydrogen bonds from a trajectory:
 ```bash
 cd examples/timeflare
 dynamic_contacts.py --topology 5xnd_topology.pdb --trajectory 5xnd_trajectory.dcd --all-interactions --output 5xnd_all-contacts.tsv
@@ -16,7 +16,7 @@ The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https:
 
 ## Multi-flare script
 ![Multi-flare flowchart](../imgs/Multiflare-input-flow.png)
-[`flares_to_multiflare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes multiple flare JSONs (with matching labels) and generates a single "multi-flare" that is useful for showing differences and similarities between contact networks. The following commands generates flareplot input for three DHFR crystal structures and groups them together in a multiflare:
+[`flares_to_multiflare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) takes multiple flare JSONs (with matching labels) and generates a single "multi-flare" that is useful for showing differences and similarities between contact networks. The following commands generates flareplot input for three DHFR crystal structures and groups them together in a multiflare:
 ```bash
 cd examples/multiflare/
 
