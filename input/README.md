@@ -1,14 +1,16 @@
-# Generating input to FlarePlot
+# Generating input to flareplot
 
-The input format to FlarePlots is a JSON file with the format described below. We also provide a set of premade scripts that generate such JSON files.
+The input format to flareplots is a JSON file with the format described in the sections below. We also provide a set of premade scripts that generate such JSON files from protein structures or simulations. These can be uploaded to and directly visualized on [the flareplot homepage](https://gpcrviz.github.io/flareplot/?p=create).
 
-
-* [GPCRtraj2flare](https://raw.githubusercontent.com/GPCRviz/FlarePlot/master/scripts/GPCRtraj2flare.zip) - Takes a molecular dynamics trajectory, topology, and UNIPROT-id of a GPCR and generates a FlarePlot input-file (JSON). For example:
+[`contacts_to_flare.py`](https://raw.githubusercontent.com/GPCRviz/flareplot/master/input/contacts_to_flare.py) - Takes a protein contact-file from by [MDContactNetwork](https://github.com/Eigenstate/vmd-python) and generates a flareplot input-file (JSON). Assuming you have [vmd-python](https://github.com/Eigenstate/vmd-python) installed and [MDContactNetwork](https://github.com/Eigenstate/vmd-python) in your `PATH`, the following commands will generate a flareplot JSON with side-chain hydrogen bonds from a trajectory:
 ```bash
-python3 GPCRtraj2flare.py mor_active_bu72.nc mor_active_bu72.psf OPRM_MOUSE
+cd examples/timeflare
+dynamic_contacts.py --topology 5xnd_topology.pdb --trajectory 5xnd_trajectory.dcd --all-interactions --output 5xnd_all-contacts.tsv
+contacts_to_flare.py --input 5xnd_all-contacts.tsv --itype hbss --output 5xnd_hbss.json
 ```
+The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
 
-[hbonds2flare](https://raw.githubusercontent.com/GPCRviz/FlarePlot/master/scripts/hbonds2flare.py) - Takes a molecular dynamics trajectory and topology of any molecular chain and generates a FlarePlot input-file that shows hydrogen bond interactions. Can be used to filter by type of interactions: backbone-backbone, backbone-side chain, or side chain-side chain. For example:
+
 ```bash
 python3 hbonds2flare.py mor_active_bu72.nc mor_active_bu72.psf SC-SC
 ```
