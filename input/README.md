@@ -1,4 +1,4 @@
-# Generating input to flareplot
+# Flareplot input files
 
 The input format to flareplots is a JSON file with the format described in the below section. We also provide a set of premade scripts that generate such input-files from protein structures or simulations which can then be visualized on [the flareplot homepage](https://gpcrviz.github.io/flareplot/?p=create)
 ![Time-flare flowchart](imgs/Timeflare-input-flow.png)
