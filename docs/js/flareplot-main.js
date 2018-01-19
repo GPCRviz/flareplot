@@ -129,10 +129,10 @@ function createFlareplot(width, inputGraph, containerSelector){
                 .attr("dy", ".31em")
                 .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
                 .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
-                .text(function(d) { return d.key; })
+                .text(function(d) { return d.name; })
                 .on("mouseover", mouseoverNode)
                 .on("mouseout", mouseoutNode)
-                .on("click", function(d){ toggleNode(d.name); });
+                .on("click", function(d){ toggleNode(d); });
 
 
             var arcW = 250.0/(graph.nodeNames.length)*Math.PI/360;
@@ -159,10 +159,20 @@ function createFlareplot(width, inputGraph, containerSelector){
                 })
                 .style("fill", function(d){ return d.color; })
                 .attr("d", arc)
+                .on("mouseover", function(d){
+                    //Locate corresponding node
+                    nodes.filter(function(n){ return n.name==d.nodeName; })
+                        .forEach(function(n){ mouseoverNode(n); });
+                })
+                .on("mouseout", function(d){
+                    //Locate corresponding node
+                    nodes.filter(function(n){ return n.name==d.nodeName; })
+                        .forEach(function(n){ mouseoutNode(n); });
+                })
                 .on("click", function(d){
                     //Locate corresponding node
                     nodes.filter(function(n){ return n.name==d.nodeName; })
-                        .forEach(function(n){ toggleNode(n.name); });
+                        .forEach(function(n){ toggleNode(n); });
 
                 });
 
@@ -254,7 +264,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     if (name.length) {
                         node.parent = addToMap(nodeMap, fullName.substring(0, i));
                         node.parent.children.push(node);
-                        node.key = name;
+                        node.key = name.replace(/:/g, "_");
                     }
                 }
                 return node;
@@ -644,13 +654,13 @@ function createFlareplot(width, inputGraph, containerSelector){
             throw "framesSum must take either two integers (range), or an array (subset) as argument";
         }
 
-        function toggleNode(nodeName){
-            var svgNodeElement = svg.selectAll("g.node#node-"+nodeName).node();
+        function toggleNode(node){
+            var svgNodeElement = svg.selectAll("g.node#node-"+node.key).node();
             var toggled = !d3.select(svgNodeElement).classed("toggledNode");
             d3.select(svgNodeElement)
                 .classed("toggledNode", function(){return toggled; });
 
-            var name = nodeName.substring(nodeName.lastIndexOf(".")+1);
+            var name = node.key.substring(node.key.lastIndexOf(".")+1);
             if(!toggled)
                 delete toggledNodes[name];
             else
@@ -662,12 +672,12 @@ function createFlareplot(width, inputGraph, containerSelector){
                 });
 
             visibleEdges.forEach(function(e){
-                if(e.edge.name1==nodeName || e.edge.name2==nodeName){
+                if(e.edge.name1==name || e.edge.name2==name){
                     e.toggled = toggled;
                 }
             });
 
-            fireNodeToggleListeners(nodeName);
+            fireNodeToggleListeners({"name": node.name, "key": node.key});
         }
 
 
