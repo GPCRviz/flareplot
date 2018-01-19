@@ -40,17 +40,16 @@ function createFlareplot(width, inputGraph, containerSelector){
             cluster = d3.layout.cluster()
                 .size([360, ry - discRad])
                 .sort(function(a, b) {
-                    // var aRes = a.key.match(/[0-9]*$/);
-                    // var bRes = b.key.match(/[0-9]*$/);
-                    // if(aRes.length==0 || bRes.length==0){
-                    //     aRes = a.key;
-                    //     bRes = b.key;
-                    // }else{
-                    //     aRes = parseInt(aRes[0]);
-                    //     bRes = parseInt(bRes[0]);
-                    // }
-                    //return d3.ascending(aRes, bRes);
-                    return d3.ascending(a.key, b.key);
+                    if (!a.sortKey && !b.sortKey) {
+                        var aRes = a.key.match(/\d+$/);
+                        var bRes = b.key.match(/\d+$/);
+                        if (aRes && bRes) {
+                            return d3.ascending(parseInt(aRes[0]), parseInt(bRes[0]));
+                        }
+                    }
+                    let aKey = a.sortKey?a.sortKey:a.key;
+                    let bKey = b.sortKey?b.sortKey:b.key;
+                    return d3.ascending(aKey, bKey);
                 });
 
             graph = preprocessGraph(inputGraph);
@@ -117,10 +116,6 @@ function createFlareplot(width, inputGraph, containerSelector){
                 .attr("d", function(d, i) { return line(splines[i]); })
                 .on("mouseover", function(d){ fireEdgeHoverListeners(d); })
                 .on("click", function(d){ fireEdgeToggleListeners(d); });
-
-
-
-
 
 
             svg.selectAll("g.node")
@@ -274,7 +269,7 @@ function createFlareplot(width, inputGraph, containerSelector){
                     //addedNames.push(p.path.substring(p.path.lastIndexOf(".") + 1));
                     addedNames.push(n.key);
                     if (p.key){
-                        n.key = p.key;
+                        n.sortKey = p.key;
                     }
                 });
 
