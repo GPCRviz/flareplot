@@ -33,4 +33,4 @@ contacts_to_flare.py --input 4KJL_all-contacts.tsv --itype hbss --output 4KJL_hb
 # Combine them into a multi-flare
 flares_to_multiflare.py --single-flares 4KJ?_hbss.json --output DHFR_compare_hbss.json
 ```
-The resulting `5xnd_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
+The resulting `DHFR_compare_hbss.json` can then be uploaded and visualized [here](https://gpcrviz.github.io/flareplot/?p=create).
