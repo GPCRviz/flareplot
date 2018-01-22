@@ -247,9 +247,10 @@ function createFlareplot(width, inputGraph, containerSelector){
 
             // =========== Parse `edges` section ========== \\
 
-            //Go through edges and ensure that default widths have been assigned
+            //Go through edges and ensure that default widths have been assigned and frames are sorted
             graph.edges.forEach(function (e) {
                 e.width = e.width || graph.defaults.edgeWidth || 1;
+                e.frames.sort();
             });
 
 
@@ -442,7 +443,8 @@ function createFlareplot(width, inputGraph, containerSelector){
         function getNumFrames(){
             var maxFrame = -1;
             graph.edges.forEach(function(e){
-                maxFrame = Math.max(maxFrame,  Math.max.apply(Math, e.frames));
+                // maxFrame = Math.max(maxFrame, Math.max.apply(Math, e.frames));
+                maxFrame = Math.max(maxFrame, e.frames[e.frames.length - 1]);
             });
             return maxFrame+1;
         }
