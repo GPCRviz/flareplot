@@ -250,7 +250,17 @@ function createFlareplot(width, inputGraph, containerSelector){
             //Go through edges and ensure that default widths have been assigned and frames are sorted
             graph.edges.forEach(function (e) {
                 e.width = e.width || graph.defaults.edgeWidth || 1;
-                e.frames.sort();
+                // Sort e.frames, but only if its out of order
+                let last = -100;
+                for (let i=0;i<e.frames.length; i++){
+                    let cur = e.frames[i];
+                    if (last > cur){
+                        e.frames.sort();
+                        break;
+                    }
+                    last = cur;
+                }
+                // e.frames.sort();
             });
 
 
