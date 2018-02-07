@@ -39,29 +39,6 @@ other dynamic elements on the page. The
 following sections outline how to add different controls and the [Developer API](#Developer-API) shows all available
 functions.
 
-## Reading json from a local file
-
-The d3-library has a convenient mechanism for reading json files:
-```html
-<html>
-<head>
-    <!-- FlarePlot dependencies -->
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-
-    <!-- FlarePlot javascript files -->
-    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
-</head>
-<body>
-    <div id="flare-container"></div>
-    <script>
-        d3.json("abc.json", function(jsonData){
-            var plot = createFlareplot(500, jsonData, "#flare-container");
-        });
-    </script>
-</body>
-</html>
-```
-
 ## Styling the plot
 
 The style of the plot can be modified through css. Most importantly, the edges and nodes will be decorated with `
@@ -92,6 +69,30 @@ The style of the plot can be modified through css. Most importantly, the edges a
 This will make edges transparent and node fonts much smaller and responsive to mouse hovering.
 
 
+## Reading json from a local file
+
+The d3-library has a convenient mechanism for reading json files:
+```html
+<html>
+<head>
+    <!-- FlarePlot dependencies -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+    <!-- FlarePlot javascript files -->
+    <script src="http://cdn.rawgit.com/GPCRviz/FlarePlot/master/flareplot-main.js"></script>
+</head>
+<body>
+    <div id="flare-container"></div>
+    <script>
+        d3.json("abc.json", function(jsonData){
+            var plot = createFlareplot(500, jsonData, "#flare-container");
+        });
+    </script>
+</body>
+</html>
+```
+
+
 ## Navigating time-varying data
 
 FlarePlot includes a range-slider extension that allows to change the currently selected time-point and inspect
@@ -116,17 +117,19 @@ averages over intervals of frames. To use it
 </head>
 <body>
     <div id="flare-container"></div>
-    <div id="slider-container" style="width:500px"></div>
+    <div id="slider-container" style="width:900px;height:40px"></div>
     <script>
-        d3.json("abc.json", function(jsonData){
-            var plot = createFlareplot(500, jsonData, "#flare-container");
-            createRangeSlider("#slider-container", plot);
+        d3.json("1-12_hbss_flarelabels_test4.json", function(jsonData){
+            var plot = createFlareplot(900, jsonData, "#flare-container");
+            createFlareplotSlider(plot, "#slider-container");
+          
         });
     </script>
 </body>
 </html>
+
 ```
-This will place a range-slider below the plot. The appearance can be changed by modifying the corresponding css.
+This will place a range-slider below the plot. The appearance can be changed by modifying the corresponding CSS.
 
 ## Switching between trees and tracks
 
