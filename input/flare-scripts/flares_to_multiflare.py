@@ -136,16 +136,18 @@ def compose_flares(singleflares, names):
                     if existing_path is None:
                         ret["trees"][0]["treePaths"].append(treepath)
                     elif existing_path != treepath:
+                        fidx = singleflares.index(flare)
                         print("Can't compose conflicting tree-paths:")
                         print("> "+existing_path)
                         print("> "+treepath)
+                        print("> "+names[fidx])
                         exit(1)
 
     # Compose tracks - currently adds all tracks
     # TODO: Check for identical tracks and only add one
     if any(map(lambda f: "tracks" in f and len(f["tracks"]) > 0, singleflares)):
         ret["tracks"] = []
-        for flare,flarename in zip(singleflares, names):
+        for flare, flarename in zip(singleflares, names):
             if "tracks" in flare and len(flare["tracks"]) > 0:
                 for track in flare["tracks"]:
                     ret["tracks"].append({"trackLabel": track["trackLabel"]+"_"+flarename,
