@@ -8,6 +8,8 @@
     <meta name="description" content="Diversity in the GPCR interactome across human tissues">
 
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Javascript libs -->
     <script type="text/javascript" src="vendor/d3/d3.v3.min.js"></script>
@@ -80,23 +82,46 @@
 
         }
         .fileUpload {
-            width: 140px;
+            /*width: 140px;*/
             /*left: 50%;*/
-            position: relative;
-            overflow: hidden;
+            /*position: relative;*/
+            /*overflow: hidden;*/
             /*margin: 10px;*/
             /*margin-left: -70px;*/
+            width:100%;
+            text-align:center;
+            padding-top:40px;
+            height:160px;
+            font-size:1.4em;
+            border:dashed 5px #b1b5ca;
+            border-radius:10px;
+            background-color: #f4f4f8;
+            color:gray;
         }
         .fileUpload input.upload {
             position: absolute;
             top: 0;
-            right: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             margin: 0;
             padding: 0;
             font-size: 20px;
             cursor: pointer;
             opacity: 0;
-            filter: alpha(opacity=0);
+            /*filter: alpha(opacity=0);*/
+        }
+        .rangeText{
+            position: absolute;
+            right: 20px;
+            bottom: -20px;
+            z-index: 10;
+            font-family: sans;
+            font-size: 0.8em;
+            /*color: "#BBDDEE";*/
+            color: #8489a3;
+            cursor: pointer;
+            /*pointer-events: none;*/
         }
     </style>
 
@@ -106,10 +131,10 @@
 <body>
 <!--<a href="../index.html" class="logo">Flareplot</a>-->
 <!--<h1>Interactions in MD trajectory of active morphine receptor</h1>-->
-<div class="container" id="flareDiv">
+<div class="container-fluid" id="flareDiv">
 
     <!--<img src="img/workflow.png" class="center" id="workflow">-->
-    <div style="height:20px"></div>
+    <div style="height:10px"></div>
     <p>
         Flareplots take specially formatted JSON files as input and produce interactive circular plots:
     </p>
@@ -139,60 +164,59 @@
         d3.select("#smallFPcontainer").style("width", leftHeight+"px");
         d3.select("#smallFPspinner").on("input", function(){
             smallFP.setFrame( this.value );
-
         });
     </script>
     <p>
-        Here ARG135 and ASP134 interact at times 0 to 2 and 4 to 7, and so on. It is also possible to introduce
-        custom grouping of nodes (called 'trees'), annotate nodes with colors (called 'tracks'), and configure
-        interactive controllers (time-slider or comparison tool). For details on how to generate your own see ...
+        Here ARG135 and ASP134 interact at times 0&ndash;2 and 4&ndash;7, and so on. It is also possible to introduce
+        custom grouping of nodes (called <i>trees</i>), annotate nodes with colors (called <i>tracks</i>), and configure
+        interactive controllers (time-slider or comparison tool). For details on how to generate your own flareplot
+        see <a href="https://github.com/GPCRviz/flareplot/tree/master/input" target="_new">Flareplot input
+        documentation</a>.
     </p>
 
-    <a href="https://github.com/GPCRviz/flareplot/tree/master/input" target="_new">
-        <button type="button" class="btn btn-primary btn-block btn-lg" >Flareplot input documentation</button>
-    </a>
-        <!--<a href="https://github.com/GPCRviz/flareplot/tree/master/input" target="_new" class="" >Flareplot input documentation</a>.-->
-        <!--<a href="https://github.com/GPCRviz/flareplot/tree/master/input">JSON input documentation</a>.-->
-    <div style="height:20px"></div>
-    <div class="leftDiv">
-        <p>You can also try one of our examples ..</p>
-        <ul>
-            <li>
-                <a href="javascript:loadExample('resources/mor-active-rep1-wb.json')" class="btn btn-primary">
-                    mor-active-rep1-wb.json
-                </a> [14MB, <a href="resources/mor-active-rep1-wb.json" target="new">raw</a>]
-            </li>
-            <li>
-                <a href="javascript:loadExample('resources/top7_mcmc.json')" class="btn btn-primary">
-                    top7_mcmc.json
-                </a> [21MB, <a href="resources/top7_mcmc.json" target="new">raw</a>]
-            </li>
-            <li>
-                <a href="javascript:loadExample('resources/gpcr_brain.json')" class="btn btn-primary">
-                    gpcr_brain.json
-                </a> [20KB, <a href="resources/gpcr_brain.json" target="new">raw</a>]
-            </li>
+    <div class="row">
+        <div class="col-xs-3"></div>
 
-        </ul>
+        <div class="col-xs-6">
+            <div class="fileUpload" style="">
+                <div class="glyphicon glyphicon-cloud-upload" style="font-size:1.8em;margin-bottom:20px"></div>
+                <div>Upload flare-file (JSON)</div>
+                <!--<span style="font-size:0.5em"> .. or drop here</span>-->
+                <input type="file" id="uploader" class="upload" />
+            </div>
+        </div>
+        <div class="col-xs-3"></div>
     </div>
-    <div class="rightDiv">
-        <p>
-            or generate your own input ...
-        </p>
-        <a href="https://github.com/GPCRviz/flareplot/tree/master/input" target="new" class="btn btn-primary">
-            Pre-made JSON scripts
-        </a>
-        <p>
-            and then upload it here ...
-        </p>
-        <div class="fileUpload btn btn-primary">
-            <span>Upload JSON</span>
-            <input type="file" id="uploader" class="upload" />
+
+    <!--<div style="height:20px"></div>-->
+
+    <div>
+        <p>You can also test one of our examples ..</p>
+        <div class="row">
+            <div class="col-xs-4 text-center">
+                <a href="javascript:loadExample('resources/mor-active-rep1-wb.json')">
+                    <img src="img/example_mor.png" style="width:80px">
+                </a><br>MOR-receptor simulation<br>[14MB, <a href="resources/mor-active-rep1-wb.json" target="new">raw</a>]
+            </div>
+            <div class="col-xs-4 text-center">
+                <a href="javascript:loadExample('resources/top7_mcmc.json')">
+                    <img src="img/example_top7.png" style="width:80px">
+                </a><br>Top7 MCMC simulation<br>[21MB, <a href="resources/top7_mcmc.json" target="new">raw</a>]
+            </div>
+            <div class="col-xs-4 text-center">
+                <a href="javascript:loadExample('resources/gpcr_brain.json')">
+                    <img src="img/example_brain.png" style="width:80px">
+                </a><br>Brain tissue coexpressions<br>[20KB, <a href="resources/gpcr_brain.json" target="new">raw</a>]
+            </div>
+
         </div>
     </div>
 </div>
 
-<div class="container" id="sliderDiv"></div>
+<div class="container" id="sliderDiv">
+
+    <span class="rangeText"></span>
+</div>
 
 <script>
     var flareplot;
@@ -224,8 +248,32 @@
             panel = createFingerprintPanel(flareplot, "#flareDiv", true, "75px");
         } else {
             const maxFrame = d3.max(flareplot.graph.edges, function(e){ return e.frames[e.frames.length-1]; });
-            if (maxFrame>0)
+            if (maxFrame>0) {
                 slider = createFlareplotSlider(flareplot, "#sliderDiv");
+                var rangeInfo = d3.select(".rangeText").text(0)
+                    .on("click", function(){
+                        const r = slider.range();
+                        const defaultText = r.begin+(r.begin<r.end?"-"+r.end:"");
+                        const interval = prompt("Enter time-point or interval (e.g. '100-200'):", defaultText);
+                        if (!interval) return;
+                        const singleMatch = interval.match(/^\d/);
+                        const intervalMatch = interval.match(/^\d+-\d+/);
+                        if(intervalMatch){
+                            const start = parseInt(interval.split("-")[0]);
+                            const end = parseInt(interval.split("-")[1]);
+                            slider.range(start, end);
+                        }else if(singleMatch){
+                            const start = parseInt(interval);
+                            slider.range(start);
+                        }
+                    });
+                slider.onChange(function(r){
+                    if(r.begin==r.end)
+                        rangeInfo.text(r.begin+"");
+                    else
+                        rangeInfo.html(r.begin+" &ndash; "+r.end);
+                })
+            }
         }
 
     }
