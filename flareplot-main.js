@@ -9,6 +9,11 @@
  */
 function createFlareplot(width, inputGraph, containerSelector){
     var w = width;
+    if (width === "auto") {
+        const containerStyle = window.getComputedStyle(d3.select(containerSelector).node());
+        const containerPadding = parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight);
+        w = parseFloat(d3.select(containerSelector).node().clientWidth) - containerPadding;
+    }
     var h = w;
     var rx = w * 0.5;
     var ry = w * 0.5;
