@@ -22,6 +22,11 @@
 
     <link href="../css/demos.css" rel="stylesheet">
 
+    <style>
+        .cp-cell-inactive{
+            color: #CCC;
+        }
+    </style>
 
 </head>
 
@@ -47,32 +52,15 @@
 
         flareplot.framesIntersect([]); //show all interactions to begin with
 
-        panel = createComparePanel(flareplot, 30, "#panelcontent");
+        panel = createComparePanel(flareplot, 25, "#panelcontent");
+        panel.addClickListener(function(d){
+            console.log(d);
+        })
     }
 
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        var contents = e.target.result;
-        fileRead(contents);
-    };
-
-    function handleFile() {
-        document.getElementById("maintext").innerHTML = "<p>Loading ...</p>";
-        var file = this.files[0];
-        reader.readAsText(file);
-    }
-
-
-    function loadExample(fileName){
-        d3.text(fileName, function(json_text){
-            fileRead(json_text);
-        });
-    }
-
-    function codeAddress() {
-        loadExample('../resources/gpcr_brain.json')
-    }
-    window.onload = codeAddress;
+    d3.text('../resources/gpcr_brain.json', function(json_text){
+        fileRead(json_text);
+    });
 </script>
 
 </body>
