@@ -30,7 +30,7 @@ The input-json can contain three sections
 This section has the format
 ```json
   "edges":[
-    {"name1":<string>, "name2":<string>, "frames":<int-list>, "color":<string>, "width":<int>},
+    {"name1": "<string>", "name2": "<string>", "frames": <int-list>, "color": "<string>", "width": <int>},
     ...
   ]
 ```
@@ -44,7 +44,7 @@ This section has the format
   "trees":[
     { "treeLabel":<string>, 
       "treeProperties": [
-        {"path": <string>, "key": <string>},
+        {"path": "<string>", "key": "<string>"},
         ...
       ]
     },
@@ -70,7 +70,7 @@ This section has the format
   "tracks":[
     { "trackLabel":<string>, 
       "trackProperties": [
-        {"nodeName":<string>, "color":<string>, "size":<float>},
+        {"nodeName": "<string>", "color": "<string>", "size": <float>},
         ...
       ]
     }
@@ -91,6 +91,15 @@ Each track specifies visual cues for each of the nodes. If `color` is specified 
   ]
 ```
 
+### Frame dictionary
+Flare files can be used to visualize differences between conditions. In this case each frame number corresponds to a particular condition. In order to name conditions a `frameDict` with the following format can be supplied:
+```json
+  "frameDict": {
+    "<int>": "<string>",
+    ...
+  }
+```
+The existence of `frameDict` indicates that the json represents a multi-flare. The largest frame-number in the `edges` section can not exceed the largest key in the `frameDict`.
 
 ### Defaults
 This section has the format
